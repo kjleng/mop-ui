@@ -1,15 +1,20 @@
-import React from 'react';
-import './App.css';
+import { Redirect, Route, Switch } from "react-router-dom";
+
+import { ROUTES } from "./constants/routes";
+import Layout from "./components/Layout/Layout";
+import {
+  HomePage, AnotherPage
+} from "./pages";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Merchant Onboarding Landing page. start developing.
-        </p>
-      </header>
-    </div>
+    <Layout>
+      <Switch>
+        <Route path="/" exact render={() => <Redirect to={ROUTES.home} />} />
+        <Route exact path={ROUTES.home} component={HomePage} />
+        <Route exact path={ROUTES.another} component={AnotherPage} />
+      </Switch>
+    </Layout>
   );
 }
 
