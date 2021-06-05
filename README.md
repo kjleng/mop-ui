@@ -45,5 +45,6 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-## environment
-dev: http://djkzjxyznzy5n.cloudfront.net/index.html 
+## cloudfront domain
+dev: http://djkzjxyznzy5n.cloudfront.net
+qa: http://dwvyyfl2ump0o.cloudfront.net

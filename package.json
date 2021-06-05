@@ -24,9 +24,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "invalidate-cache-dev": "aws cloudfront create-invalidation",
+    "invalidate-cache": "aws cloudfront create-invalidation",
     "sync-dev": "aws s3 sync build/ s3://dev-merchant-onboarding-ui",
-    "deploy-dev": "npm run build && npm run sync-dev && npm run invalidate-cache-dev -- --distribution-id EP1928UHJ9I66 --paths /*"
+    "deploy-dev": "npm run build && npm run sync-dev && npm run invalidate-cache -- --distribution-id EP1928UHJ9I66 --paths /*",
+    "sync-qa": "aws s3 sync build/ s3://qa-merchant-onboarding-ui",
+    "deploy-qa": "npm run build && npm run sync-qa && npm run invalidate-cache -- --distribution-id E10H0ZO4HMY97C --paths /*"
   },
   "eslintConfig": {
     "extends": [
