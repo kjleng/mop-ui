@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) => ({
   footer: {
@@ -34,10 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Footer = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
   return (
     <div className={classes.footer}>
-      <Typography className={classes.line1}>Financing provided by Fairstone</Typography>
-      <Typography className={classes.line2}>© 2021, ™/® Fairstone Financial Inc.</Typography>
+      <Typography className={classes.line1}>{t('Financing provided by Fairstone')}</Typography>
+      <Typography className={classes.line2}>{t('© 2021, ™/® Fairstone Financial Inc.')}</Typography>
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import { AppBar, Toolbar, Button, makeStyles, Theme } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import logo from './fairstone_header_logo.svg';
-
+import LanguageChangeButton from '../LanguageChangeButton/LanguageChangeButton';
+import { useTranslation } from 'react-i18next';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,13 +34,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const { t } = useTranslation()
   const navItems = [
+    // {
+    //   label: "FR",
+    //   href: "/anotherpage",
+    // },
     {
-      label: "FR",
-      href: "/anotherpage",
-    },
-    {
-      label: "Login",
+      label: t("Login"),
       href: "/home",
     },
   ];
@@ -57,7 +59,7 @@ const Header = () => {
             className: classes.menuButton,
           }}
         >
-          {label}
+          { label }
         </Button>
       );
     });
@@ -66,8 +68,13 @@ const Header = () => {
   return (
     <AppBar className={classes.appBar}>
       <div className={classes.container}>
-        <img src={logo} className={classes.logo} alt="Fairstone logo"/>
-        <Toolbar className={classes.toolbar}>  {getNavButtons()}</Toolbar>
+        <img src={logo} className={classes.logo} alt="Fairstone logo" />
+
+        <Toolbar className={classes.toolbar}>
+          <LanguageChangeButton />
+          {getNavButtons()}
+        </Toolbar>
+
       </div>
     </AppBar>
   );

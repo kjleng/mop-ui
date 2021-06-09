@@ -1,4 +1,4 @@
-import HomePage from "./home";
+import DashboardPage from "./dashboard";
 import AnotherPage from "./another";
 
-export { HomePage, AnotherPage };
+export { DashboardPage, AnotherPage };

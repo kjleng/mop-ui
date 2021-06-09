@@ -1,20 +1,22 @@
 import { Redirect, Route, Switch } from "react-router-dom";
-
+import { Suspense } from "react";
 import { ROUTES } from "./constants/routes";
 import Layout from "./components/Layout/Layout";
 import {
-  HomePage, AnotherPage
+  DashboardPage, AnotherPage
 } from "./pages";
 
 function App() {
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" exact render={() => <Redirect to={ROUTES.home} />} />
-        <Route exact path={ROUTES.home} component={HomePage} />
-        <Route exact path={ROUTES.another} component={AnotherPage} />
-      </Switch>
-    </Layout>
+    <Suspense fallback="loading">
+      <Layout>
+        <Switch>
+          <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
+          <Route exact path={ROUTES.dashboard} component={DashboardPage} />
+          <Route exact path={ROUTES.another} component={AnotherPage} />
+        </Switch>
+      </Layout>
+    </Suspense >
   );
 }
 
