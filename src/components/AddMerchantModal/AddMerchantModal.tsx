@@ -1,25 +1,27 @@
-import { 
-    makeStyles, 
-    Theme, 
-    Typography, 
-    Button, 
-    Dialog, 
-    DialogTitle, 
-    DialogContent, 
-    DialogContentText, 
-    TextField, 
-    DialogActions, 
-    FormLabel, 
-    Select, 
-    Grid, 
-    Accordion, 
-    AccordionSummary 
+import {
+    makeStyles,
+    Theme,
+    Typography,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    TextField,
+    DialogActions,
+    FormLabel,
+    Select,
+    Grid,
+    Accordion,
+    AccordionSummary
 } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { useTranslation } from 'react-i18next';
 import React from 'react'
 import CloseIcon from '@material-ui/icons/Close';
-
+import { TramRounded } from "@material-ui/icons";
+import axios from 'axios';
+import https from 'axios';
 
 
 
@@ -141,12 +143,49 @@ const useStyles = makeStyles((theme) => ({
             fontWeight: 600,
             color: `#333`
         }
+    },
+    formTitle: {
+        fontFamily: 'Roboto, sans-serif',
+        fontSize: '1.6rem',
+        fontWeight: 'normal',
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: '1.5',
+        letterSpacing: 0.015,
+        color: 'rgba(0, 0, 0, 0.87)',
+    },
+    inputLabel: {
+        margin: ' 0 9.4rem 0.04rem 0',
+        fontFamily: 'Source Sans Pro',
+        fontSize: '1.4rem',
+        fontWeight: 600,
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: 'normal',
+        letterSpacing: 'normal',
+        color: '#333333',
+        width: '15.6rem',
+        height: '1.4rem'
+    },
+    input: {
+        width: '23.5rem',
+        height: '3rem',
+        margin: '0.6rem 1.5rem 0.4rem 0',
+        fontFamily: 'Source Sans Pro',
+        fontSize: '2.4rem',
+        fontWeight: 'normal',
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: 1.25,
+        letterSpacing: 'normal',
+        color: '#333333'
     }
 }));
 
 export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) => {
     const classes = useStyles();
-    
+
+
     const [open, setOpen] = React.useState(isOpen); //whether Modal is open
     const [submitText, setSubmitText] = React.useState('Search Merchant');
 
@@ -158,8 +197,26 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
     })
 
     const handleClose = () => {
-        // different api calls depending on submitText var's value
-        // ..
+
+
+
+
+        axios.get('https://7gwlj0uhql.execute-api.us-east-1.amazonaws.com/dev/api/v1/merchants/?name=bestbuyapi')
+        // axios.get('http://www.math.com')
+            .then(function (response) {
+                debugger;
+                // handle success
+                console.log(response);
+            })
+            .catch(function (error) {
+                debugger;
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                debugger;
+                // always executed
+            });
         setOpen(false);
     };
 
@@ -177,102 +234,114 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                         <CloseIcon className={classes.dialogTitleClose} />
                     </div>
                 </DialogTitle>
+                <DialogContent>
+                    <Typography className={classes.formTitle}>Add Merchant Details</Typography>
+                    <form onSubmit={submitSearchMerchant}>
+                        <TextField
+                            name='serach-merchant-name'
+                            label="Search Merchant Name"
+                            InputLabelProps={{ classes: { root: classes.inputLabel }, shrink: true }}
+                            InputProps={{ classes: { root: classes.input } }}
+                        />
 
-                <form onSubmit={submitSearchMerchant}>
-                    <TextField
-                        name='serach-merchant-name'
-                        label="Search Merchant Name"
-                    />
-                </form>
 
-                {
-                    // Add another form here for add merchant details, Display Name onwards
-                    // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869fe0a7bb3862848e3f
-                    // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869f9c7b12757015693a
-                }
-                <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
-                    <TextField
-                        className="merchantName"
-                        id="merchantName"
-                        InputProps={{
-                            className: classes.merchantFoundInput,
-                            disableUnderline: true,
-                            readOnly: true 
-                        }}
-                        InputLabelProps={{
-                            className: classes.merchantFoundLabel
-                        }}
-                        label="Merchant"
-                        defaultValue="Lorem Ipsum" // TODO: replace this with Merchant name from API response
-                    />
-                    <TextField
-                        className="displayName"
-                        id="displayName"
-                        InputProps={{ 
-                            className: classes.merchantFoundInput,
-                            value: merchantFoundForm.displayName, 
-                            onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                ...prevForm,
-                                displayName: value
-                            }))
-                        }}
-                        InputLabelProps={{
-                            className: classes.merchantFoundLabel
-                        }}
-                        label="Display Name"
-                    />
-                    <TextField
-                        className="merchantId"
-                        id="merchantId"
-                        InputProps={{ 
-                            className: classes.merchantFoundInput,
-                            value: merchantFoundForm.merchantId, 
-                            onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                ...prevForm,
-                                merchantId: value
-                            }))
-                        }}
-                        InputLabelProps={{
-                            className: classes.merchantFoundLabel
-                        }}
-                        label="Merchant Id"
-                    />
-                    <TextField
-                        className="ecomId"
-                        id="ecomId"
-                        InputProps={{ 
-                            className: classes.merchantFoundInput,
-                            value: merchantFoundForm.ecomId, 
-                            onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                ...prevForm,
-                                ecomId: value
-                            }))
-                        }}
-                        InputLabelProps={{
-                            className: classes.merchantFoundLabel
-                        }}
-                        label="EComm Store ID"
-                    />
-                    <Accordion 
-                        className={classes.merchantFoundDrawer}
-                        elevation={0}
-                        expanded={merchantFoundForm.additionalDetailsExpanded} 
-                        onChange={() => setMerchantFoundForm(prevForm => ({
-                            ...prevForm,
-                            additionalDetailsExpanded: !prevForm.additionalDetailsExpanded
-                        }))}
-                    >
-                        <AccordionSummary className="summary" expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
-                            <Typography className="header">Additional Details</Typography>
-                        </AccordionSummary>
+                    </form>
 
-                        {/**
+                    <form onSubmit={submitSearchMerchant}>
+                        <TextField
+                            name='serach-merchant-name'
+                            label="Search Merchant Name"
+                        />
+                    </form>
+
+                    {
+                        // Add another form here for add merchant details, Display Name onwards
+                        // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869fe0a7bb3862848e3f
+                        // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869f9c7b12757015693a
+                    }
+                    <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
+                        <TextField
+                            className="merchantName"
+                            id="merchantName"
+                            InputProps={{
+                                className: classes.merchantFoundInput,
+                                disableUnderline: true,
+                                readOnly: true
+                            }}
+                            InputLabelProps={{
+                                className: classes.merchantFoundLabel
+                            }}
+                            label="Merchant"
+                            defaultValue="Lorem Ipsum" // TODO: replace this with Merchant name from API response
+                        />
+                        <TextField
+                            className="displayName"
+                            id="displayName"
+                            InputProps={{
+                                className: classes.merchantFoundInput,
+                                value: merchantFoundForm.displayName,
+                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                    ...prevForm,
+                                    displayName: value
+                                }))
+                            }}
+                            InputLabelProps={{
+                                className: classes.merchantFoundLabel
+                            }}
+                            label="Display Name"
+                        />
+                        <TextField
+                            className="merchantId"
+                            id="merchantId"
+                            InputProps={{
+                                className: classes.merchantFoundInput,
+                                value: merchantFoundForm.merchantId,
+                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                    ...prevForm,
+                                    merchantId: value
+                                }))
+                            }}
+                            InputLabelProps={{
+                                className: classes.merchantFoundLabel
+                            }}
+                            label="Merchant Id"
+                        />
+                        <TextField
+                            className="ecomId"
+                            id="ecomId"
+                            InputProps={{
+                                className: classes.merchantFoundInput,
+                                value: merchantFoundForm.ecomId,
+                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                    ...prevForm,
+                                    ecomId: value
+                                }))
+                            }}
+                            InputLabelProps={{
+                                className: classes.merchantFoundLabel
+                            }}
+                            label="EComm Store ID"
+                        />
+                        <Accordion
+                            className={classes.merchantFoundDrawer}
+                            elevation={0}
+                            expanded={merchantFoundForm.additionalDetailsExpanded}
+                            onChange={() => setMerchantFoundForm(prevForm => ({
+                                ...prevForm,
+                                additionalDetailsExpanded: !prevForm.additionalDetailsExpanded
+                            }))}
+                        >
+                            <AccordionSummary className="summary" expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
+                                <Typography className="header">Additional Details</Typography>
+                            </AccordionSummary>
+
+                            {/**
                          * TODO:
                          *   Accordion options will go here
                          */}
-                    </Accordion>
-                </form>
-
+                        </Accordion>
+                    </form>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
