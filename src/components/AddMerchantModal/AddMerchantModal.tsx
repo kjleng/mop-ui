@@ -10,12 +10,17 @@ import {
     TextField,
     DialogActions,
     FormLabel,
-    Select,
     Grid,
     Accordion,
-    AccordionSummary
+    AccordionSummary,
+    AccordionDetails,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel
 } from "@material-ui/core";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { useTranslation } from 'react-i18next';
 import React from 'react'
 import CloseIcon from '@material-ui/icons/Close';
@@ -23,6 +28,7 @@ import { TramRounded } from "@material-ui/icons";
 import axios from 'axios';
 import https from 'axios';
 
+import { ChevronRight } from "@material-ui/icons";
 
 
 interface AddMerchantModalProps {
@@ -31,6 +37,18 @@ interface AddMerchantModalProps {
 
 interface ISearchMerchantInput {
     findMerchantName: string;
+}
+
+type MerchantFoundForm = {
+    displayName: String;
+    merchantId: String;
+    ecomId: String;
+    additionalDetailsExpanded: boolean;
+    orderManagement: boolean;
+    paymentGateway: boolean;
+    showPlan: boolean;
+    performPayment: boolean;
+    authorizationFormat: 'Short' | 'Extended';
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -123,26 +141,104 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 600
     },
     merchantFoundDrawer: {
+        display: `block`,
         gridArea: `drawer`,
         border: `none`,
         '&::before': {
             display: `none`
-        },
-        '& .summary': {
-            flexDirection: `row-reverse`,
-            paddingLeft: 0
-        },
-        '& .MuiAccordionSummary-expandIcon': {
-            padding: `0`,
-            marginRight: `12px`,
-            color: `#333`
         },
         '& .header': {
             fontSize: `16px`,
             lineHeight: `20px`,
             fontWeight: 600,
             color: `#333`
-        }
+        },
+
+    },
+    merchantFoundDrawerSummary: {
+        flexDirection: `row-reverse`,
+        paddingLeft: 0,
+        '& .MuiAccordionSummary-expandIcon': {
+            padding: `0`,
+            marginRight: `12px`,
+            color: `#333`
+        },
+    },
+    merchantFoundDrawerDetails: {
+        display: `block`,
+        '& .top-toggles': {
+            display: `flex`,
+            flexDirection: `column`,
+            justifyContent: `flex-start`,
+            [theme.breakpoints.up(`sm`)]: {
+                flexDirection: `row`
+            }
+        },
+        '& .bottom-toggles': {
+            marginTop: `8px`,
+            display: `flex`,
+            flexDirection: `row`,
+            flexWrap: `wrap`,
+            backgroundColor: `#fafafa`,
+            padding: `18px`
+        },
+        '& .toggle': {
+            fontSize: `16px`,
+            marginRight: `14px`,
+            marginTop: `8px`,
+            [theme.breakpoints.up(`sm`)]: {
+                marginTop: `0px`
+            },
+
+            '& .button': {
+                border: `1px solid #009bcd`,
+                '& p': {
+                    color: `#009bcd`,
+                    textTransform: `none`,
+                    fontSize: `16px`,
+                    fontWeight: 600,
+                }
+            },
+            '& .button.Mui-selected': {
+                border: `1px solid #009bcd`,
+                backgroundColor: `#009bcd`,
+                '& p': {
+                    color: `#fff`,
+                    textTransform: `none`,
+                    fontSize: `16px`,
+                    fontWeight: 600,
+                }
+            }
+        },
+        '& .toggle-label': {
+            color: `#333`,
+            fontSize: `14px`,
+            fontWeight: 600,
+            marginBottom: `8px`
+        },
+    },
+    authorizationSelect: {
+        display: `block`,
+        width: `100%`,
+        marginTop: `22px`,
+        '& .label': {
+            color: `#333`,
+            fontSize: `14px`,
+            fontWeight: 600,
+            marginBottom: `8px`
+        },
+        '& .select': {
+            fontSize: `24px`,
+            color: `#333`,
+            minWidth: `236px`,
+
+            // '& .chevron': {
+            //     transform: `rotate(90deg)`
+            // },
+        },
+        // '& .select.Mui-focused': {
+        //     backgroundColor: `red`
+        // }
     },
     formTitle: {
         fontFamily: 'Roboto, sans-serif',
@@ -189,11 +285,16 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
     const [open, setOpen] = React.useState(isOpen); //whether Modal is open
     const [submitText, setSubmitText] = React.useState('Search Merchant');
 
-    const [merchantFoundForm, setMerchantFoundForm] = React.useState({
+    const [merchantFoundForm, setMerchantFoundForm] = React.useState<MerchantFoundForm>({
         displayName: ``,
         merchantId: ``,
         ecomId: ``,
-        additionalDetailsExpanded: false
+        additionalDetailsExpanded: false,
+        orderManagement: true,
+        paymentGateway: true,
+        showPlan: true,
+        performPayment: true,
+        authorizationFormat: 'Short'
     })
 
     const handleClose = () => {
@@ -202,7 +303,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
 
         axios.get('https://7gwlj0uhql.execute-api.us-east-1.amazonaws.com/dev/api/v1/merchants/?name=bestbuyapi')
-        // axios.get('http://www.math.com')
+            // axios.get('http://www.math.com')
             .then(function (response) {
                 debugger;
                 // handle success
@@ -222,8 +323,16 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
     const submitSearchMerchant = () => {
         debugger;
-    }
+    };
 
+    const toggleButtonReducer = (newSelection: boolean, stateKey: keyof MerchantFoundForm) => {
+        const currentState = merchantFoundForm[stateKey];
+        if (currentState === newSelection || newSelection === null) return; // True or False must be selected, don't let them deselect one and have neither
+        else return setMerchantFoundForm(prevForm => ({
+            ...prevForm,
+            [stateKey]: newSelection
+        }))
+    };
 
     return (
         <div>
@@ -322,6 +431,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             }}
                             label="EComm Store ID"
                         />
+
                         <Accordion
                             className={classes.merchantFoundDrawer}
                             elevation={0}
@@ -331,26 +441,109 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 additionalDetailsExpanded: !prevForm.additionalDetailsExpanded
                             }))}
                         >
-                            <AccordionSummary className="summary" expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
+                            <AccordionSummary className={classes.merchantFoundDrawerSummary} expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
                                 <Typography className="header">Additional Details</Typography>
                             </AccordionSummary>
-
-                            {/**
-                         * TODO:
-                         *   Accordion options will go here
-                         */}
+                            <AccordionDetails className={classes.merchantFoundDrawerDetails}>
+                                <div className="top-toggles">
+                                    <div className="toggle">
+                                        <Typography className="toggle-label">Order Management</Typography>
+                                        <ToggleButtonGroup
+                                            exclusive
+                                            value={merchantFoundForm.orderManagement}
+                                            onChange={(_, newManagement) => toggleButtonReducer(newManagement, `orderManagement`)}
+                                        >
+                                            <ToggleButton className="button" value={true}>
+                                                <Typography>True</Typography>
+                                            </ToggleButton>
+                                            <ToggleButton className="button" value={false}>
+                                                <Typography>False</Typography>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </div>
+                                    <div className="toggle">
+                                        <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                                        <ToggleButtonGroup
+                                            exclusive
+                                            value={merchantFoundForm.paymentGateway}
+                                            onChange={(_, newPayment) => toggleButtonReducer(newPayment, `paymentGateway`)}
+                                        >
+                                            <ToggleButton className="button" value={true}>
+                                                <Typography>True</Typography>
+                                            </ToggleButton>
+                                            <ToggleButton className="button" value={false}>
+                                                <Typography>False</Typography>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </div>
+                                </div>
+                                {merchantFoundForm.paymentGateway && (
+                                    <div className="bottom-toggles">
+                                        <div className="toggle">
+                                            <Typography className="toggle-label">Order Management</Typography>
+                                            <ToggleButtonGroup
+                                                exclusive
+                                                value={merchantFoundForm.showPlan}
+                                                onChange={(_, newManagement) => toggleButtonReducer(newManagement, `showPlan`)}
+                                            >
+                                                <ToggleButton className="button" value={true}>
+                                                    <Typography>True</Typography>
+                                                </ToggleButton>
+                                                <ToggleButton className="button" value={false}>
+                                                    <Typography>False</Typography>
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+                                        </div>
+                                        <div className="toggle">
+                                            <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                                            <ToggleButtonGroup
+                                                exclusive
+                                                value={merchantFoundForm.performPayment}
+                                                onChange={(_, newPayment) => toggleButtonReducer(newPayment, `performPayment`)}
+                                            >
+                                                <ToggleButton className="button" value={true}>
+                                                    <Typography>True</Typography>
+                                                </ToggleButton>
+                                                <ToggleButton className="button" value={false}>
+                                                    <Typography>False</Typography>
+                                                </ToggleButton>
+                                            </ToggleButtonGroup>
+                                        </div>
+                                        <FormControl className={classes.authorizationSelect}>
+                                            <Typography className="label">Authorization Format</Typography>
+                                            <Select
+                                                className="select"
+                                                // IconComponent={() => <ChevronRight className="chevron" fontSize="large" />}
+                                                id="authorizationFormat"
+                                                onChange={({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                                    ...prevForm,
+                                                    authorizationFormat: value as ('Short' | 'Extended')
+                                                }))}
+                                                value={merchantFoundForm.authorizationFormat}
+                                            >
+                                                <MenuItem value='Short'>
+                                                    Short
+                                            </MenuItem>
+                                                <MenuItem value='Extended'>
+                                                    Extended
+                                            </MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                )}
+                            </AccordionDetails>
                         </Accordion>
                     </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        {submitText}
-                    </Button>
-                </DialogActions>
 
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary">
+                            Cancel
+                    </Button>
+                        <Button onClick={handleClose} color="primary">
+                            {submitText}
+                        </Button>
+                    </DialogActions>
+                </DialogContent>
             </Dialog >
         </div >
     );
