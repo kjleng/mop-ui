@@ -302,7 +302,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
 
 
-        axios.get('https://7gwlj0uhql.execute-api.us-east-1.amazonaws.com/dev/api/v1/merchants/?name=bestbuyapi')
+        axios.get('https://jtuw8zbzec.execute-api.us-east-1.amazonaws.com/dev/api/v1/merchants/?name=bestbuyapi')
             // axios.get('http://www.math.com')
             .then(function (response) {
                 debugger;
