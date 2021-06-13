@@ -17,7 +17,13 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel
+    InputLabel,
+    Snackbar,
+    SnackbarContent,
+    Card,
+    CardContent,
+    Collapse,
+    IconButton
 } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
@@ -27,16 +33,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import { TramRounded } from "@material-ui/icons";
 import axios from 'axios';
 import https from 'axios';
-
+import { searchMerchant } from '../../api/merchant';
 import { ChevronRight } from "@material-ui/icons";
+import { useSnackbar } from 'notistack';
+import MuiAlert from '@material-ui/lab/Alert';
+import { divide } from "lodash";
+import { Alert, Color as AlertColor } from '@material-ui/lab';
+
 
 
 interface AddMerchantModalProps {
     isOpen: boolean;
-}
-
-interface ISearchMerchantInput {
-    findMerchantName: string;
 }
 
 type MerchantFoundForm = {
@@ -49,6 +56,10 @@ type MerchantFoundForm = {
     showPlan: boolean;
     performPayment: boolean;
     authorizationFormat: 'Short' | 'Extended';
+}
+
+type SearchMerchantForm = {
+    name: String;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -302,16 +313,61 @@ const useStyles = makeStyles((theme) => ({
         lineHeight: 'normal',
         letterSpacing: 'normal',
         textAlign: 'center',
-        color: '#007ea8'
+        color: '#007ea8',
+    },
+    snackBar: {
+
+        fontFamily: 'Source Sans Pro, sans-serif',
+        fontSize: '1.4rem',
+        fontWeight: 600,
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: 'normal',
+        letterSpacing: 'normal',
+        color: '#333333',
+
+    },
+    toasterCard: {
+        backgroundColor: '#00a857',
+        // padding: '1.5rem',
+        borderRadius: '0.4rem'
+    },
+    toasterCardError: {
+        backgroundColor: '#c42323',
+    },
+    toasterContent: {
+        fontFamily: 'Source Sans Pro, sans-serif',
+        fontSize: '1.6rem',
+        fontWeight: 600,
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        letterSpacing: 'normal',
+        lineHeight: 1.25,
+        color: ' #ffffff',
+
     }
 }));
 
 export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) => {
     const classes = useStyles();
+    // const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 
     const [open, setOpen] = React.useState(isOpen); //whether Modal is open
+
+    const [merchantFound, setMerchantFound] = React.useState(false); //whether toaster messgage is open
+
     const [submitText, setSubmitText] = React.useState('Search Merchant');
+
+    const [toasterOpen, setToasterOpen] = React.useState(false); //whether toaster messgage is open
+    const [toasterMessage, setToasterMessage] = React.useState('');
+    const [toasterColor, setToasterColor] = React.useState<AlertColor>('success'); // 
+
+
+
+    const [merchantNameForm, setMerchantNameForm] = React.useState<SearchMerchantForm>({
+        name: ``
+    });
 
     const [merchantFoundForm, setMerchantFoundForm] = React.useState<MerchantFoundForm>({
         displayName: ``,
@@ -326,31 +382,42 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
     })
 
     const handleClose = () => {
-
-
-
-
-        axios.get('https://jtuw8zbzec.execute-api.us-east-1.amazonaws.com/dev/api/v1/merchants/?name=bestbuyapi')
-            // axios.get('http://www.math.com')
-            .then(function (response) {
-                debugger;
-                // handle success
-                console.log(response);
-            })
-            .catch(function (error) {
-                debugger;
-                // handle error
-                console.log(error);
-            })
-            .then(function () {
-                debugger;
-                // always executed
-            });
         setOpen(false);
     };
 
-    const submitSearchMerchant = () => {
-        debugger;
+    const submitSearchMerchant = async () => {
+
+        if (!merchantFound) {
+            try {
+                const merchantResponse = await searchMerchant(merchantNameForm.name);
+                debugger;
+                // if (merchantResponse.success) {
+                //     enqueueSnackbar('I love hooks', {
+                //         variant: 'success',
+                //         anchorOrigin:  { horizontal: 'center', vertical: 'top' },
+                //         autoHideDuration:  5000
+                //     });
+                // }
+
+                if (merchantResponse.success) {
+                    setToasterMessage('Merchant successfully found');
+                    setToasterOpen(true);
+                    setMerchantFound(true);
+                    setToasterColor('success');
+                }
+
+            }
+            catch (e) {
+                debugger;
+                const msg = e?.data?.message === 'Not found' ? 'Merchant not found' : 'Error';
+                setToasterMessage(msg);
+                setToasterOpen(true);
+                setMerchantFound(false);
+                setToasterColor('error');
+            }
+
+        }
+
     };
 
     const toggleButtonReducer = (newSelection: boolean, stateKey: keyof MerchantFoundForm) => {
@@ -373,20 +440,69 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                 </DialogTitle>
                 <DialogContent>
                     <Typography className={classes.formTitle}>Add Merchant Details</Typography>
-                    <form onSubmit={submitSearchMerchant}>
-                        <TextField
-                            name='serach-merchant-name'
-                            label="Search Merchant Name"
-                            InputLabelProps={{ classes: { root: classes.inputLabel }, shrink: true }}
-                            InputProps={{ classes: { root: classes.input } }}
-                        />
+                    {/* <Snackbar
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={true}
+                        autoHideDuration={6000}
+                        variant="success"
+                        className={classes.snackBar}
+                    >
+                        <SnackbarContent message="I love snacks."
+                            className={classes.snackBar} />
+
+                    </Snackbar> */}
+                    {/* <Collapse in={toasterOpen}> */}
+                    {
+                        toasterOpen &&
+                        <Alert
+                            classes={{
+                                root: classes.toasterCard,
+                                standardError: classes.toasterCardError
+                            }}
+                            icon={false}
+                            color={toasterColor}
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setToasterOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            <Typography className={classes.toasterContent}>{toasterMessage}</Typography>
+                        </Alert>
+                    }
+                    {/* </Collapse> */}
+                    {!merchantFound &&
+                        <form onSubmit={submitSearchMerchant}>
+                            <TextField
+                                name='search-merchant-name'
+                                label="Search Merchant Name"
+                                value={merchantNameForm.name}
+                                InputLabelProps={{ classes: { root: classes.inputLabel }, shrink: true }}
+                                InputProps={{
+                                    classes: { root: classes.input },
+                                    onChange: ({ target: { value } }) => setMerchantNameForm(prevForm => ({
+                                        ...prevForm,
+                                        name: value
+                                    }))
+                                }}
+                            />
 
 
-                    </form>
-
+                        </form>
+                    }
                     {/* <form onSubmit={submitSearchMerchant}>
                         <TextField
-                            name='serach-merchant-name'
+                            name='search-merchant-name'
                             label="Search Merchant Name"
                         />
                     </form> */}
@@ -396,132 +512,101 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                         // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869fe0a7bb3862848e3f
                         // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869f9c7b12757015693a
                     }
-                    <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
-                        <TextField
-                            className="merchantName"
-                            id="merchantName"
-                            InputProps={{
-                                classes: { root: classes.input },
-                                disableUnderline: true,
-                                readOnly: true
-                            }}
-                            // InputProps={{
-                            //     className: classes.merchantFoundInput,
-                            //     disableUnderline: true,
-                            //     readOnly: true
-                            // }}
-                            InputLabelProps={{
-                                classes: { root: classes.inputLabel },
-                                shrink: true
-                            }}
-                            label="Merchant"
-                            defaultValue="Lorem Ipsum" // TODO: replace this with Merchant name from API response
-                        />
-                        <TextField
-                            className="displayName"
-                            id="displayName"
-                            InputProps={{
-                                classes: { root: classes.input },
-                                value: merchantFoundForm.displayName,
-                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                    ...prevForm,
-                                    displayName: value
-                                }))
-                            }}
-                            InputLabelProps={{
-                                classes: { root: classes.inputLabel },
-                                shrink: true
-                            }}
-                            label="Display Name"
-                        />
-                        <TextField
-                            className="merchantId"
-                            id="merchantId"
-                            InputProps={{
-                                classes: { root: classes.input },
-                                value: merchantFoundForm.merchantId,
-                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                    ...prevForm,
-                                    merchantId: value
-                                }))
-                            }}
-                            InputLabelProps={{
-                                classes: { root: classes.inputLabel },
-                                shrink: true
-                            }}
-                            label="Merchant Id"
-                        />
-                        <TextField
-                            className="ecomId"
-                            id="ecomId"
-                            InputProps={{
-                                classes: { root: classes.input },
-                                value: merchantFoundForm.ecomId,
-                                onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                    ...prevForm,
-                                    ecomId: value
-                                }))
-                            }}
-                            InputLabelProps={{
-                                classes: { root: classes.inputLabel },
-                                shrink: true
-                            }}
-                            label="EComm Store ID"
-                        />
+                    {
+                        merchantFound &&
+                        <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
+                            <TextField
+                                className="merchantName"
+                                id="merchantName"
+                                InputProps={{
+                                    classes: { root: classes.input },
+                                    disableUnderline: true,
+                                    readOnly: true
+                                }}
+                                // InputProps={{
+                                //     className: classes.merchantFoundInput,
+                                //     disableUnderline: true,
+                                //     readOnly: true
+                                // }}
+                                InputLabelProps={{
+                                    classes: { root: classes.inputLabel },
+                                    shrink: true
+                                }}
+                                label="Merchant"
+                                defaultValue={merchantNameForm.name} // TODO: replace this with Merchant name from API response
+                            />
+                            <TextField
+                                className="displayName"
+                                id="displayName"
+                                InputProps={{
+                                    classes: { root: classes.input },
+                                    value: merchantFoundForm.displayName,
+                                    onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                        ...prevForm,
+                                        displayName: value
+                                    }))
+                                }}
+                                InputLabelProps={{
+                                    classes: { root: classes.inputLabel },
+                                    shrink: true
+                                }}
+                                label="Display Name"
+                            />
+                            <TextField
+                                className="merchantId"
+                                id="merchantId"
+                                InputProps={{
+                                    classes: { root: classes.input },
+                                    value: merchantFoundForm.merchantId,
+                                    onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                        ...prevForm,
+                                        merchantId: value
+                                    }))
+                                }}
+                                InputLabelProps={{
+                                    classes: { root: classes.inputLabel },
+                                    shrink: true
+                                }}
+                                label="Merchant Id"
+                            />
+                            <TextField
+                                className="ecomId"
+                                id="ecomId"
+                                InputProps={{
+                                    classes: { root: classes.input },
+                                    value: merchantFoundForm.ecomId,
+                                    onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                        ...prevForm,
+                                        ecomId: value
+                                    }))
+                                }}
+                                InputLabelProps={{
+                                    classes: { root: classes.inputLabel },
+                                    shrink: true
+                                }}
+                                label="EComm Store ID"
+                            />
 
-                        <Accordion
-                            className={classes.merchantFoundDrawer}
-                            elevation={0}
-                            expanded={merchantFoundForm.additionalDetailsExpanded}
-                            onChange={() => setMerchantFoundForm(prevForm => ({
-                                ...prevForm,
-                                additionalDetailsExpanded: !prevForm.additionalDetailsExpanded
-                            }))}
-                        >
-                            <AccordionSummary className={classes.merchantFoundDrawerSummary} expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
-                                <Typography className="header">Additional Details</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails className={classes.merchantFoundDrawerDetails}>
-                                <div className="top-toggles">
-                                    <div className="toggle">
-                                        <Typography className="toggle-label">Order Management</Typography>
-                                        <ToggleButtonGroup
-                                            exclusive
-                                            value={merchantFoundForm.orderManagement}
-                                            onChange={(_, newManagement) => toggleButtonReducer(newManagement, `orderManagement`)}
-                                        >
-                                            <ToggleButton className="button" value={true}>
-                                                <Typography>True</Typography>
-                                            </ToggleButton>
-                                            <ToggleButton className="button" value={false}>
-                                                <Typography>False</Typography>
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    </div>
-                                    <div className="toggle">
-                                        <Typography className="toggle-label">Payment Gateway Enabled</Typography>
-                                        <ToggleButtonGroup
-                                            exclusive
-                                            value={merchantFoundForm.paymentGateway}
-                                            onChange={(_, newPayment) => toggleButtonReducer(newPayment, `paymentGateway`)}
-                                        >
-                                            <ToggleButton className="button" value={true}>
-                                                <Typography>True</Typography>
-                                            </ToggleButton>
-                                            <ToggleButton className="button" value={false}>
-                                                <Typography>False</Typography>
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    </div>
-                                </div>
-                                {merchantFoundForm.paymentGateway && (
-                                    <div className="bottom-toggles">
+                            <Accordion
+                                className={classes.merchantFoundDrawer}
+                                elevation={0}
+                                expanded={merchantFoundForm.additionalDetailsExpanded}
+                                onChange={() => setMerchantFoundForm(prevForm => ({
+                                    ...prevForm,
+                                    additionalDetailsExpanded: !prevForm.additionalDetailsExpanded
+                                }))}
+                            >
+                                <AccordionSummary className={classes.merchantFoundDrawerSummary} expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
+                                    <Typography className="header">Additional Details</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails className={classes.merchantFoundDrawerDetails}>
+                                    <div className="top-toggles">
                                         <div className="toggle">
                                             <Typography className="toggle-label">Order Management</Typography>
                                             <ToggleButtonGroup
                                                 exclusive
-                                                value={merchantFoundForm.showPlan}
-                                                onChange={(_, newManagement) => toggleButtonReducer(newManagement, `showPlan`)}
+                                                value={merchantFoundForm.orderManagement}
+                                                onChange={(_, newManagement) => toggleButtonReducer(newManagement, `orderManagement`)}
                                             >
                                                 <ToggleButton className="button" value={true}>
                                                     <Typography>True</Typography>
@@ -535,8 +620,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                             <Typography className="toggle-label">Payment Gateway Enabled</Typography>
                                             <ToggleButtonGroup
                                                 exclusive
-                                                value={merchantFoundForm.performPayment}
-                                                onChange={(_, newPayment) => toggleButtonReducer(newPayment, `performPayment`)}
+                                                value={merchantFoundForm.paymentGateway}
+                                                onChange={(_, newPayment) => toggleButtonReducer(newPayment, `paymentGateway`)}
                                             >
                                                 <ToggleButton className="button" value={true}>
                                                     <Typography>True</Typography>
@@ -546,37 +631,70 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                                 </ToggleButton>
                                             </ToggleButtonGroup>
                                         </div>
-                                        <FormControl className={classes.authorizationSelect}>
-                                            <Typography className="label">Authorization Format</Typography>
-                                            <Select
-                                                className="select"
-                                                // IconComponent={() => <ChevronRight className="chevron" fontSize="large" />}
-                                                id="authorizationFormat"
-                                                onChange={({ target: { value } }) => setMerchantFoundForm(prevForm => ({
-                                                    ...prevForm,
-                                                    authorizationFormat: value as ('Short' | 'Extended')
-                                                }))}
-                                                value={merchantFoundForm.authorizationFormat}
-                                            >
-                                                <MenuItem value='Short'>
-                                                    Short
-                                            </MenuItem>
-                                                <MenuItem value='Extended'>
-                                                    Extended
-                                            </MenuItem>
-                                            </Select>
-                                        </FormControl>
                                     </div>
-                                )}
-                            </AccordionDetails>
-                        </Accordion>
-                    </form>
-
+                                    {merchantFoundForm.paymentGateway && (
+                                        <div className="bottom-toggles">
+                                            <div className="toggle">
+                                                <Typography className="toggle-label">Order Management</Typography>
+                                                <ToggleButtonGroup
+                                                    exclusive
+                                                    value={merchantFoundForm.showPlan}
+                                                    onChange={(_, newManagement) => toggleButtonReducer(newManagement, `showPlan`)}
+                                                >
+                                                    <ToggleButton className="button" value={true}>
+                                                        <Typography>True</Typography>
+                                                    </ToggleButton>
+                                                    <ToggleButton className="button" value={false}>
+                                                        <Typography>False</Typography>
+                                                    </ToggleButton>
+                                                </ToggleButtonGroup>
+                                            </div>
+                                            <div className="toggle">
+                                                <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                                                <ToggleButtonGroup
+                                                    exclusive
+                                                    value={merchantFoundForm.performPayment}
+                                                    onChange={(_, newPayment) => toggleButtonReducer(newPayment, `performPayment`)}
+                                                >
+                                                    <ToggleButton className="button" value={true}>
+                                                        <Typography>True</Typography>
+                                                    </ToggleButton>
+                                                    <ToggleButton className="button" value={false}>
+                                                        <Typography>False</Typography>
+                                                    </ToggleButton>
+                                                </ToggleButtonGroup>
+                                            </div>
+                                            <FormControl className={classes.authorizationSelect}>
+                                                <Typography className="label">Authorization Format</Typography>
+                                                <Select
+                                                    className="select"
+                                                    // IconComponent={() => <ChevronRight className="chevron" fontSize="large" />}
+                                                    id="authorizationFormat"
+                                                    onChange={({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                                        ...prevForm,
+                                                        authorizationFormat: value as ('Short' | 'Extended')
+                                                    }))}
+                                                    value={merchantFoundForm.authorizationFormat}
+                                                >
+                                                    <MenuItem value='Short'>
+                                                        Short
+                                            </MenuItem>
+                                                    <MenuItem value='Extended'>
+                                                        Extended
+                                            </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                    )}
+                                </AccordionDetails>
+                            </Accordion>
+                        </form>
+                    }
                     <DialogActions>
                         <Button onClick={handleClose} className={classes.dialogActionButton}>
                             Cancel
                     </Button>
-                        <Button onClick={handleClose} className={classes.dialogActionButton}>
+                        <Button onClick={submitSearchMerchant} className={classes.dialogActionButton}>
                             {submitText}
                         </Button>
                     </DialogActions>
