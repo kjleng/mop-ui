@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         width: '60rem',
         backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
+        border: '0.2rem solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
@@ -94,11 +94,10 @@ const useStyles = makeStyles((theme) => ({
     },
     merchantFoundForm: {
         display: `flex`,
-        padding: `24px`,
         flexDirection: `column`,
         [theme.breakpoints.up(`md`)]: {
             display: `grid`,
-            gridGap: `24px`,
+            gridGap: `2.4rem`,
             gridTemplateAreas: `
                 'merchantName nothing'
                 'displayName nothing'
@@ -118,10 +117,24 @@ const useStyles = makeStyles((theme) => ({
         '& .ecomId': {
             gridArea: `ecomId`,
         },
-        '& input': {
-            fontSize: `24px`,
-            lineHeight: `30px`,
-        },
+        /*  '& input': {
+             // fontSize: `1.4rem`,
+             // lineHeight: `3`,
+             // fontFamily: 'Source Sans Pro'
+ 
+ 
+             margin: ' 0 9.4rem 0.04rem 0',
+             fontFamily: 'Source Sans Pro',
+             fontSize: '1.4rem',
+             fontWeight: 600,
+             fontStretch: 'normal',
+             fontStyle: 'normal',
+             lineHeight: 'normal',
+             letterSpacing: 'normal',
+             color: '#333333',
+             width: '15.6rem',
+             height: '1.4rem'
+         }, */
         '& label.Mui-focused': {
             color: `#3f2a56`
         },
@@ -130,13 +143,13 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     merchantFoundInput: {
-        fontSize: `24px`,
-        lineHeight: `30px`,
+        fontSize: `2.4rem`,
+        lineHeight: `3rem`,
         color: `#333`,
     },
     merchantFoundLabel: {
         color: `#333`,
-        fontSize: `14px`,
+        fontSize: `1.4rem`,
         lineHeight: `normal`,
         fontWeight: 600
     },
@@ -148,8 +161,8 @@ const useStyles = makeStyles((theme) => ({
             display: `none`
         },
         '& .header': {
-            fontSize: `16px`,
-            lineHeight: `20px`,
+            fontSize: `1.6rem`,
+            lineHeight: `2rem`,
             fontWeight: 600,
             color: `#333`
         },
@@ -160,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: 0,
         '& .MuiAccordionSummary-expandIcon': {
             padding: `0`,
-            marginRight: `12px`,
+            marginRight: `1.2rem`,
             color: `#333`
         },
     },
@@ -175,27 +188,27 @@ const useStyles = makeStyles((theme) => ({
             }
         },
         '& .bottom-toggles': {
-            marginTop: `8px`,
+            marginTop: `0.8rem`,
             display: `flex`,
             flexDirection: `row`,
             flexWrap: `wrap`,
             backgroundColor: `#fafafa`,
-            padding: `18px`
+            padding: `1.8rem`
         },
         '& .toggle': {
-            fontSize: `16px`,
-            marginRight: `14px`,
-            marginTop: `8px`,
+            fontSize: `1.6rem`,
+            marginRight: `1.4rem`,
+            marginTop: `0.8rem`,
             [theme.breakpoints.up(`sm`)]: {
                 marginTop: `0px`
             },
 
             '& .button': {
-                border: `1px solid #009bcd`,
+                border: `0.1rem solid #009bcd`,
                 '& p': {
                     color: `#009bcd`,
                     textTransform: `none`,
-                    fontSize: `16px`,
+                    fontSize: `1.6rem`,
                     fontWeight: 600,
                 }
             },
@@ -205,32 +218,33 @@ const useStyles = makeStyles((theme) => ({
                 '& p': {
                     color: `#fff`,
                     textTransform: `none`,
-                    fontSize: `16px`,
+                    fontSize: `1.6rem`,
                     fontWeight: 600,
                 }
             }
         },
         '& .toggle-label': {
             color: `#333`,
-            fontSize: `14px`,
+            fontSize: `1.4rem`,
             fontWeight: 600,
-            marginBottom: `8px`
+            marginBottom: `0.8rem`
         },
     },
     authorizationSelect: {
         display: `block`,
         width: `100%`,
-        marginTop: `22px`,
+        marginTop: `2.2rem`,
         '& .label': {
             color: `#333`,
-            fontSize: `14px`,
+            fontSize: `1.4rem`,
             fontWeight: 600,
-            marginBottom: `8px`
+            marginBottom: `0.8rem`
         },
         '& .select': {
-            fontSize: `24px`,
+            fontSize: `2.4rem`,
             color: `#333`,
-            minWidth: `236px`,
+            minWidth: `23.6rem`,
+            fontFamily: 'Source Sans Pro',
 
             // '& .chevron': {
             //     transform: `rotate(90deg)`
@@ -241,18 +255,19 @@ const useStyles = makeStyles((theme) => ({
         // }
     },
     formTitle: {
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: 'Source Sans Pro, sans-serif',
         fontSize: '1.6rem',
-        fontWeight: 'normal',
+        fontWeight: 600,
         fontStretch: 'normal',
         fontStyle: 'normal',
         lineHeight: '1.5',
-        letterSpacing: 0.015,
+        letterSpacing: 'normal',
         color: 'rgba(0, 0, 0, 0.87)',
+        marginBottom: '2.4rem',
     },
     inputLabel: {
         margin: ' 0 9.4rem 0.04rem 0',
-        fontFamily: 'Source Sans Pro',
+        fontFamily: 'Source Sans Pro, sans-serif',
         fontSize: '1.4rem',
         fontWeight: 600,
         fontStretch: 'normal',
@@ -274,7 +289,20 @@ const useStyles = makeStyles((theme) => ({
         fontStyle: 'normal',
         lineHeight: 1.25,
         letterSpacing: 'normal',
-        color: '#333333'
+        color: '#333333',
+        marginBottom: '2.4rem'
+    },
+    dialogActionButton: {
+
+        fontFamily: 'Source Sans Pro',
+        fontSize: '1.8rem',
+        fontWeight: 600,
+        fontStretch: 'normal',
+        fontStyle: 'normal',
+        lineHeight: 'normal',
+        letterSpacing: 'normal',
+        textAlign: 'center',
+        color: '#007ea8'
     }
 }));
 
@@ -356,12 +384,12 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
                     </form>
 
-                    <form onSubmit={submitSearchMerchant}>
+                    {/* <form onSubmit={submitSearchMerchant}>
                         <TextField
                             name='serach-merchant-name'
                             label="Search Merchant Name"
                         />
-                    </form>
+                    </form> */}
 
                     {
                         // Add another form here for add merchant details, Display Name onwards
@@ -373,12 +401,18 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             className="merchantName"
                             id="merchantName"
                             InputProps={{
-                                className: classes.merchantFoundInput,
+                                classes: { root: classes.input },
                                 disableUnderline: true,
                                 readOnly: true
                             }}
+                            // InputProps={{
+                            //     className: classes.merchantFoundInput,
+                            //     disableUnderline: true,
+                            //     readOnly: true
+                            // }}
                             InputLabelProps={{
-                                className: classes.merchantFoundLabel
+                                classes: { root: classes.inputLabel },
+                                shrink: true
                             }}
                             label="Merchant"
                             defaultValue="Lorem Ipsum" // TODO: replace this with Merchant name from API response
@@ -387,7 +421,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             className="displayName"
                             id="displayName"
                             InputProps={{
-                                className: classes.merchantFoundInput,
+                                classes: { root: classes.input },
                                 value: merchantFoundForm.displayName,
                                 onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
                                     ...prevForm,
@@ -395,7 +429,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 }))
                             }}
                             InputLabelProps={{
-                                className: classes.merchantFoundLabel
+                                classes: { root: classes.inputLabel },
+                                shrink: true
                             }}
                             label="Display Name"
                         />
@@ -403,7 +438,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             className="merchantId"
                             id="merchantId"
                             InputProps={{
-                                className: classes.merchantFoundInput,
+                                classes: { root: classes.input },
                                 value: merchantFoundForm.merchantId,
                                 onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
                                     ...prevForm,
@@ -411,7 +446,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 }))
                             }}
                             InputLabelProps={{
-                                className: classes.merchantFoundLabel
+                                classes: { root: classes.inputLabel },
+                                shrink: true
                             }}
                             label="Merchant Id"
                         />
@@ -419,7 +455,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             className="ecomId"
                             id="ecomId"
                             InputProps={{
-                                className: classes.merchantFoundInput,
+                                classes: { root: classes.input },
                                 value: merchantFoundForm.ecomId,
                                 onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
                                     ...prevForm,
@@ -427,7 +463,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 }))
                             }}
                             InputLabelProps={{
-                                className: classes.merchantFoundLabel
+                                classes: { root: classes.inputLabel },
+                                shrink: true
                             }}
                             label="EComm Store ID"
                         />
@@ -536,10 +573,10 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                     </form>
 
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={handleClose} className={classes.dialogActionButton}>
                             Cancel
                     </Button>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={handleClose} className={classes.dialogActionButton}>
                             {submitText}
                         </Button>
                     </DialogActions>
