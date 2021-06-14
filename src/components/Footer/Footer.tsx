@@ -1,36 +1,36 @@
-import Typography from "@material-ui/core/Typography";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) => ({
   footer: {
-    background: "#fafafa",
+    background: '#fafafa',
     color: theme.palette.secondary.light,
     padding: theme.spacing(2),
-
   },
   line1: {
-    fontFamily: "Source Sans Pro, sans-serif",
-    fontSize: "12px",
-    fontWeight: "normal",
-    fontStretch: "normal",
-    fontStyle: "normal",
+    fontFamily: 'Source Sans Pro, sans-serif',
+    fontSize: '12px',
+    fontWeight: 'normal',
+    fontStretch: 'normal',
+    fontStyle: 'normal',
     lineHeight: 1.17,
-    letterSpacing: "normal",
-    textAlign: "center",
-    color: "#3f2a56"
+    letterSpacing: 'normal',
+    textAlign: 'center',
+    color: '#3f2a56',
   },
   line2: {
-    fontFamily: "Source Sans Pro, sans-serif",
-    fontSize: "10px",
-    fontWeight: "normal",
-    fontStretch: "normal",
-    fontStyle: "normal",
+    fontFamily: 'Source Sans Pro, sans-serif',
+    fontSize: '10px',
+    fontWeight: 'normal',
+    fontStretch: 'normal',
+    fontStyle: 'normal',
     lineHeight: 1.4,
-    letterSpacing: "normal",
-    textAlign: "center",
-    color: "#3f2a56",
-  }
+    letterSpacing: 'normal',
+    textAlign: 'center',
+    color: '#3f2a56',
+  },
 }));
 
 const Footer = () => {

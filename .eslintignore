@@ -1,0 +1,9 @@
+/node_modules
+/build
+/public
+/coverage
+/cache
+package.json
+yarn.lock
+.vscode
+.history
