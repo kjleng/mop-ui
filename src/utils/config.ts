@@ -11,7 +11,7 @@ const env = () => {
     };
   } else if (envName === 'qa') {
     return {
-      API_HOST: 'https://97kwiirbbh.execute-api.us-east-1.amazonaws.com/qa/api/v1',
+      API_HOST: 'https://jtuw8zbzec.execute-api.us-east-1.amazonaws.com/dev/api/v1/',
     };
   } else {
     return {
