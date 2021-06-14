@@ -5,7 +5,7 @@ import Layout from "./components/Layout/Layout";
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
-  DashboardPage, AnotherPage
+  DashboardPage, AnotherPage, MerchantDetailsPage
 } from "./pages";
 import { SnackbarProvider } from 'notistack';
 function App() {
@@ -27,6 +27,7 @@ function App() {
             <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
             <Route exact path={ROUTES.dashboard} component={DashboardPage} />
             <Route exact path={ROUTES.another} component={AnotherPage} />
+            <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
           </Switch>
         {/* </SnackbarProvider> */}
       </Layout>

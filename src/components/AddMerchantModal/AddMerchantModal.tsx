@@ -39,6 +39,7 @@ import { useSnackbar } from 'notistack';
 import MuiAlert from '@material-ui/lab/Alert';
 import { divide } from "lodash";
 import { Alert, Color as AlertColor } from '@material-ui/lab';
+import { Redirect, useHistory } from "react-router-dom";
 
 
 
@@ -365,8 +366,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
     const [open, setOpen] = React.useState(isOpen); //whether Modal is open
 
     const [merchantFound, setMerchantFound] = React.useState(false); //whether toaster messgage is open
+    const [merchantedAdded, setMerchantedAdded] = React.useState(false); //whether to redirect to details page
 
-    const [submitText, setSubmitText] = React.useState('Search Merchant');
 
     const [toasterOpen, setToasterOpen] = React.useState(false); //whether toaster messgage is open
     const [toasterMessage, setToasterMessage] = React.useState('');
@@ -449,6 +450,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                         setToasterOpen(true);
                         setMerchantFound(true);
                         setToasterColor('success');
+                        setMerchantedAdded(true);
                     }
                 }
                 catch (error) {
@@ -475,6 +477,9 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
             [stateKey]: newSelection
         }))
     };
+    if (merchantedAdded) {
+        return <Redirect to={`/merchant-details?name=${merchantFoundForm.merchantName}`} />
+    }
 
     return (
         <div>
@@ -482,7 +487,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                 <DialogTitle className={classes.diaglogTitle}>
                     <div className={classes.diaglogTitleContainer}>
                         <Typography id='add-merchant-modal-title' className={classes.dialogTitleText}>Add New Merchant</Typography>
-                        <CloseIcon className={classes.dialogTitleClose} />
+                        <CloseIcon className={classes.dialogTitleClose} onClick={handleClose} />
                     </div>
                 </DialogTitle>
                 <DialogContent>
