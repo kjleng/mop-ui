@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import { config } from '../utils/config';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: config(process.env.REACT_ENV).API_HOST,
+  baseURL: config().API_HOST,
   responseType: 'json',
   headers: {
     'content-type': 'application/json',
