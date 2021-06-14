@@ -7,6 +7,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#3f2a56',
     fontFamily: 'Source Sans Pro, sans-serif',
     fontWeight: 600,
+    fontSize: '2rem',
+    fontStretch: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 'normal',
+    letterSpacing: 'normal',
+    textAlign: 'center',
   },
 }));
 

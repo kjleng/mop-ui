@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   line1: {
     fontFamily: 'Source Sans Pro, sans-serif',
-    fontSize: '12px',
+    fontSize: '1.2rem',
     fontWeight: 'normal',
     fontStretch: 'normal',
     fontStyle: 'normal',
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   line2: {
     fontFamily: 'Source Sans Pro, sans-serif',
-    fontSize: '10px',
+    fontSize: '1rem',
     fontWeight: 'normal',
     fontStretch: 'normal',
     fontStyle: 'normal',
