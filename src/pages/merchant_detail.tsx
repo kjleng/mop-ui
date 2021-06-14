@@ -42,6 +42,7 @@ const MerchantDetailPage = () => {
     const classes = useStyles();
     return (
       <Container maxWidth="md" className={classes.container}>
+        {/* TODO: Replace the merchant name with merchant data prop   */}
        <Typography className={classes.heading}>Best Buy</Typography> 
        <Typography className={classes.subheading}>Merchant Details</Typography> 
        <div className={classes.sectionContainer}>[MERCHANT DETAILS PLACEHOLDER]</div>
