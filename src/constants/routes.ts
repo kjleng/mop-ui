@@ -1,6 +1,5 @@
 export const ROUTES = {
-  home: "/home",
-  another: "/anotherpage",
-  dashboard: `/dashboard`,
-  merchant: `/merchant/:merchantCode`
+  dashboard: '/dashboard',
+  another: '/anotherpage',
+  merchantDetails: '/merchant-details',
 };

@@ -1,36 +1,40 @@
-import { Redirect, Route, Switch } from "react-router-dom";
-import {ThemeProvider} from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core/styles'
-import { ROUTES } from "./constants/routes";
-import Layout from "./components/Layout/Layout";
-import {
-  HomePage, AnotherPage, Dashboard
-} from "./pages";
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import React, { Suspense } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
+import { ROUTES } from './constants/routes';
+
+import { Dashboard, AnotherPage, MerchantDetailsPage } from './pages';
 
 const theme = createMuiTheme({
   palette: {
     text: {
-      primary: `#000`
-    }
+      primary: `#000`,
+    },
   },
   typography: {
-    fontFamily: "Source Sans Pro, sans-serif",
-  }
-})
+    fontFamily: 'Source Sans Pro, sans-serif',
+  },
+});
 
 function App() {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      fontFamily: 'Sans Pro',
+    },
+  }));
+  const classes = useStyles();
   return (
-    <ThemeProvider theme={theme}>
+    <Suspense fallback="loading">
       <Layout>
         <Switch>
-          <Route path="/" exact render={() => <Redirect to={ROUTES.home} />} />
-          <Route exact path={ROUTES.home} component={HomePage} />
-          <Route exact path={ROUTES.another} component={AnotherPage} />
+          <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
           <Route exact path={ROUTES.dashboard} component={Dashboard} />
-          <Route path={ROUTES.merchant} component={AnotherPage} />
+          <Route exact path={ROUTES.another} component={AnotherPage} />
+          <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
         </Switch>
       </Layout>
-    </ThemeProvider>
+    </Suspense>
   );
 }
 

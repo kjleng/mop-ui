@@ -3,4 +3,4 @@ export type Merchant = {
   code: number;
   date: string;
   status: string;
-}
+};
