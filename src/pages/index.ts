@@ -1,5 +1,6 @@
-import HomePage from "./home";
-import AnotherPage from "./another";
-import MerchantDetailPage from './merchant_detail';
+import React from 'react';
+import AnotherPage from './another';
+import DashboardPage from './dashboard';
+import MerchantDetailsPage from './merchant-details';
 
-export { HomePage, AnotherPage, MerchantDetailPage };
+export { DashboardPage, AnotherPage, MerchantDetailsPage };

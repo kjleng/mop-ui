@@ -1,21 +1,29 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import React, { Suspense } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
+import { ROUTES } from './constants/routes';
 
-import { ROUTES } from "./constants/routes";
-import Layout from "./components/Layout/Layout";
-import {
-  HomePage, AnotherPage, MerchantDetailPage
-} from "./pages";
+import { DashboardPage, AnotherPage, MerchantDetailsPage } from './pages';
 
 function App() {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      fontFamily: 'Sans Pro',
+    },
+  }));
+  const classes = useStyles();
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" exact render={() => <Redirect to={ROUTES.home} />} />
-        <Route exact path={ROUTES.home} component={HomePage} />
-        <Route exact path={ROUTES.another} component={AnotherPage} />
-        <Route exact path={ROUTES.merchantDetail} component={MerchantDetailPage} />
-      </Switch>
-    </Layout>
+    <Suspense fallback="loading">
+      <Layout>
+        <Switch>
+          <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
+          <Route exact path={ROUTES.dashboard} component={DashboardPage} />
+          <Route exact path={ROUTES.another} component={AnotherPage} />
+          <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
+        </Switch>
+      </Layout>
+    </Suspense>
   );
 }
 

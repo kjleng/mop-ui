@@ -4,16 +4,26 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.170",
     "@types/node": "^12.20.13",
     "@types/react": "^17.0.6",
     "@types/react-dom": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.21.1",
+    "i18next": "^20.3.1",
+    "i18next-browser-languagedetector": "^6.1.1",
+    "i18next-http-backend": "^1.2.6",
+    "lodash": "^4.17.21",
+    "notistack": "^1.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-i18next": "^11.10.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "typescript": "^4.2.4",
@@ -23,12 +33,20 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:nowatch": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "invalidate-cache": "aws cloudfront create-invalidation",
     "sync-dev": "aws s3 sync build/ s3://dev-merchant-onboarding-ui",
     "deploy-dev": "npm run build && npm run sync-dev && npm run invalidate-cache -- --distribution-id EP1928UHJ9I66 --paths /*",
     "sync-qa": "aws s3 sync build/ s3://qa-merchant-onboarding-ui",
-    "deploy-qa": "npm run build && npm run sync-qa && npm run invalidate-cache -- --distribution-id E10H0ZO4HMY97C --paths /*"
+    "deploy-qa": "npm run build && npm run sync-qa && npm run invalidate-cache -- --distribution-id E10H0ZO4HMY97C --paths /*",
+    "prepare": "husky install",
+    "tsc": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint --format codeframe --fix \"./**/*.{js,ts,tsx}\" --report-unused-disable-directives",
+    "format:ts": "prettier --write \"./**/*.{js,ts,tsx}\"",
+    "format:json": "prettier --write \"./**/*.json\"",
+    "format:md": "prettier --write \"./**/*.md\"",
+    "format:css": "prettier --write \"./**/*.css\""
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +67,23 @@
     ]
   },
   "devDependencies": {
-    "@types/material-ui": "^0.21.8"
+    "@types/material-ui": "^0.21.8",
+    "@commitlint/cli": "^12.1.4",
+    "commitlint-config-jira": "^1.5.1",
+    "commitlint-plugin-jira-rules": "^1.5.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^2.3.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "npm run lint",
+      "npm run format:ts"
+    ],
+    "*.json": "npm run format:json",
+    "*.md": "npm run format:md",
+    "*.css": "npm run format:css"
   }
 }
