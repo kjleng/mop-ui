@@ -413,7 +413,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
   if (merchantedAdded) {
     //redirect to details onces merchant is added
-    return <Redirect to={`/merchant-details?name=${merchantFoundForm.merchantName}`} />;
+    return <Redirect to={`/merchant-detail/${merchantFoundForm.merchantName}`} />;
   }
 
   return (
