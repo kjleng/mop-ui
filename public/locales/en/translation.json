@@ -24,6 +24,12 @@
     "Authorization Format": "Authorization Format",
     "Short": "Short",
     "Extended": "Extended",
-    "Add Merchant": "Add Merchant"
+    "Add Merchant": "Add Merchant",
+    "Merchant Details":"Merchant Details",
+    "Merchant Users":"Merchant Users",
+    "Merchant Questionnaire":"Merchant Questionnaire",
+    "Merchant Logos":"Merchant Logos",
+    "Merchant Plans":"Merchant Plans"
+
 }
 

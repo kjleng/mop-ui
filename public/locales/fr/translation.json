@@ -24,5 +24,10 @@
     "Authorization Format": "Format d'autorisation",
     "Short": "Court",
     "Extended": "Élargi",
-    "Add Merchant": "Ajouter un marchand"
+    "Add Merchant": "Ajouter un marchand",
+    "Merchant Details":"Détails du marchand",
+    "Merchant Users":"Utilisateurs marchands",
+    "Merchant Questionnaire":"Questionnaire marchand",
+    "Merchant Logos":"Logos marchands",
+    "Merchant Plans":"Plans marchands"
 }

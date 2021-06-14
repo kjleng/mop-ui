@@ -47,15 +47,15 @@ const MerchantDetailPage = () => {
     <Container maxWidth="md" className={classes.container}>
       {/* TODO: Replace the merchant name with merchant data prop   */}
       <Typography className={classes.heading}>Best Buy</Typography>
-      <Typography className={classes.subheading}>Merchant Details</Typography>
+      <Typography className={classes.subheading}>{t('Merchant Details')}</Typography>
       <div className={classes.sectionContainer}>[MERCHANT DETAILS PLACEHOLDER]</div>
-      <Typography className={classes.subheading}>Merchant Users</Typography>
+      <Typography className={classes.subheading}>{t('Merchant Users')}</Typography>
       <div className={classes.sectionContainer}>[MERCHANT USERS PLACEHOLDER]</div>
-      <Typography className={classes.subheading}>Merchant Questionnaire</Typography>
+      <Typography className={classes.subheading}>{t('Merchant Questionnaire')}</Typography>
       <div className={classes.sectionContainer}>[MERCHANT QUESTIONNAIRE PLACEHOLDER]</div>
-      <Typography className={classes.subheading}>Merchant Logos</Typography>
+      <Typography className={classes.subheading}>{t('Merchant Logos')}</Typography>
       <div className={classes.sectionContainer}>[MERCHANT LOGOS PLACEHOLDER]</div>
-      <Typography className={classes.subheading}>Merchant Plans</Typography>
+      <Typography className={classes.subheading}>{t('Merchant Plans')}</Typography>
       <div className={classes.sectionContainer}>[MERCHANT PLANS PLACEHOLDER]</div>
     </Container>
   );
