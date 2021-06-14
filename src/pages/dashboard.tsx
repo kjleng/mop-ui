@@ -25,12 +25,12 @@ import type { Merchant } from '../types/merchants.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   pageWrapper: {
-    padding: `60px 15px`,
+    padding: `6rem 1.5rem`,
     [theme.breakpoints.up(`md`)]: {
-      padding: `60px 100px`,
+      padding: `6rem 10rem`,
     },
     [theme.breakpoints.up(`lg`)]: {
-      padding: `48px 200px`,
+      padding: `4.8rem 20rem`,
     },
   },
   pageHeader: {
@@ -38,22 +38,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: `column`,
     justifyContent: `flex-start`,
     alignItems: `flex-start`,
-    marginBottom: `15px`,
+    marginBottom: `1.5rem`,
     [theme.breakpoints.up(`md`)]: {
       flexDirection: `row`,
       justifyContent: `space-between`,
       alignItems: `center`,
-      marginBottom: `22px`,
+      marginBottom: `2.2rem`,
     },
     '& h1': {
-      fontSize: `30px`,
+      fontSize: `3rem`,
       fontWeight: 600,
     },
     '& button': {
       color: `#007ea8`,
-      fontSize: `18px`,
+      fontSize: `1.8rem`,
       fontWeight: `600`,
-      marginTop: `10px`,
+      marginTop: `1rem`,
       [theme.breakpoints.up(`md`)]: {
         marginTop: `0`,
       },
@@ -61,44 +61,44 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   needsActionSection: {
     '& h2': {
-      fontSize: `24px`,
+      fontSize: `2.4rem`,
       fontWeight: `600`,
-      lineHeight: `30px`,
+      lineHeight: `3rem`,
       textAlign: `left`,
-      marginBottom: `13px`,
+      marginBottom: `1.3rem`,
     },
   },
   needsActionCard: {
     textAlign: `left`,
-    padding: `11px 14px`,
+    padding: `1.1rem 1.4rem`,
     backgroundColor: `#f2f2f2`,
     height: '100',
     '& .subtitle': {
-      fontSize: `21px`,
-      lineHeight: `30px`,
+      fontSize: `2.1rem`,
+      lineHeight: `3rem`,
     },
     '& .code': {
-      fontSize: `14px`,
-      lineHeight: `30px`,
+      fontSize: `1.4rem`,
+      lineHeight: `3rem`,
     },
     '& .date': {
-      fontsize: `14px`,
-      lineHeight: `30px`,
+      fontsize: `1.4rem`,
+      lineHeight: `3rem`,
       color: `#acacac`,
     },
     '& .button': {
       color: `#000`,
       textAlign: `left`,
-      fontSize: `14px`,
+      fontSize: `1.4rem`,
       // fontWeight: `normal`,
-      padding: `6px 7px`,
+      padding: `.6rem .7rem`,
       lineHeight: `normal`,
       textTransform: `none`,
       marginTop: `auto`,
     },
   },
   allMerchantsSection: {
-    marginTop: `24px`,
+    marginTop: `2.4rem`,
   },
   allMerchantsHeader: {
     display: `flex`,
@@ -110,13 +110,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: `space-between`,
       alignItems: `center`,
     },
-    marginBottom: `29px`,
+    marginBottom: `2.9rem`,
     '& h2': {
-      fontSize: `24px`,
+      fontSize: `2.4rem`,
       fontWeight: 600,
-      lineHeight: `30px`,
+      lineHeight: `3rem`,
       textAlign: `left`,
-      marginBottom: `10px`,
+      marginBottom: `1rem`,
       [theme.breakpoints.up(`sm`)]: {
         marginBottom: 0,
       },
@@ -124,12 +124,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   allMerchantsInput: {
     backgroundColor: `#b5b5b5`,
-    borderRadius: `22.5px`,
+    borderRadius: `2.25rem`,
     color: `white`,
-    fontSize: `14px`,
-    minWidth: `300px`,
+    fontSize: `1.4rem`,
+    minWidth: `30rem`,
     '& input': {
-      padding: `12px 22px`,
+      padding: `1.2rem 2.2rem`,
       '&::placeholder': {
         color: `#fff`,
         opacity: 1,
@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   merchantsUl: {
     '& li:not(:last-of-type)': {
-      marginBottom: `10px`,
+      marginBottom: `1rem`,
     },
   },
   merchantLink: {
@@ -158,14 +158,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       gridTemplateAreas: `'name code date status svg'`,
     },
     backgroundColor: `#fbfbfb`,
-    padding: `17px 30px`,
+    padding: `1.7rem 3rem`,
     '& h6': {
-      fontSize: `21px`,
-      lineHeight: `30px`,
+      fontSize: `2.1rem`,
+      lineHeight: `3rem`,
     },
     '& p': {
-      fontSize: `16px`,
-      lineHeight: `30px`,
+      fontSize: `1.6rem`,
+      lineHeight: `3rem`,
       textAlign: `left`,
       [theme.breakpoints.up(`md`)]: {
         textAlign: `center`,
@@ -185,16 +185,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: `flex`,
       justifyContent: `flex-start`,
       alignItems: `center`,
-      marginTop: `5px`,
+      marginTop: `.5rem`,
       [theme.breakpoints.up(`md`)]: {
         justifyContent: `center`,
         marginTop: 0,
       },
       '& p': {
         '&.rounded': {
-          padding: `0 15px`,
+          padding: `0 1.5rem`,
           backgroundColor: `#d8d8d8`,
-          borderRadius: `16px`,
+          borderRadius: `1.6rem`,
         },
       },
     },
