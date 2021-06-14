@@ -116,6 +116,7 @@ const useStyles = makeStyles((theme) => ({
                 'displayName nothing'
                 'merchantId ecomId'
                 'drawer drawer'
+                'dialogActions dialogActions'
             `
         },
         '& .merchantName': {
@@ -130,6 +131,11 @@ const useStyles = makeStyles((theme) => ({
         '& .ecomId': {
             gridArea: `ecomId`,
         },
+
+        '& .dialogActions': {
+            gridArea: `dialogActions`,
+        },
+
         /*  '& input': {
              // fontSize: `1.4rem`,
              // lineHeight: `3`,
@@ -760,7 +766,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     )}
                                 </AccordionDetails>
                             </Accordion>
-                            <DialogActions>
+                            <DialogActions className="dialogActions">
                                 <Button onClick={handleClose} className={classes.dialogActionButton}>
                                     Cancel
                                 </Button>
