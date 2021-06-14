@@ -28,12 +28,12 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { useTranslation } from 'react-i18next';
-import React from 'react'
+import React, { FormEventHandler, FormEvent } from 'react'
 import CloseIcon from '@material-ui/icons/Close';
 import { TramRounded } from "@material-ui/icons";
 import axios from 'axios';
 import https from 'axios';
-import { searchMerchant } from '../../api/merchant';
+import { searchMerchant, addMerchant } from '../../api/merchant';
 import { ChevronRight } from "@material-ui/icons";
 import { useSnackbar } from 'notistack';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -47,6 +47,7 @@ interface AddMerchantModalProps {
 }
 
 type MerchantFoundForm = {
+    merchantName: String;
     displayName: String;
     merchantId: String;
     ecomId: String;
@@ -289,6 +290,14 @@ const useStyles = makeStyles((theme) => ({
         width: '15.6rem',
         height: '1.4rem'
     },
+    labelAsterisk: {
+        // color: '#db3131',
+        // '&$error': {
+        //     color: '#db3131'
+        // },
+        display: 'none'
+
+    },
     input: {
         width: '23.5rem',
         height: '3rem',
@@ -378,47 +387,85 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
         paymentGateway: true,
         showPlan: true,
         performPayment: true,
-        authorizationFormat: 'Short'
+        authorizationFormat: 'Short',
+        merchantName: ``
     })
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const submitSearchMerchant = async () => {
+    const submitSearchMerchant = async (e: React.FormEvent<HTMLFormElement>) => {
 
-        if (!merchantFound) {
-            try {
-                const merchantResponse = await searchMerchant(merchantNameForm.name);
-                debugger;
-                // if (merchantResponse.success) {
-                //     enqueueSnackbar('I love hooks', {
-                //         variant: 'success',
-                //         anchorOrigin:  { horizontal: 'center', vertical: 'top' },
-                //         autoHideDuration:  5000
-                //     });
-                // }
+        e.preventDefault();
 
-                if (merchantResponse.success) {
-                    setToasterMessage('Merchant successfully found');
+
+
+        try {
+            if (!merchantFound && e.currentTarget.checkValidity()) {
+                try {
+                    // (async () => {
+                    //     const merchantResponse = await searchMerchant(merchantNameForm.name);
+
+                    //     if (merchantResponse.success) {
+                    //         setToasterMessage('Merchant successfully found');
+                    //         setToasterOpen(true);
+                    //         setMerchantFound(true);
+                    //         setToasterColor('success');
+                    //     }
+                    // })();
+
+
+
+                    const merchantResponse = await searchMerchant(merchantNameForm.name);
+
+                    if (merchantResponse.success) {
+                        setToasterMessage('Merchant successfully found');
+                        setToasterOpen(true);
+                        setMerchantFound(true);
+                        setToasterColor('success');
+                        setMerchantFoundForm({ ...merchantFoundForm, merchantName: merchantNameForm.name })
+                    }
+                }
+                catch (error) {
+
+                    const msg = error?.data?.message === 'Not found' ? 'Merchant not found' : 'Error';
+                    setToasterMessage(msg);
                     setToasterOpen(true);
-                    setMerchantFound(true);
-                    setToasterColor('success');
+                    setMerchantFound(false);
+                    setToasterColor('error');
                 }
 
-            }
-            catch (e) {
-                debugger;
-                const msg = e?.data?.message === 'Not found' ? 'Merchant not found' : 'Error';
-                setToasterMessage(msg);
-                setToasterOpen(true);
-                setMerchantFound(false);
-                setToasterColor('error');
+                // const merchantResponse = await searchMerchant(merchantNameForm.name);
             }
 
+            else {
+                try {
+                    const merchantResponse = await addMerchant(merchantFoundForm);
+                    console.log(merchantFoundForm);
+
+                    if (merchantResponse.success) {
+                        setToasterMessage('Merchant successfully added');
+                        setToasterOpen(true);
+                        setMerchantFound(true);
+                        setToasterColor('success');
+                    }
+                }
+                catch (error) {
+                    setToasterMessage('Unable to register merchant');
+                    setToasterOpen(true);
+                    setMerchantFound(false);
+                    setToasterColor('error');
+                }
+            }
         }
-
-    };
+        catch (error) {
+            setToasterMessage('Error');
+            setToasterOpen(true);
+            setMerchantFound(false);
+            setToasterColor('error');
+        }
+    }
 
     const toggleButtonReducer = (newSelection: boolean, stateKey: keyof MerchantFoundForm) => {
         const currentState = merchantFoundForm[stateKey];
@@ -487,7 +534,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 name='search-merchant-name'
                                 label="Search Merchant Name"
                                 value={merchantNameForm.name}
-                                InputLabelProps={{ classes: { root: classes.inputLabel }, shrink: true }}
+                                InputLabelProps={{
+                                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                                    shrink: true,
+
+                                }}
                                 InputProps={{
                                     classes: { root: classes.input },
                                     onChange: ({ target: { value } }) => setMerchantNameForm(prevForm => ({
@@ -495,8 +546,17 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                         name: value
                                     }))
                                 }}
+                                required={true}
                             />
 
+                            <DialogActions>
+                                <Button onClick={handleClose} className={classes.dialogActionButton}>
+                                    Cancel
+                                </Button>
+                                <Button type='submit' className={classes.dialogActionButton}>
+                                    Search
+                                </Button>
+                            </DialogActions>
 
                         </form>
                     }
@@ -521,7 +581,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 InputProps={{
                                     classes: { root: classes.input },
                                     disableUnderline: true,
-                                    readOnly: true
+                                    readOnly: true,
+                                    onChange: ({ target: { value } }) => setMerchantFoundForm(prevForm => ({
+                                        ...prevForm,
+                                        merchantName: value
+                                    }))
                                 }}
                                 // InputProps={{
                                 //     className: classes.merchantFoundInput,
@@ -529,11 +593,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 //     readOnly: true
                                 // }}
                                 InputLabelProps={{
-                                    classes: { root: classes.inputLabel },
+                                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
                                 label="Merchant"
-                                defaultValue={merchantNameForm.name} // TODO: replace this with Merchant name from API response
+                                defaultValue={merchantNameForm.name}
                             />
                             <TextField
                                 className="displayName"
@@ -547,10 +611,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     }))
                                 }}
                                 InputLabelProps={{
-                                    classes: { root: classes.inputLabel },
+                                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
                                 label="Display Name"
+                                required={true}
                             />
                             <TextField
                                 className="merchantId"
@@ -564,10 +629,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     }))
                                 }}
                                 InputLabelProps={{
-                                    classes: { root: classes.inputLabel },
+                                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
                                 label="Merchant Id"
+                                required={true}
                             />
                             <TextField
                                 className="ecomId"
@@ -581,10 +647,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     }))
                                 }}
                                 InputLabelProps={{
-                                    classes: { root: classes.inputLabel },
+                                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
                                 label="EComm Store ID"
+                                required={true}
                             />
 
                             <Accordion
@@ -688,16 +755,16 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     )}
                                 </AccordionDetails>
                             </Accordion>
+                            <DialogActions>
+                                <Button onClick={handleClose} className={classes.dialogActionButton}>
+                                    Cancel
+                                </Button>
+                                <Button type='submit' className={classes.dialogActionButton}>
+                                    Add Merchant
+                                </Button>
+                            </DialogActions>
                         </form>
                     }
-                    <DialogActions>
-                        <Button onClick={handleClose} className={classes.dialogActionButton}>
-                            Cancel
-                    </Button>
-                        <Button onClick={submitSearchMerchant} className={classes.dialogActionButton}>
-                            {submitText}
-                        </Button>
-                    </DialogActions>
                 </DialogContent>
             </Dialog >
         </div >
