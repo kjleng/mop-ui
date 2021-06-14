@@ -1,47 +1,28 @@
 import {
     makeStyles,
-    Theme,
     Typography,
     Button,
     Dialog,
     DialogTitle,
     DialogContent,
-    DialogContentText,
     TextField,
     DialogActions,
-    FormLabel,
-    Grid,
     Accordion,
     AccordionSummary,
     AccordionDetails,
     Select,
     MenuItem,
     FormControl,
-    InputLabel,
-    Snackbar,
-    SnackbarContent,
-    Card,
-    CardContent,
-    Collapse,
     IconButton
 } from "@material-ui/core";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { useTranslation } from 'react-i18next';
-import React, { FormEventHandler, FormEvent } from 'react'
+import React from 'react'
 import CloseIcon from '@material-ui/icons/Close';
-import { TramRounded } from "@material-ui/icons";
-import axios from 'axios';
-import https from 'axios';
+import { Redirect } from 'react-router-dom';
 import { searchMerchant, addMerchant } from '../../api/merchant';
-import { ChevronRight } from "@material-ui/icons";
-import { useSnackbar } from 'notistack';
-import MuiAlert from '@material-ui/lab/Alert';
-import { divide } from "lodash";
 import { Alert, Color as AlertColor } from '@material-ui/lab';
-import { Redirect, useHistory } from "react-router-dom";
-
-
 
 interface AddMerchantModalProps {
     isOpen: boolean;
@@ -366,20 +347,17 @@ const useStyles = makeStyles((theme) => ({
 
 export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) => {
     const classes = useStyles();
-    // const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+    const { t } = useTranslation();
 
     const [open, setOpen] = React.useState(isOpen); //whether Modal is open
 
-    const [merchantFound, setMerchantFound] = React.useState(false); //whether toaster messgage is open
+    const [merchantFound, setMerchantFound] = React.useState(false); //whether merchant search is successful
     const [merchantedAdded, setMerchantedAdded] = React.useState(false); //whether to redirect to details page
 
 
     const [toasterOpen, setToasterOpen] = React.useState(false); //whether toaster messgage is open
     const [toasterMessage, setToasterMessage] = React.useState('');
-    const [toasterColor, setToasterColor] = React.useState<AlertColor>('success'); // 
-
-
+    const [toasterColor, setToasterColor] = React.useState<AlertColor>('success'); // green or red toaster
 
     const [merchantNameForm, setMerchantNameForm] = React.useState<SearchMerchantForm>({
         name: ``
@@ -406,28 +384,13 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
         e.preventDefault();
 
-
-
-        try {
-            if (!merchantFound && e.currentTarget.checkValidity()) {
+        if (e.currentTarget.checkValidity()) { // only submit if form is valid
+            if (!merchantFound) { // searching for merchant
                 try {
-                    // (async () => {
-                    //     const merchantResponse = await searchMerchant(merchantNameForm.name);
-
-                    //     if (merchantResponse.success) {
-                    //         setToasterMessage('Merchant successfully found');
-                    //         setToasterOpen(true);
-                    //         setMerchantFound(true);
-                    //         setToasterColor('success');
-                    //     }
-                    // })();
-
-
-
                     const merchantResponse = await searchMerchant(merchantNameForm.name);
 
                     if (merchantResponse.success) {
-                        setToasterMessage('Merchant successfully found');
+                        setToasterMessage(t('Merchant successfully found'));
                         setToasterOpen(true);
                         setMerchantFound(true);
                         setToasterColor('success');
@@ -436,23 +399,20 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                 }
                 catch (error) {
 
-                    const msg = error?.data?.message === 'Not found' ? 'Merchant not found' : 'Error';
+                    const msg = error?.data?.message === 'Not found' ? t('Merchant not found') : t('Error');
                     setToasterMessage(msg);
                     setToasterOpen(true);
                     setMerchantFound(false);
                     setToasterColor('error');
                 }
-
-                // const merchantResponse = await searchMerchant(merchantNameForm.name);
             }
-
-            else {
+            else { // adding mercant
                 try {
                     const merchantResponse = await addMerchant(merchantFoundForm);
                     console.log(merchantFoundForm);
 
                     if (merchantResponse.success) {
-                        setToasterMessage('Merchant successfully added');
+                        setToasterMessage(t('Merchant successfully added'));
                         setToasterOpen(true);
                         setMerchantFound(true);
                         setToasterColor('success');
@@ -467,12 +427,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                 }
             }
         }
-        catch (error) {
-            setToasterMessage('Error');
-            setToasterOpen(true);
-            setMerchantFound(false);
-            setToasterColor('error');
-        }
+
     }
 
     const toggleButtonReducer = (newSelection: boolean, stateKey: keyof MerchantFoundForm) => {
@@ -483,7 +438,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
             [stateKey]: newSelection
         }))
     };
-    if (merchantedAdded) {
+
+    if (merchantedAdded) { //redirect to details onces merchant is added
         return <Redirect to={`/merchant-details?name=${merchantFoundForm.merchantName}`} />
     }
 
@@ -492,27 +448,15 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
             <Dialog open={open} onClose={handleClose} aria-labelledby='add-merchant-modal-title'>
                 <DialogTitle className={classes.diaglogTitle}>
                     <div className={classes.diaglogTitleContainer}>
-                        <Typography id='add-merchant-modal-title' className={classes.dialogTitleText}>Add New Merchant</Typography>
+                        <Typography id='add-merchant-modal-title' className={classes.dialogTitleText}>
+                            {t('Add New Merchant')}
+                        </Typography>
                         <CloseIcon className={classes.dialogTitleClose} onClick={handleClose} />
                     </div>
                 </DialogTitle>
                 <DialogContent>
-                    <Typography className={classes.formTitle}>Add Merchant Details</Typography>
-                    {/* <Snackbar
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={true}
-                        autoHideDuration={6000}
-                        variant="success"
-                        className={classes.snackBar}
-                    >
-                        <SnackbarContent message="I love snacks."
-                            className={classes.snackBar} />
+                    <Typography className={classes.formTitle}>{t('Add Merchant Details')}</Typography>
 
-                    </Snackbar> */}
-                    {/* <Collapse in={toasterOpen}> */}
                     {
                         toasterOpen &&
                         <Alert
@@ -538,7 +482,6 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             <Typography className={classes.toasterContent}>{toasterMessage}</Typography>
                         </Alert>
                     }
-                    {/* </Collapse> */}
                     {!merchantFound &&
                         <form onSubmit={submitSearchMerchant}>
                             <TextField
@@ -562,28 +505,18 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
                             <DialogActions>
                                 <Button onClick={handleClose} className={classes.dialogActionButton}>
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button type='submit' className={classes.dialogActionButton}>
-                                    Search
+                                    {t('Search')}
                                 </Button>
                             </DialogActions>
 
                         </form>
                     }
-                    {/* <form onSubmit={submitSearchMerchant}>
-                        <TextField
-                            name='search-merchant-name'
-                            label="Search Merchant Name"
-                        />
-                    </form> */}
 
                     {
-                        // Add another form here for add merchant details, Display Name onwards
-                        // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869fe0a7bb3862848e3f
-                        // https://app.zeplin.io/project/60afaeb937ae977eae3bcbd1/screen/60b6869f9c7b12757015693a
-                    }
-                    {
+                        // Search merchant form
                         merchantFound &&
                         <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
                             <TextField
@@ -598,16 +531,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                         merchantName: value
                                     }))
                                 }}
-                                // InputProps={{
-                                //     className: classes.merchantFoundInput,
-                                //     disableUnderline: true,
-                                //     readOnly: true
-                                // }}
                                 InputLabelProps={{
                                     classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
-                                label="Merchant"
+                                label={t('Merchant')}
                                 defaultValue={merchantNameForm.name}
                             />
                             <TextField
@@ -625,7 +553,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
-                                label="Display Name"
+                                label={t('Display Name')}
                                 required={true}
                             />
                             <TextField
@@ -643,7 +571,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
-                                label="Merchant Id"
+                                label={t('Merchant Id')}
                                 required={true}
                             />
                             <TextField
@@ -661,7 +589,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
                                     shrink: true
                                 }}
-                                label="EComm Store ID"
+                                label={t('EComm Store ID')}
                                 required={true}
                             />
 
@@ -675,22 +603,22 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                 }))}
                             >
                                 <AccordionSummary className={classes.merchantFoundDrawerSummary} expandIcon={<ExpandMoreIcon style={{ padding: 0 }} fontSize="large" />}>
-                                    <Typography className="header">Additional Details</Typography>
+                                    <Typography className="header">{t('Additional Details')}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails className={classes.merchantFoundDrawerDetails}>
                                     <div className="top-toggles">
                                         <div className="toggle">
-                                            <Typography className="toggle-label">Order Management</Typography>
+                                            <Typography className="toggle-label">{t('Order Management')}</Typography>
                                             <ToggleButtonGroup
                                                 exclusive
                                                 value={merchantFoundForm.orderManagement}
                                                 onChange={(_, newManagement) => toggleButtonReducer(newManagement, `orderManagement`)}
                                             >
                                                 <ToggleButton className="button" value={true}>
-                                                    <Typography>True</Typography>
+                                                    <Typography>{t('True')}</Typography>
                                                 </ToggleButton>
                                                 <ToggleButton className="button" value={false}>
-                                                    <Typography>False</Typography>
+                                                    <Typography>{t('False')}</Typography>
                                                 </ToggleButton>
                                             </ToggleButtonGroup>
                                         </div>
@@ -702,10 +630,10 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                                 onChange={(_, newPayment) => toggleButtonReducer(newPayment, `paymentGateway`)}
                                             >
                                                 <ToggleButton className="button" value={true}>
-                                                    <Typography>True</Typography>
+                                                    <Typography>{t('True')}</Typography>
                                                 </ToggleButton>
                                                 <ToggleButton className="button" value={false}>
-                                                    <Typography>False</Typography>
+                                                    <Typography>{t('False')}</Typography>
                                                 </ToggleButton>
                                             </ToggleButtonGroup>
                                         </div>
@@ -713,37 +641,37 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                     {merchantFoundForm.paymentGateway && (
                                         <div className="bottom-toggles">
                                             <div className="toggle">
-                                                <Typography className="toggle-label">Order Management</Typography>
+                                                <Typography className="toggle-label">{t('Order Management')}</Typography>
                                                 <ToggleButtonGroup
                                                     exclusive
                                                     value={merchantFoundForm.showPlan}
                                                     onChange={(_, newManagement) => toggleButtonReducer(newManagement, `showPlan`)}
                                                 >
                                                     <ToggleButton className="button" value={true}>
-                                                        <Typography>True</Typography>
+                                                        <Typography>{t('True')}</Typography>
                                                     </ToggleButton>
                                                     <ToggleButton className="button" value={false}>
-                                                        <Typography>False</Typography>
+                                                        <Typography>{t('False')}</Typography>
                                                     </ToggleButton>
                                                 </ToggleButtonGroup>
                                             </div>
                                             <div className="toggle">
-                                                <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                                                <Typography className="toggle-label">{t('Payment Gateway Enabled')}</Typography>
                                                 <ToggleButtonGroup
                                                     exclusive
                                                     value={merchantFoundForm.performPayment}
                                                     onChange={(_, newPayment) => toggleButtonReducer(newPayment, `performPayment`)}
                                                 >
                                                     <ToggleButton className="button" value={true}>
-                                                        <Typography>True</Typography>
+                                                        <Typography>{t('True')}</Typography>
                                                     </ToggleButton>
                                                     <ToggleButton className="button" value={false}>
-                                                        <Typography>False</Typography>
+                                                        <Typography>{t('False')}</Typography>
                                                     </ToggleButton>
                                                 </ToggleButtonGroup>
                                             </div>
                                             <FormControl className={classes.authorizationSelect}>
-                                                <Typography className="label">Authorization Format</Typography>
+                                                <Typography className="label">{t('Authorization Format')}</Typography>
                                                 <Select
                                                     className="select"
                                                     // IconComponent={() => <ChevronRight className="chevron" fontSize="large" />}
@@ -755,11 +683,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                                                     value={merchantFoundForm.authorizationFormat}
                                                 >
                                                     <MenuItem value='Short'>
-                                                        Short
-                                            </MenuItem>
+                                                        {t('Short')}
+                                                    </MenuItem>
                                                     <MenuItem value='Extended'>
-                                                        Extended
-                                            </MenuItem>
+                                                        {t('Extended')}
+                                                    </MenuItem>
                                                 </Select>
                                             </FormControl>
                                         </div>
@@ -768,10 +696,10 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
                             </Accordion>
                             <DialogActions className="dialogActions">
                                 <Button onClick={handleClose} className={classes.dialogActionButton}>
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button type='submit' className={classes.dialogActionButton}>
-                                    Add Merchant
+                                    {t('Add Merchant')}
                                 </Button>
                             </DialogActions>
                         </form>
