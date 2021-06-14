@@ -26,6 +26,7 @@ import { searchMerchant, addMerchant } from '../../api/merchant';
 
 interface AddMerchantModalProps {
   isOpen: boolean;
+  closeCallback: () => void;
 }
 
 type MerchantFoundForm = {
@@ -319,11 +320,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) => {
+export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, closeCallback }) => {
   const classes = useStyles();
   const { t } = useTranslation();
-
-  const [open, setOpen] = React.useState(isOpen); //whether Modal is open
 
   const [merchantFound, setMerchantFound] = React.useState(false); //whether merchant search is successful
   const [merchantedAdded, setMerchantedAdded] = React.useState(false); //whether to redirect to details page
@@ -349,9 +348,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
     merchantName: ``,
   });
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClose = () => closeCallback();
 
   const submitSearchMerchant = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -418,7 +415,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen }) =>
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="add-merchant-modal-title">
+      <Dialog open={isOpen} onClose={handleClose} aria-labelledby="add-merchant-modal-title">
         <DialogTitle className={classes.diaglogTitle}>
           <div className={classes.diaglogTitleContainer}>
             <Typography id="add-merchant-modal-title" className={classes.dialogTitleText}>

@@ -24,6 +24,11 @@ a {
   text-decoration: none;
 }
 
+main {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 :root {
   font-size: 62.5%; /* (62.5/100) * 16px = 10px */
 }
