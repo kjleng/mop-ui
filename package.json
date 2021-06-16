@@ -40,7 +40,7 @@
     "build-dev": "cross-env REACT_APP_ENV=dev react-scripts build",
     "test-dev": "cross-env REACT_APP_ENV=dev react-scripts test",
     "sync-dev": "aws s3 sync build/ s3://dev-merchant-onboarding-ui",
-    "deploy-dev": "npm run build-dev &&  && npm run sync-dev && npm run invalidate-cache -- --distribution-id EP1928UHJ9I66 --paths /*",
+    "deploy-dev": "npm run build-dev && npm run sync-dev && npm run invalidate-cache -- --distribution-id EP1928UHJ9I66 --paths /*",
     "start-qa": "cross-env REACT_APP_ENV=qa react-scripts start",
     "build-qa": "cross-env REACT_APP_ENV=qa react-scripts build",
     "test-qa": "cross-env REACT_APP_ENV=qa react-scripts test",
