@@ -1,10 +1,15 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import merge from 'lodash/merge';
 
-import { config } from '../utils/config';
+const getApiUrl = () => {
+  const envName = process.env.REACT_APP_ENV;
+  if (envName === 'dev') return process.env.REACT_APP_DEV_API_HOST;
+  else if (envName === 'prod') return process.env.REACT_APP_PROD_API_HOST;
+  else return process.env.REACT_APP_QA_API_HOST;
+};
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: config().API_HOST,
+  baseURL: getApiUrl(),
   responseType: 'json',
   headers: {
     'content-type': 'application/json',

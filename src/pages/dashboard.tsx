@@ -45,12 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: `center`,
       marginBottom: `2.2rem`,
     },
-    '& h1': {
-      fontSize: `3rem`,
-      fontWeight: 600,
-    },
     '& button': {
-      color: `#007ea8`,
+      color: theme.palette.secondary.main,
       fontSize: `1.8rem`,
       fontWeight: `600`,
       marginTop: `1rem`,
@@ -82,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       lineHeight: `3rem`,
     },
     '& .date': {
-      fontsize: `1.4rem`,
+      fontSize: `1.4rem`,
       lineHeight: `3rem`,
       color: `#acacac`,
     },
