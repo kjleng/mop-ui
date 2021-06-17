@@ -1,5 +1,5 @@
 export const ROUTES = {
   dashboard: '/dashboard',
   another: '/anotherpage',
-  merchantDetails: '/merchant-details',
+  merchantDetails: '/merchant-details/:merchantName',
 };

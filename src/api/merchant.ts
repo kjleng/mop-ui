@@ -1,3 +1,4 @@
+import { MerchantUser } from '../types/merchants.types';
 import { httpRequest } from './http-request';
 
 export interface SearchMerchantResponse {
@@ -49,6 +50,23 @@ const add = async (merchant: Merchant) => {
 
   return data;
 };
+
+export const getMerchantUsers = (
+  merchantName: string,
+  callback: (users: Array<MerchantUser>) => void
+) =>
+  httpRequest({
+    url: `/merchant_profiles/?name=${merchantName}`,
+    method: `GET`,
+  })
+    .then((res) => {
+      const users = res?.data?.merchants ?? [];
+      if (!res?.data?.merchants) console.error(res);
+      return callback(users);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 
 export const searchMerchant = search;
 export const addMerchant = add;
