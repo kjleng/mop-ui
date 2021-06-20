@@ -35,5 +35,14 @@
     "Merchant Users":"Utilisateurs marchands",
     "Merchant Questionnaire":"Questionnaire marchand",
     "Merchant Logos":"Logos marchands",
-    "Merchant Plans":"Plans marchands"
+    "Merchant Plans":"Plans marchands",
+    "Add Merchant User":"Add Merchant User",
+    "Close": "Close",
+    "Add New User": "Ajouter un nouvel utilisateur",
+    "Full name": "Nom et Prénom",
+    "Email address": "L'adresse électronique",
+    "Language": "Langue",
+    "English":"Anglais",
+    "French":"Français",
+    "Done": "Fini",
 }

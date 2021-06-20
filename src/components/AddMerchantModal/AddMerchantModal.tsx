@@ -597,7 +597,9 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </ToggleButtonGroup>
                       </div>
                       <div className="toggle">
-                        <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                        <Typography className="toggle-label">
+                          {t('Payment Gateway Enabled')}
+                        </Typography>
                         <ToggleButtonGroup
                           exclusive
                           value={merchantFoundForm.paymentGateway}

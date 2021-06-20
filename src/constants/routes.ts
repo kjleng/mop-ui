@@ -1,5 +1,5 @@
 export const ROUTES = {
-  dashboard: '/dashboard',
+  dashboard: '/admin/dashboard',
   another: '/anotherpage',
   merchantDetails: '/merchant-details',
 };

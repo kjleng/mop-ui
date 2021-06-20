@@ -14,8 +14,8 @@ import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AddMerchantModal } from '../components/AddMerchantModal/AddMerchantModal';
-import type { Merchant } from '../types/merchants.types';
+import { AddMerchantModal } from '../../components/AddMerchantModal/AddMerchantModal';
+import type { Merchant } from '../../types/merchants.types';
 
 /**
  * NOTE
