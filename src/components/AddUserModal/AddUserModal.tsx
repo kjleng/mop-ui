@@ -228,7 +228,6 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(newUsers);
 
     if (e.currentTarget.checkValidity()) {
       // only submit if form is valid
