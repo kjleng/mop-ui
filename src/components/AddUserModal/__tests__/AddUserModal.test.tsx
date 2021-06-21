@@ -1,9 +1,9 @@
 import { createMuiTheme, useTheme } from '@material-ui/core/styles';
 import { cleanup, render, act } from '@testing-library/react';
+import { AddUserModal } from 'components/AddUserModal/AddUserModal';
+import MaterialUiTheme from 'components/MaterialUiTheme/MaterialUiTheme';
 import React from 'react';
-import { muiTheme } from '../../../utils/theme.styles';
-import MaterialUiTheme from '../../MaterialUiTheme/MaterialUiTheme';
-import { AddUserModal } from '../AddUserModal';
+import { muiTheme } from 'utils/theme.styles';
 
 afterEach(cleanup);
 

@@ -2,9 +2,9 @@ import { Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { AddUserModal } from 'components/AddUserModal/AddUserModal';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AddUserModal } from '../components/AddUserModal/AddUserModal';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

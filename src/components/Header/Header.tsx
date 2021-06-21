@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Button, makeStyles, Theme } from '@material-ui/core';
+import LanguageChangeButton from 'components/LanguageChangeButton/LanguageChangeButton';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import LanguageChangeButton from '../LanguageChangeButton/LanguageChangeButton';
 import logo from './fairstone_header_logo.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({

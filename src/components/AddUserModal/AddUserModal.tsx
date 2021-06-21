@@ -3,11 +3,10 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { ToggleButton, ToggleButtonGroup, Color as AlertColor } from '@material-ui/lab';
 
+import { MerchantUserDTO, addUserMerchant } from 'api/merchant-user';
+import { Modal } from 'components/Modal/Modal';
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { MerchantUserDTO, addUserMerchant } from '../../api/merchant-user';
-import { Modal } from '../Modal/Modal';
 
 interface AddUserModalProps {
   isOpen: boolean;
