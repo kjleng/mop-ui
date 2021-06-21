@@ -201,7 +201,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [merchants, setMerchants] = useState<{

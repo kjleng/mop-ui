@@ -1,6 +1,6 @@
 import { httpRequest } from './http-request';
 
-export interface MerchantUser {
+export interface MerchantUserDTO {
   fullName: string;
   emailAddress: string;
   language: 'en' | 'fr';
@@ -18,7 +18,7 @@ export interface AddMerchantUserResponse {
   error?: CreateMerchantUserError;
 }
 
-const add = async (user: MerchantUser) => {
+const add = async (user: MerchantUserDTO) => {
   const body = {
     fullName: user.fullName,
     emailAddress: user.emailAddress,

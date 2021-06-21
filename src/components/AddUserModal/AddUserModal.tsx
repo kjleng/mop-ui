@@ -3,10 +3,10 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { ToggleButton, ToggleButtonGroup, Color as AlertColor } from '@material-ui/lab';
 
-import React from 'react';
+import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MerchantUser, addUserMerchant } from '../../api/merchant-user';
+import { MerchantUserDTO, addUserMerchant } from '../../api/merchant-user';
 import { Modal } from '../Modal/Modal';
 
 interface AddUserModalProps {
@@ -206,7 +206,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallback }) => {
+export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) => {
+  const { isOpen, closeCallback } = props;
   const classes = useStyles();
   const { t, i18n } = useTranslation();
 
@@ -217,7 +218,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
     return regex.test(currentLang) ? 'en' : 'fr';
   };
 
-  const [newUsers, setNewUsers] = React.useState<Array<MerchantUser>>([
+  const [newUsers, setNewUsers] = React.useState<Array<MerchantUserDTO>>([
     { fullName: '', emailAddress: '', language: currentLang() },
   ]);
 
@@ -227,6 +228,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(newUsers);
 
     if (e.currentTarget.checkValidity()) {
       // only submit if form is valid
@@ -266,8 +268,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
             className="addUserButton"
             aria-label="Add User"
             onClick={() => {
-              setNewUsers(() => {
-                return [...newUsers, { fullName: '', emailAddress: '', language: 'fr' }];
+              setNewUsers((prevValue) => {
+                return [...prevValue, { fullName: '', emailAddress: '', language: 'fr' }];
               });
             }}>
             <AddIcon></AddIcon>
@@ -281,7 +283,9 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
               <CloseIcon
                 className="removeUserIcon"
                 onClick={() => {
-                  setNewUsers(() => newUsers.filter((user, arrindex) => arrindex != reactIndex));
+                  setNewUsers((prevValue) =>
+                    prevValue.filter((user, arrindex) => arrindex != reactIndex)
+                  );
                 }}></CloseIcon>
               <div className={classes.newUserInputs}>
                 <TextField
@@ -290,8 +294,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
                   required
                   InputProps={{
                     onChange: ({ target: { value } }) =>
-                      setNewUsers(() =>
-                        newUsers.map((user, userIndex) => {
+                      setNewUsers((prevValue) =>
+                        prevValue.map((user, userIndex) => {
                           if (userIndex == reactIndex) {
                             user.fullName = value;
 
@@ -316,8 +320,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
                   type="email"
                   InputProps={{
                     onChange: ({ target: { value } }) =>
-                      setNewUsers(() =>
-                        newUsers.map((user, userIndex) => {
+                      setNewUsers((prevValue) =>
+                        prevValue.map((user, userIndex) => {
                           if (userIndex == reactIndex) {
                             user.emailAddress = value;
 
@@ -341,13 +345,15 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({ isOpen, closeCallbac
                     exclusive
                     value={newUsers[reactIndex].language}
                     onChange={(event, value) => {
-                      newUsers.map((user, userIndex) => {
-                        if (userIndex == reactIndex) {
-                          user.language = value == 'fr' ? 'fr' : 'en';
-                          return user;
-                        } else {
-                          return user;
-                        }
+                      setNewUsers((prevState) => {
+                        return newUsers.map((user, userIndex) => {
+                          if (userIndex == reactIndex) {
+                            user.language = value == 'fr' ? 'fr' : 'en';
+                            return user;
+                          } else {
+                            return user;
+                          }
+                        });
                       });
                     }}>
                     <ToggleButton className="button" value={'en'}>
