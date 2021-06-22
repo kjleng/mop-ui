@@ -1,6 +1,6 @@
-import React from 'react';
-import Dashboard from './admin/dashboard';
-import AnotherPage from './another';
-import MerchantDetailsPage from './merchant-details';
+import Dashboard from 'pages/admin/dashboard';
+import AnotherPage from 'pages/another';
+import Login from 'pages/login';
+import MerchantDetailsPage from 'pages/merchant-details';
 
-export { Dashboard, AnotherPage, MerchantDetailsPage };
+export { AnotherPage, Dashboard, Login, MerchantDetailsPage };

@@ -45,7 +45,7 @@ const Header = () => {
   const navItems = [
     {
       label: t('Login'),
-      href: '/home',
+      href: '/login',
     },
   ];
 
@@ -67,16 +67,17 @@ const Header = () => {
   };
 
   return (
-    <AppBar className={classes.appBar}>
-      <div className={classes.container}>
-        <img src={logo} className={classes.logo} alt="Fairstone logo" />
-
-        <Toolbar className={classes.toolbar}>
-          <LanguageChangeButton />
-          {getNavButtons()}
-        </Toolbar>
-      </div>
-    </AppBar>
+    <>
+      <AppBar position="sticky" className={classes.appBar}>
+        <div className={classes.container}>
+          <img src={logo} className={classes.logo} alt="Fairstone logo" />
+          <Toolbar className={classes.toolbar}>
+            <LanguageChangeButton />
+            {getNavButtons()}
+          </Toolbar>
+        </div>
+      </AppBar>
+    </>
   );
 };
 
