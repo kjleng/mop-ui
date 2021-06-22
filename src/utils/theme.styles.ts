@@ -32,7 +32,7 @@ const breakpoints = createBreakpoints({});
 export const muiTheme = {
   typography: {
     // https://app.zeplin.io/project/6064fef491501d0814269e88/screen/609b208150defcac17c6ab17
-    fontFamily: [`Source Sans Pro`, `sans-serif`].join(`,`),
+    fontFamily: 'Source Sans Pro, sans-serif',
     htmlFontSize: 10,
     h1: {
       fontSize: `2.8rem`,

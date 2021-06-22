@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
   },
   main: {
     flex: 1,
+    background: 'white',
   },
 }));
 
@@ -28,7 +29,6 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <div className={classes.root}>
       <Header />
-      <Toolbar />
       <div className={classes.container}>
         <main className={classes.main}>{children}</main>
       </div>

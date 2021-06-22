@@ -2,12 +2,11 @@ import { Container, Card, List, ListItem, Button } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Skeleton } from '@material-ui/lab';
-import { constants } from 'http2';
-import React, { useEffect, useState } from 'react';
+import {  AxiosResponse } from 'axios';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { httpRequest } from '../../api/http-request';
-import { getMerchantUsers } from '../../api/merchant';
 import { AddUserModal } from '../../components/AddUserModal/AddUserModal';
 import type { MerchantUser } from '../../types/merchants.types';
 
@@ -19,7 +18,7 @@ type Params = {
 type State = {
   loading: boolean;
   users: Array<MerchantUser>;
-  error: null | Error;
+  error: string;
   modalOpen: boolean;
 };
 
@@ -69,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: `.5rem`,
     marginBottom: `.7rem`,
   },
+  message: {
+    textAlign: `center`,
+  },
   user: {
     backgroundColor: `#fafafa`,
     padding: `1rem 2.5rem`,
@@ -105,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
+const MerchantDetailPage = () => {
   const { t } = useTranslation();
   const classes = useStyles();
   const params: Params = useParams();
@@ -113,7 +115,7 @@ const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
   const [{ error, loading, users, modalOpen }, setState] = useState<State>({
     loading: true,
     users: [],
-    error: null,
+    error: ``,
     modalOpen: false,
   });
 
@@ -123,21 +125,48 @@ const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
       modalOpen: false,
     }));
 
-  const getUsersCallback = (result: ReturnType<typeof getMerchantUsers>) => {
-    if (Array.isArray(result)) {
-      return setState((prevState) => ({
-        ...prevState,
-        loading: false,
-        users: result,
-      }));
-    } else {
-      console.error(result);
-    }
-  };
-
   React.useEffect(() => {
-    getUsers(params.merchantName, getUsersCallback);
-  }, [params.merchantName, getUsers]);
+    httpRequest({
+      // Get Merchant Hash
+      url: `merchants/?name=${params.merchantName}`,
+      method: `GET`,
+    })
+      .then(
+        (
+          res: AxiosResponse<{ merchantHash: string }>
+        ): PromiseLike<AxiosResponse<{ users: Array<MerchantUser> }>> => {
+          const merchantHash = res?.data?.merchantHash ?? ``;
+
+          return httpRequest({
+            // Get Merchant User
+            url: `/merchants/${merchantHash}/users`,
+            method: `GET`,
+          });
+        }
+      )
+      .then((res) => {
+        const users: Array<MerchantUser> = res?.data?.users ?? [];
+        if (!res?.data?.users) {
+          console.error(res);
+        } else {
+          return setState((prevState) => ({
+            ...prevState,
+            loading: false,
+            users,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        return setState((prevState) => ({
+          ...prevState,
+          loading: false,
+          error:
+            err?.message ??
+            `There was an issue getting the information for ${params.merchantName}, please try again later`,
+        }));
+      });
+  }, [params.merchantName]);
 
   return (
     <>
@@ -184,13 +213,12 @@ const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
                 />
               ))}
             {error && (
-              <Typography data-testid="error-message" variant="h2">
-                There was an error getting the users for {params.merchantName}, pelase try again
-                later.
+              <Typography className={classes.message} data-testid="error-message" variant="h2">
+                {error}
               </Typography>
             )}
             {!users.length && !loading && !error && (
-              <Typography data-testid="no-users" variant="h2">
+              <Typography className={classes.message} data-testid="no-users" variant="h2">
                 {params.merchantName} does not have any Merchant Users
               </Typography>
             )}
@@ -201,6 +229,7 @@ const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
                 <ListItem
                   className={classes.user}
                   component="li"
+                  data-testid="user"
                   key={`${user.name}-${Math.random()}`}>
                   <Typography className="name" variant="h4">
                     {user.name}
@@ -208,13 +237,7 @@ const MerchantDetailPage = ({ getUsers = getMerchantUsers }) => {
                   <Typography className="email">{user.email}</Typography>
                   <Button
                     className="button"
-                    onClick={
-                      () => console.log(`Delete functionality will go here`)
-                      // setState((prevState) => ({
-                      //   ...prevState,
-                      //   modalOpen: true,
-                      // }))
-                    }>
+                    onClick={() => console.log(`Delete functionality will go here`)}>
                     {t(`Delete User`)}
                   </Button>
                 </ListItem>

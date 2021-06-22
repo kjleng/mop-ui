@@ -41,9 +41,12 @@
     "Merchant Id": "Identifiant du marchand",
     "Not Started": "Pas encore commence",
     "Order Management": "La gestion des commandes",
+    "Password":"Mot de passe",
     "Payment Gateway Enabled": "Passerelle de paiement activée",
     "Search": "Rechercher",
     "Short": "Court",
+    "Sign into your account":"Connectez-vous à votre compte",
     "True": "Vrai",
-    "Unable to register merchant": "Impossible d'enregistrer le marchand"
-}
+    "Unable to register merchant": "Impossible d'enregistrer le marchand",
+    "Username":"Nom d'utilisateur"
+}    

@@ -53,15 +53,15 @@ const add = async (merchant: Merchant) => {
 
 export const getMerchantUsers = (
   merchantHash: string,
-  callback: (result: Promise<Array<MerchantUser> | Error>) => any
+  callback: (result: Array<MerchantUser> | Error) => any
 ) =>
   httpRequest({
     url: `/merchants/${merchantHash}/users`,
     method: `GET`,
   })
     .then((res) => {
-      const users = res?.data?.merchants ?? [];
-      if (!res?.data?.merchants) console.error(res);
+      const users: Array<MerchantUser> = res?.data?.users ?? [];
+      if (!res?.data?.users) console.error(res);
       return callback(users);
     })
     .catch((err) => {

@@ -1,24 +1,31 @@
+import ProtectedRoute from 'components/ProtectedRoute/ProtectedRoute';
+import PublicRoute from 'components/PublicRoute/PublicRoute';
+import { AuthProvider } from 'contexts/AuthContext';
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import MaterialUiTheme from './components/MaterialUiTheme/MaterialUiTheme';
 import { ROUTES } from './constants/routes';
-import { Dashboard, AnotherPage, MerchantDetailsPage } from './pages';
+
+import { Dashboard, AnotherPage, MerchantDetailsPage, Login } from './pages';
 
 function App() {
   return (
-    <MaterialUiTheme>
-      <Suspense fallback="loading">
-        <Layout>
-          <Switch>
-            <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
-            <Route exact path={ROUTES.dashboard} component={Dashboard} />
-            <Route exact path={ROUTES.another} component={AnotherPage} />
-            <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
-          </Switch>
-        </Layout>
-      </Suspense>
-    </MaterialUiTheme>
+    <AuthProvider>
+      <MaterialUiTheme>
+        <Suspense fallback="loading">
+          <Layout>
+            <Switch>
+              <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
+              <PublicRoute exact path={ROUTES.login} component={Login} />
+              <ProtectedRoute exact path={ROUTES.dashboard} component={Dashboard} />
+              <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
+              <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
+            </Switch>
+          </Layout>
+        </Suspense>
+      </MaterialUiTheme>
+    </AuthProvider>
   );
 }
 

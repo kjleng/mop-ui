@@ -41,10 +41,13 @@
     "Needs Action": "Needs Action",
     "Not Started": "Not Started",
     "Order Management": "Order Management",
+    "Password":"Password",
     "Payment Gateway Enabled": "Payment Gateway Enabled",
     "Search": "Search",
+    "Sign into your account":"Sign into your account",
     "Short": "Short",
     "True": "True",
-    "Unable to register merchant": "Unable to register merchant"
+    "Unable to register merchant": "Unable to register merchant",
+    "Username":"Username"
 }
 
