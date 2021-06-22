@@ -34,10 +34,12 @@ export const muiTheme = {
     // https://app.zeplin.io/project/6064fef491501d0814269e88/screen/609b208150defcac17c6ab17
     fontFamily: [`SourceSansPro`, `sans-serif`].join(`,`),
     htmlFontSize: 10,
+    color: '#333333',
     h1: {
       fontSize: `2.8rem`,
       lineHeight: 1.07,
       fontWeight: 600,
+      color: '#453064',
       [breakpoints.up(`md`)]: {
         fontSize: `3rem`,
         lineHeight: 1,
@@ -65,6 +67,7 @@ export const muiTheme = {
       fontSize: `1.6rem`,
       lineHeight: 1.38,
       fontWeight: 600,
+      color: '#3F2A56',
       [breakpoints.up(`md`)]: {
         fontSize: `1.8rem`,
         lineHeight: 1.22,
@@ -79,9 +82,21 @@ export const muiTheme = {
         lineHeight: 1,
       },
     },
+    subtitle1: {
+      fontSize: `1.6rem`,
+      fontWeight: 600,
+      lineHeight: 1.25,
+      paddingTop: '1rem',
+      paddingBottom: '1rem',
+    },
     body1: {
       fontSize: `2.4rem`,
-      lineHeight: 30,
+      lineHeight: 1.07,
+    },
+    body2: {
+      fontSize: `1.6rem`,
+      fontWeight: 600,
+      lineHeight: 1.07,
     },
   },
   palette: {
@@ -108,6 +123,7 @@ export const muiTheme = {
     },
     text: {
       primary: `#000`,
+      secondary: `#FFFFFF`,
     },
   },
 } as const;

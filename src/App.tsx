@@ -3,7 +3,14 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import MaterialUiTheme from './components/MaterialUiTheme/MaterialUiTheme';
 import { ROUTES } from './constants/routes';
-import { Dashboard, AnotherPage, MerchantDetailsPage } from './pages';
+import {
+  Dashboard,
+  AnotherPage,
+  MerchantDetailsPage,
+  MerchantDashboard,
+  QuestionnairePage,
+  UploadLogoPage,
+} from './pages';
 
 function App() {
   return (
@@ -15,6 +22,10 @@ function App() {
             <Route exact path={ROUTES.dashboard} component={Dashboard} />
             <Route exact path={ROUTES.another} component={AnotherPage} />
             <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
+            <Route exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
+            <Route exact path={ROUTES.questionnaire} component={QuestionnairePage} />
+            <Route exact path={ROUTES.uploadLogo} component={UploadLogoPage} />
+            <Route exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
           </Switch>
         </Layout>
       </Suspense>

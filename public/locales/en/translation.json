@@ -35,7 +35,22 @@
     "Merchant Users":"Merchant Users",
     "Merchant Questionnaire":"Merchant Questionnaire",
     "Merchant Logos":"Merchant Logos",
-    "Merchant Plans":"Merchant Plans"
-
+    "Merchant Plans":"Merchant Plans",
+    "Welcome to Fairstone":"Welcome to Fairstone",
+    "Application":"Application",
+    "Please finish the platform details first before you start choosing your plans.":"Please finish the platform details first before you start choosing your plans.",
+    "Start": "Start",
+    "Setup Documents": "Setup Documents",
+    "Review these documents for the setup.": "Review these documents for the setup.",
+    "English Version": "English Version",
+    "French Version": "French Version",
+    "Fairstone e-commerce team will provide you with the cobranded logo for your setup.": "Fairstone e-commerce team will provide you with the cobranded logo for your setup.",
+    "Please use the cobranded logo for your setup.": "Veuillez utiliser le logo cobrandé pour votre installation.",
+    "We will be asking 4 simple questions about your current platform.": "We will be asking 4 simple questions about your current platform.",
+    "We will need a copy of your company's logo to brand the testing environment.":"We will need a copy of your company's logo to brand the testing environment.",
+    "ShopifySetupGuide.pdf": "ShopifySetupGuide.pdf",
+    "ShopifyHandbook.pdf": "ShopifyHandbook.pdf",
+    "MagentoSetupGuide.pdf": "MagentoSetupGuide.pdf",
+    "MagentoHandbook.pdf":"MagentoHandbook.pdf"
 }
 

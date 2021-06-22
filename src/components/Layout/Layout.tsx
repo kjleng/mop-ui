@@ -5,7 +5,7 @@ import Header from '../Header/Header';
 
 const useStyles = makeStyles(() => ({
   root: {
-    textAlign: 'center',
+    textAlign: 'left',
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
