@@ -39,7 +39,7 @@ const getUsers = jest.fn();
 test(`Merchant Details Page -- Skeletons show on load & H1 shows correct Merchant Name`, () => {
   const { queryByTestId, queryAllByTestId, debug } = render(
     <MaterialUiTheme>
-      <MerchantDetailPage getUsers={getUsers} />
+      <MerchantDetailPage />
     </MaterialUiTheme>
   );
   const h1 = queryByTestId(`h1`);
