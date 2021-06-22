@@ -45,12 +45,24 @@
     "English Version": "English Version",
     "French Version": "French Version",
     "Fairstone e-commerce team will provide you with the cobranded logo for your setup.": "Fairstone e-commerce team will provide you with the cobranded logo for your setup.",
-    "Please use the cobranded logo for your setup.": "Veuillez utiliser le logo cobrandé pour votre installation.",
+    "Please use the cobranded logo for your setup.": "Please use the cobranded logo for your setup.",
     "We will be asking 4 simple questions about your current platform.": "We will be asking 4 simple questions about your current platform.",
     "We will need a copy of your company's logo to brand the testing environment.":"We will need a copy of your company's logo to brand the testing environment.",
     "ShopifySetupGuide.pdf": "ShopifySetupGuide.pdf",
     "ShopifyHandbook.pdf": "ShopifyHandbook.pdf",
     "MagentoSetupGuide.pdf": "MagentoSetupGuide.pdf",
-    "MagentoHandbook.pdf":"MagentoHandbook.pdf"
+    "MagentoHandbook.pdf":"MagentoHandbook.pdf",
+    "Sign into your account":"Sign into your account",
+    "Username":"Username",
+    "Password":"Password",
+    "Add Merchant User": "Add Merchant User",
+    "Add New User":"Add New User",
+    "Close": "Close",
+    "Full name": "Full Name",
+    "Email address": "Email address",
+    "Language": "Language",
+    "English":"English",
+    "French":"French",
+    "Done": "Done"
 }
 

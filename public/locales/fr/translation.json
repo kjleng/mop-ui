@@ -53,5 +53,17 @@
     "ShopifySetupGuide.pdf": "ShopifySetupGuide.pdf",
     "ShopifyHandbook.pdf": "ShopifyHandbook.pdf",
     "MagentoSetupGuide.pdf": "MagentoSetupGuide.pdf",
-    "MagentoHandbook.pdf":"MagentoHandbook.pdf"
+    "MagentoHandbook.pdf":"MagentoHandbook.pdf",
+    "Sign into your account":"Connectez-vous à votre compte",
+    "Username":"Nom d'utilisateur",
+    "Password":"Mot de passe",
+    "Add Merchant User":"Add Merchant User",
+    "Close": "Close",
+    "Add New User": "Ajouter un nouvel utilisateur",
+    "Full name": "Nom et Prénom",
+    "Email address": "L'adresse électronique",
+    "Language": "Langue",
+    "English":"Anglais",
+    "French":"Français",
+    "Done": "Fini"
 }

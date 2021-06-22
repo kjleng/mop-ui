@@ -1,7 +1,7 @@
 import { makeStyles, Toolbar } from '@material-ui/core';
+import Footer from 'components/Footer/Footer';
+import Header from 'components/Header/Header';
 import React, { ReactNode } from 'react';
-import Footer from '../Footer/Footer';
-import Header from '../Header/Header';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
   },
   main: {
     flex: 1,
+    background: 'white',
   },
 }));
 
@@ -28,7 +29,6 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <div className={classes.root}>
       <Header />
-      <Toolbar />
       <div className={classes.container}>
         <main className={classes.main}>{children}</main>
       </div>

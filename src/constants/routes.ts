@@ -1,8 +1,9 @@
 export const ROUTES = {
-  dashboard: '/dashboard',
+  dashboard: '/admin/dashboard',
   another: '/anotherpage',
-  merchantDashboard: '/merchant/dashboard',
+  login: '/login',
   merchantDetails: '/merchant-details',
+  merchantDashboard: '/merchant/dashboard',
   questionnaire: '/merchant/questionnaire',
   uploadLogo: '/merchant/uploadlogo',
 };

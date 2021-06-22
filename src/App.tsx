@@ -1,3 +1,6 @@
+import ProtectedRoute from 'components/ProtectedRoute/ProtectedRoute';
+import PublicRoute from 'components/PublicRoute/PublicRoute';
+import { AuthProvider } from 'contexts/AuthContext';
 import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
@@ -7,6 +10,7 @@ import {
   Dashboard,
   AnotherPage,
   MerchantDetailsPage,
+  Login,
   MerchantDashboard,
   QuestionnairePage,
   UploadLogoPage,
@@ -14,22 +18,24 @@ import {
 
 function App() {
   return (
-    <MaterialUiTheme>
-      <Suspense fallback="loading">
-        <Layout>
-          <Switch>
-            <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
-            <Route exact path={ROUTES.dashboard} component={Dashboard} />
-            <Route exact path={ROUTES.another} component={AnotherPage} />
-            <Route exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
-            <Route exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
-            <Route exact path={ROUTES.questionnaire} component={QuestionnairePage} />
-            <Route exact path={ROUTES.uploadLogo} component={UploadLogoPage} />
-            <Route exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
-          </Switch>
-        </Layout>
-      </Suspense>
-    </MaterialUiTheme>
+    <AuthProvider>
+      <MaterialUiTheme>
+        <Suspense fallback="loading">
+          <Layout>
+            <Switch>
+              <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
+              <PublicRoute exact path={ROUTES.login} component={Login} />
+              <ProtectedRoute exact path={ROUTES.dashboard} component={Dashboard} />
+              <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
+              <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
+              <ProtectedRoute exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
+              <ProtectedRoute exact path={ROUTES.questionnaire} component={QuestionnairePage} />
+              <ProtectedRoute exact path={ROUTES.uploadLogo} component={UploadLogoPage} />
+            </Switch>
+          </Layout>
+        </Suspense>
+      </MaterialUiTheme>
+    </AuthProvider>
   );
 }
 

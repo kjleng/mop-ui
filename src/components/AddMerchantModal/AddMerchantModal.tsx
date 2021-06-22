@@ -19,10 +19,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup, Alert, Color as AlertColor } from '@material-ui/lab';
 
+import { searchMerchant, addMerchant } from 'api/merchant';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
-import { searchMerchant, addMerchant } from '../../api/merchant';
 
 interface AddMerchantModalProps {
   isOpen: boolean;
@@ -597,7 +597,9 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </ToggleButtonGroup>
                       </div>
                       <div className="toggle">
-                        <Typography className="toggle-label">Payment Gateway Enabled</Typography>
+                        <Typography className="toggle-label">
+                          {t('Payment Gateway Enabled')}
+                        </Typography>
                         <ToggleButtonGroup
                           exclusive
                           value={merchantFoundForm.paymentGateway}
