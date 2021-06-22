@@ -1,9 +1,9 @@
 import { Typography } from '@material-ui/core';
 import { createMuiTheme, useTheme } from '@material-ui/core/styles';
 import { cleanup, render } from '@testing-library/react';
+import MaterialUiTheme from 'components/MaterialUiTheme/MaterialUiTheme';
 import React from 'react';
-import { muiTheme } from '../../../utils/theme.styles';
-import MaterialUiTheme from '../MaterialUiTheme';
+import { muiTheme } from 'utils/theme.styles';
 
 afterEach(cleanup);
 

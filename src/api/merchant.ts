@@ -52,11 +52,11 @@ const add = async (merchant: Merchant) => {
 };
 
 export const getMerchantUsers = (
-  merchantName: string,
-  callback: (users: Array<MerchantUser>) => void
+  merchantHash: string,
+  callback: (result: Promise<Array<MerchantUser> | Error>) => any
 ) =>
   httpRequest({
-    url: `/merchant_profiles/?name=${merchantName}`,
+    url: `/merchants/${merchantHash}/users`,
     method: `GET`,
   })
     .then((res) => {
@@ -66,6 +66,7 @@ export const getMerchantUsers = (
     })
     .catch((err) => {
       console.error(err);
+      return callback(err);
     });
 
 export const searchMerchant = search;

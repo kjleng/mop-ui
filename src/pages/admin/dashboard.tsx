@@ -11,11 +11,11 @@ import {
 } from '@material-ui/core';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
+import { AddMerchantModal } from 'components/AddMerchantModal/AddMerchantModal';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AddMerchantModal } from '../components/AddMerchantModal/AddMerchantModal';
-import type { Merchant } from '../types/merchants.types';
+import type { Merchant } from 'types/merchants.types';
 
 /**
  * NOTE
@@ -201,7 +201,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const [merchants, setMerchants] = useState<{
