@@ -2,5 +2,12 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm run tsc
-npx --no-install lint-staged
+
+npm run lint
+
+npm run format:ts
+npm run format:json
+npm run format:md
+npm run format:css
+
 npm run test:nowatch
