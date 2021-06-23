@@ -36,7 +36,7 @@ interface IFSButton {
 }
 
 const FSButton: React.FC<IFSButton> = (props: IFSButton) => {
-  const { linkText, linkPath } = props;
+  const { type, linkText, linkPath } = props;
   const classes = useStyles();
   const history = useHistory();
 
@@ -62,8 +62,9 @@ const FSButton: React.FC<IFSButton> = (props: IFSButton) => {
     <Button
       variant="contained"
       color="primary"
-      className={clsx(classes.ctaButton, determineVariantClass(FSButtonTypes.Blue))}
-      onClick={handleClick}>
+      className={clsx(classes.ctaButton, determineVariantClass(type))}
+      onClick={handleClick}
+      data-testid="fsbutton">
       {linkText}
     </Button>
   );

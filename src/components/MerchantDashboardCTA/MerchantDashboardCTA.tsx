@@ -38,7 +38,7 @@ const MerchantDashboardCTA: React.FC<IMerchantDashboardCTA> = (props: IMerchantD
         <Typography variant="subtitle1"> {BodyText}</Typography>
       </Grid>
       <Grid item>
-        <FSButton type={FSButtonTypes.White} linkText={LinkText} linkPath={LinkPath} />
+        <FSButton type={FSButtonTypes.Blue} linkText={LinkText} linkPath={LinkPath} />
       </Grid>
     </Grid>
   );
