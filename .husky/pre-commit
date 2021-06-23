@@ -1,4 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-
+# running linting and prettier in prepush instead
+# npx --no-install lint-staged
