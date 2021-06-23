@@ -36,7 +36,7 @@ test('Has tile with correct font', () => {
   const { typography, palette } = renderedTheme;
   const titleNode = queryByText(/Merchant Users/i);
   expect(titleNode).toBeInTheDocument();
-  expect(titleNode).toHaveStyle(`font-family: Source Sans Pro, sans-serif;`);
+  expect(titleNode).toHaveStyle(`font-family: Source Sans Pro,sans-serif;`);
 });
 
 test('close function fired value when close button clicked', () => {
