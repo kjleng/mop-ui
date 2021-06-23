@@ -256,6 +256,7 @@ const useStyles = makeStyles((theme) => ({
     color: '#333333',
     width: '15.6rem',
     height: '1.4rem',
+    whiteSpace: `nowrap`, // French translation is very long
   },
   labelAsterisk: {
     // color: '#db3131',
@@ -477,7 +478,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
             <form onSubmit={submitSearchMerchant}>
               <TextField
                 name="search-merchant-name"
-                label="Search Merchant Name"
+                label={t(`Search Merchant Name`)}
                 value={merchantNameForm.name}
                 InputLabelProps={{
                   classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
