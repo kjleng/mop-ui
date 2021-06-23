@@ -55,9 +55,8 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+
   diaglogTitle: {
-    // width: '60rem',
-    // height: '58rem',
     padding: '1.6rem 2.4rem 1.5rem',
   },
   diaglogTitleContainer: {
@@ -122,6 +121,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiInput-underline:after': {
       borderBottomColor: `#3f2a56`,
     },
+    '& .MuiTypography-body1': {
+      lineHeight: 'normal',
+    },
   },
   merchantFoundInput: {
     fontSize: `2.4rem`,
@@ -159,6 +161,7 @@ const useStyles = makeStyles((theme) => ({
   },
   merchantFoundDrawerDetails: {
     display: `block`,
+    padding: `0.8rem 0rem`,
     '& .top-toggles': {
       display: `flex`,
       flexDirection: `column`,
@@ -225,14 +228,10 @@ const useStyles = makeStyles((theme) => ({
       color: `#333`,
       minWidth: `23.6rem`,
       fontFamily: 'Source Sans Pro',
-
-      // '& .chevron': {
-      //     transform: `rotate(90deg)`
-      // },
     },
-    // '& .select.Mui-focused': {
-    //     backgroundColor: `red`
-    // }
+  },
+  MuiMenuItem: {
+    lineHeight: 'normal',
   },
   formTitle: {
     fontFamily: 'Source Sans Pro, sans-serif',
@@ -348,7 +347,32 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
     merchantName: ``,
   });
 
-  const handleClose = () => closeCallback();
+  const resetState = () => {
+    setMerchantFound(false);
+    setToasterOpen(false);
+    setToasterMessage('');
+    setToasterColor('success');
+    setMerchantNameForm({
+      name: ``,
+    });
+    setMerchantFoundForm({
+      displayName: ``,
+      merchantId: ``,
+      ecomId: ``,
+      additionalDetailsExpanded: false,
+      orderManagement: true,
+      paymentGateway: true,
+      showPlan: true,
+      performPayment: true,
+      authorizationFormat: 'Short',
+      merchantName: ``,
+    });
+  };
+
+  const handleClose = () => {
+    resetState();
+    closeCallback();
+  };
 
   const submitSearchMerchant = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -388,7 +412,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
             setMerchantedAdded(true);
           }
         } catch (error) {
-          setToasterMessage('Unable to register merchant');
+          setToasterMessage(t('Unable to register merchant'));
           setToasterOpen(true);
           setMerchantFound(false);
           setToasterColor('error');
@@ -410,7 +434,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
 
   if (merchantedAdded) {
     //redirect to details onces merchant is added
-    return <Redirect to={`/merchant-detail/${merchantFoundForm.merchantName}`} />;
+    return <Redirect to={`/admin/merchant-details/${merchantFoundForm.merchantName}`} />;
   }
 
   return (
@@ -618,7 +642,9 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                     {merchantFoundForm.paymentGateway && (
                       <div className="bottom-toggles">
                         <div className="toggle">
-                          <Typography className="toggle-label">{t('Order Management')}</Typography>
+                          <Typography className="toggle-label">
+                            {t('Show Plan Selection')}
+                          </Typography>
                           <ToggleButtonGroup
                             exclusive
                             value={merchantFoundForm.showPlan}
@@ -635,7 +661,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </div>
                         <div className="toggle">
                           <Typography className="toggle-label">
-                            {t('Payment Gateway Enabled')}
+                            {t('Perform Payment Authorization')}
                           </Typography>
                           <ToggleButtonGroup
                             exclusive
@@ -664,8 +690,12 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                               }))
                             }
                             value={merchantFoundForm.authorizationFormat}>
-                            <MenuItem value="Short">{t('Short')}</MenuItem>
-                            <MenuItem value="Extended">{t('Extended')}</MenuItem>
+                            <MenuItem className={classes.MuiMenuItem} value="Short">
+                              {t('Short')}
+                            </MenuItem>
+                            <MenuItem className={classes.MuiMenuItem} value="Extended">
+                              {t('Extended')}
+                            </MenuItem>
                           </Select>
                         </FormControl>
                       </div>

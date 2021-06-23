@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import { render as ReactRender } from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import MaterialUiTheme from '../../../components/MaterialUiTheme/MaterialUiTheme';
+import MaterialUiTheme from '../../../../components/MaterialUiTheme/MaterialUiTheme';
 import MerchantDetailPage from '../merchant-details';
 
 afterEach(cleanup);

@@ -223,7 +223,15 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
 
   const [errors, setErrors] = React.useState<Array<FormError>>([]);
 
-  const handleClose = () => closeCallback();
+  const resetState = () => {
+    setNewUsers([{ fullName: '', emailAddress: '', language: currentLang() }]);
+    setErrors([]);
+  };
+
+  const handleClose = () => {
+    resetState();
+    closeCallback();
+  };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

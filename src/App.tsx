@@ -6,8 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import MaterialUiTheme from './components/MaterialUiTheme/MaterialUiTheme';
 import { ROUTES } from './constants/routes';
-
-import { Dashboard, AnotherPage, MerchantDetailsPage, Login } from './pages';
+import { AnotherPage, Dashboard, Login, MerchantDetailsPage, PageNotFound } from './pages';
 
 function App() {
   return (
@@ -21,6 +20,7 @@ function App() {
               <ProtectedRoute exact path={ROUTES.dashboard} component={Dashboard} />
               <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
               <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
+              <Route component={PageNotFound} />
             </Switch>
           </Layout>
         </Suspense>

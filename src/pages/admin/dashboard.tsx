@@ -308,7 +308,7 @@ const Dashboard: React.FC = () => {
                     button
                     className={classes.merchantLink}
                     component={Link}
-                    to={`/merchant-details/${merchant.name}`}>
+                    to={`/admin/merchant-details/${merchant.name}`}>
                     <div className="name">
                       <Typography variant="subtitle1">{merchant.name}</Typography>
                     </div>
