@@ -28,7 +28,9 @@ const LanguageChangeButton = () => {
   };
 
   const toggleLang = () => {
-    i18n.changeLanguage(nextLang().toLowerCase());
+    const newLang = nextLang();
+    i18n.changeLanguage(newLang.toLowerCase());
+    document.documentElement.lang = newLang;
   };
 
   return (

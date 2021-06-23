@@ -19,6 +19,11 @@ type FormError = {
   language?: string;
 };
 
+interface MerchantUserState extends MerchantUserDTO {
+  nameError: boolean;
+  emailError: boolean;
+}
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
@@ -171,8 +176,10 @@ const useStyles = makeStyles((theme) => ({
       fontStyle: 'normal',
       lineHeight: 'normal',
       letterSpacing: 'normal',
-      color: '#333333',
       marginBottom: '2.4rem',
+    },
+    '& label': {
+      color: '#333333',
     },
     '& .MuiInputLabel-asterisk': {
       display: 'none',
@@ -217,14 +224,28 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
     return regex.test(currentLang) ? 'en' : 'fr';
   };
 
-  const [newUsers, setNewUsers] = React.useState<Array<MerchantUserDTO>>([
-    { fullName: '', emailAddress: '', language: currentLang() },
+  const [newUsers, setNewUsers] = React.useState<Array<MerchantUserState>>([
+    {
+      fullName: '',
+      emailAddress: '',
+      language: currentLang(),
+      nameError: false,
+      emailError: false,
+    },
   ]);
 
   const [errors, setErrors] = React.useState<Array<FormError>>([]);
 
   const resetState = () => {
-    setNewUsers([{ fullName: '', emailAddress: '', language: currentLang() }]);
+    setNewUsers([
+      {
+        fullName: '',
+        emailAddress: '',
+        language: currentLang(),
+        nameError: false,
+        emailError: false,
+      },
+    ]);
     setErrors([]);
   };
 
@@ -236,28 +257,41 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (e.currentTarget.checkValidity()) {
-      // only submit if form is valid
+    let hasErrors = false;
 
-      let isError = false;
+    const formattedUsers = newUsers.map((user) => {
+      const nameError = !user.fullName.length;
+      const emailError = !user.emailAddress.length;
+      user.nameError = nameError;
+      user.emailError = emailError;
+      if (!hasErrors) hasErrors = nameError || emailError;
+      return user;
+    });
 
-      for (let index = 0; index < newUsers.length; index++) {
-        const response = await addUserMerchant(newUsers[index]);
-        isError = !response.success;
+    setNewUsers(formattedUsers);
 
-        setErrors(() => {
-          const currentError: FormError = {
-            ...errors[index],
-            fullName: response?.error?.fullName,
-            emailAddress: response?.error?.emailAddress,
-            language: response?.error?.language,
-          };
-          return [...errors, currentError];
-        });
-      }
+    console.log(formattedUsers);
 
-      !isError && handleClose(); // if no error, close modal
+    if (hasErrors) return;
+
+    let isError = false;
+
+    for (let index = 0; index < newUsers.length; index++) {
+      const response = await addUserMerchant(newUsers[index]);
+      isError = !response.success;
+
+      setErrors(() => {
+        const currentError: FormError = {
+          ...errors[index],
+          fullName: response?.error?.fullName,
+          emailAddress: response?.error?.emailAddress,
+          language: response?.error?.language,
+        };
+        return [...errors, currentError];
+      });
     }
+
+    !isError && handleClose(); // if no error, close modal
   };
 
   return (
@@ -275,7 +309,16 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
             aria-label="Add User"
             onClick={() => {
               setNewUsers((prevValue) => {
-                return [...prevValue, { fullName: '', emailAddress: '', language: 'fr' }];
+                return [
+                  ...prevValue,
+                  {
+                    fullName: '',
+                    emailAddress: '',
+                    language: 'fr',
+                    nameError: false,
+                    emailError: false,
+                  },
+                ];
               });
             }}>
             <AddIcon></AddIcon>
@@ -297,8 +340,9 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
                 <TextField
                   className="fullName"
                   aria-label="Full Name"
-                  required
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !!errors[reactIndex]?.fullName || user.nameError,
                     onChange: ({ target: { value } }) =>
                       setNewUsers((prevValue) =>
                         prevValue.map((user, userIndex) => {
@@ -317,14 +361,14 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
                   }}
                   label={t('Full name')}
                   helperText={errors[reactIndex]?.fullName}
-                  error={!!errors[reactIndex]?.fullName}
+                  error={!!errors[reactIndex]?.fullName || user.nameError}
                 />
                 <TextField
                   className="emailAddress"
                   aria-label="Email Address"
-                  required
-                  type="email"
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !!errors[reactIndex]?.emailAddress || user.emailError,
                     onChange: ({ target: { value } }) =>
                       setNewUsers((prevValue) =>
                         prevValue.map((user, userIndex) => {
@@ -343,7 +387,7 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
                   }}
                   label={t('Email address')}
                   helperText={errors[reactIndex]?.emailAddress}
-                  error={!!errors[reactIndex]?.emailAddress}
+                  error={!!errors[reactIndex]?.emailAddress || user.emailError}
                 />
                 <div className="language">
                   <Typography className="toggle-label">{t('Language')}</Typography>

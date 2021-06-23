@@ -18,7 +18,6 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup, Alert, Color as AlertColor } from '@material-ui/lab';
-
 import { searchMerchant, addMerchant } from 'api/merchant';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,6 +43,13 @@ type MerchantFoundForm = {
 
 type SearchMerchantForm = {
   name: string;
+};
+
+type FieldErrors = {
+  merchantName: boolean;
+  displayName: boolean;
+  merchantId: boolean;
+  ecomId: boolean;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -348,6 +354,13 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
     merchantName: ``,
   });
 
+  const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({
+    merchantName: false,
+    displayName: false,
+    merchantId: false,
+    ecomId: false,
+  });
+
   const resetState = () => {
     setMerchantFound(false);
     setToasterOpen(false);
@@ -377,47 +390,55 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
 
   const submitSearchMerchant = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const hasMerchantNameError = !merchantNameForm.name.length;
+    const hasDisplayNameError = merchantFound && !merchantFoundForm.displayName.length;
+    const hasMerchantIdError = merchantFound && !merchantFoundForm.merchantId.length;
+    const hasEcomIdError = merchantFound && !merchantFoundForm.ecomId.length;
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      merchantName: hasMerchantNameError,
+      displayName: hasDisplayNameError,
+      merchantId: hasMerchantIdError,
+      ecomId: hasEcomIdError,
+    }));
 
-    if (e.currentTarget.checkValidity()) {
-      // only submit if form is valid
-      if (!merchantFound) {
-        // searching for merchant
-        try {
-          const merchantResponse = await searchMerchant(merchantNameForm.name);
+    if (hasMerchantNameError || hasDisplayNameError || hasMerchantIdError || hasEcomIdError) return;
 
-          if (merchantResponse.success) {
-            setToasterMessage(t('Merchant successfully found'));
-            setToasterOpen(true);
-            setMerchantFound(true);
-            setToasterColor('success');
-            setMerchantFoundForm({ ...merchantFoundForm, merchantName: merchantNameForm.name });
-          }
-        } catch (error) {
-          const msg = error?.data?.message === 'Not found' ? t('Merchant not found') : t('Error');
-          setToasterMessage(msg);
+    if (!merchantFound) {
+      // searching for merchant
+      try {
+        const merchantResponse = await searchMerchant(merchantNameForm.name);
+
+        if (merchantResponse.success) {
+          setToasterMessage(t('Merchant successfully found'));
           setToasterOpen(true);
-          setMerchantFound(false);
-          setToasterColor('error');
+          setMerchantFound(true);
+          setToasterColor('success');
+          setMerchantFoundForm({ ...merchantFoundForm, merchantName: merchantNameForm.name });
         }
-      } else {
-        // adding mercant
-        try {
-          const merchantResponse = await addMerchant(merchantFoundForm);
-          console.log(merchantFoundForm);
+      } catch (error) {
+        const msg = error?.data?.message === 'Not found' ? t('Merchant not found') : t('Error');
+        setToasterMessage(msg);
+        setToasterOpen(true);
+        setMerchantFound(false);
+        setToasterColor('error');
+      }
+    } else {
+      try {
+        const merchantResponse = await addMerchant(merchantFoundForm);
 
-          if (merchantResponse.success) {
-            setToasterMessage(t('Merchant successfully added'));
-            setToasterOpen(true);
-            setMerchantFound(true);
-            setToasterColor('success');
-            setMerchantedAdded(true);
-          }
-        } catch (error) {
-          setToasterMessage(t('Unable to register merchant'));
+        if (merchantResponse.success) {
+          setToasterMessage(t('Merchant successfully added'));
           setToasterOpen(true);
-          setMerchantFound(false);
-          setToasterColor('error');
+          setMerchantFound(true);
+          setToasterColor('success');
+          setMerchantedAdded(true);
         }
+      } catch (error) {
+        setToasterMessage(t('Unable to register merchant'));
+        setToasterOpen(true);
+        setMerchantFound(false);
+        setToasterColor('error');
       }
     }
   };
@@ -477,6 +498,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
           {!merchantFound && (
             <form onSubmit={submitSearchMerchant}>
               <TextField
+                error={fieldErrors.merchantName}
                 name="search-merchant-name"
                 label={t(`Search Merchant Name`)}
                 value={merchantNameForm.name}
@@ -485,6 +507,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                   shrink: true,
                 }}
                 InputProps={{
+                  'aria-invalid': !merchantNameForm.name.length,
+                  'aria-required': true,
                   classes: { root: classes.input },
                   onChange: ({ target: { value } }) =>
                     setMerchantNameForm((prevForm) => ({
@@ -492,7 +516,6 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                       name: value,
                     })),
                 }}
-                required={true}
               />
 
               <DialogActions>
@@ -532,8 +555,11 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                 />
                 <TextField
                   className="displayName"
+                  error={fieldErrors.displayName}
                   id="displayName"
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !merchantFoundForm.displayName.length,
                     classes: { root: classes.input },
                     value: merchantFoundForm.displayName,
                     onChange: ({ target: { value } }) =>
@@ -547,12 +573,14 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                     shrink: true,
                   }}
                   label={t('Display Name')}
-                  required={true}
                 />
                 <TextField
                   className="merchantId"
+                  error={fieldErrors.merchantId}
                   id="merchantId"
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !merchantFoundForm.merchantId.length,
                     classes: { root: classes.input },
                     value: merchantFoundForm.merchantId,
                     onChange: ({ target: { value } }) =>
@@ -566,12 +594,14 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                     shrink: true,
                   }}
                   label={t('Merchant Id')}
-                  required={true}
                 />
                 <TextField
                   className="ecomId"
+                  error={fieldErrors.ecomId}
                   id="ecomId"
                   InputProps={{
+                    'aria-invalid': !merchantFoundForm.ecomId.length,
+                    'aria-required': true,
                     classes: { root: classes.input },
                     value: merchantFoundForm.ecomId,
                     onChange: ({ target: { value } }) =>
@@ -585,7 +615,6 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                     shrink: true,
                   }}
                   label={t('EComm Store ID')}
-                  required={true}
                 />
 
                 <Accordion

@@ -78,6 +78,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+type LoginErrors = {
+  username: boolean;
+  password: boolean;
+};
+
 const Login = () => {
   const history = useHistory();
   const classes = useStyles();
@@ -89,12 +94,28 @@ const Login = () => {
     Password: '',
   });
 
+  const [loginErrors, setLoginErrors] = useState<LoginErrors>({
+    username: false,
+    password: false,
+  });
+
   const [loading, setLoading] = useState(false);
   const [openErrorAlert, setOpenErrorAlert] = useState(false);
 
   const submitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+
+    const hasUserNameError = !loginForm.Username.length;
+    const hasPasswordError = !loginForm.Password.length;
+
+    setLoginErrors((prevErrors) => ({
+      ...prevErrors,
+      username: hasUserNameError,
+      password: hasPasswordError,
+    }));
+
+    if (hasUserNameError || hasPasswordError) return;
+    setLoading(!hasUserNameError && !hasPasswordError);
 
     try {
       if (e.currentTarget.checkValidity() && (await signIn(loginForm))) {
@@ -141,13 +162,15 @@ const Login = () => {
               <Grid item xs={12} sm={8} md={6} lg={4} className={classes.gridItem}>
                 <TextField
                   id="username"
+                  error={loginErrors.username}
                   className="username"
                   label={t('Username')}
                   autoComplete="username"
-                  required
                   fullWidth
                   defaultValue={loginForm.Username}
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !loginForm.Username.length,
                     classes: { input: classes.inputText },
                     onChange: (e) =>
                       setLoginForm((prevForm) => ({
@@ -163,15 +186,17 @@ const Login = () => {
               </Grid>
               <Grid item xs={12} sm={8} md={6} lg={4} className={classes.gridItem}>
                 <TextField
+                  error={loginErrors.password}
                   id="password"
                   className="password"
                   type="password"
                   label={t('Password')}
                   autoComplete="current-password"
                   defaultValue={loginForm.Password}
-                  required
                   fullWidth
                   InputProps={{
+                    'aria-required': true,
+                    'aria-invalid': !loginForm.Password.length,
                     classes: { input: classes.inputText },
                     onChange: (e) =>
                       setLoginForm((prevForm) => ({
