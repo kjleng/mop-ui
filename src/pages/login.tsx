@@ -10,11 +10,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import { CognitoUserSession } from 'amazon-cognito-identity-js';
+import { STORAGE_KEYS } from 'constants/auth';
 import { ROUTES } from 'constants/routes';
 import { LoginCredentials, useAuth } from 'hooks/useAuth';
 import React, { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { IsAdminUser, IsMerchantUser } from 'utils/token.utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -87,7 +90,7 @@ const Login = () => {
   const history = useHistory();
   const classes = useStyles();
   const { t } = useTranslation();
-  const { signIn } = useAuth();
+  const { signIn, getUserSession } = useAuth();
 
   const [loginForm, setLoginForm] = useState<LoginCredentials>({
     Username: '',
@@ -119,7 +122,16 @@ const Login = () => {
 
     try {
       if (e.currentTarget.checkValidity() && (await signIn(loginForm))) {
-        history.push(ROUTES.dashboard);
+        const session = getUserSession();
+
+        if (session && IsAdminUser(session)) {
+          console.debug('[login.tsx] logged in as ADMIN user');
+          history.push(ROUTES.dashboard);
+        } else if (session && IsMerchantUser(session)) {
+          console.debug('[login.tsx] logged in as MERCHANT user');
+          history.push(ROUTES.dashboard); // update once merchant dashboard exists
+        }
+
         setLoading(false);
         return;
       }

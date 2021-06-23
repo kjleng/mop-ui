@@ -3,10 +3,10 @@ import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
 
-const ProtectedRoute: React.FC<RouteProps> = ({ ...routeProps }) => {
-  const auth = useAuth();
+const ProtectedRoute: React.FC<RouteProps> = ({ ...routeProps }: RouteProps) => {
+  const { isAuthenticated } = useAuth();
 
-  if (auth.isAuthenticated()) {
+  if (isAuthenticated()) {
     return <Route {...routeProps} />;
   }
 
