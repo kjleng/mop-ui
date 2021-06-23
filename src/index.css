@@ -27,6 +27,7 @@ a {
 main {
   width: 100vw;
   overflow-x: hidden;
+  background-color: white;
 }
 
 :root {

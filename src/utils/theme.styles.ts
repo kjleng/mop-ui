@@ -81,7 +81,7 @@ export const muiTheme = {
     },
     body1: {
       fontSize: `2.4rem`,
-      lineHeight: 30,
+      lineHeight: 1.25,
     },
   },
   palette: {
