@@ -27,6 +27,7 @@
     "Language": "Langue",
     "Live": "En direct",
     "Login": "Connexion",
+    "Logout": "Déconnexion",
     "Merchant": "Marchand",
     "Merchant Details":"Détails du marchand",
     "Merchant Details page": "Page de détails du marchand",
@@ -52,4 +53,4 @@
     "True": "Vrai",
     "Unable to register merchant": "Impossible d'enregistrer le marchand",
     "Username":"Nom d'utilisateur"
-}    
+}
