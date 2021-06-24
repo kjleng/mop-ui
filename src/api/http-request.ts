@@ -34,6 +34,8 @@ const handleSuccessRequest = async (req: AxiosRequestConfig) => {
 
   merge(req.params, defaults.params);
 
+  req.headers.Authorization = getAuthorizationHeader();
+
   return req;
 };
 
