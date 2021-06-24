@@ -1,9 +1,9 @@
-import React from 'react';
-import FSButton from '../FSButton';
 import { cleanup, render, fireEvent } from '@testing-library/react';
-import { FSButtonTypes } from '../../../enums/fsbutton.enum';
 import { createMemoryHistory, History } from 'history';
+import React from 'react';
 import { Router } from 'react-router-dom';
+import { FSButtonTypes } from '../../../enums/fsbutton.enum';
+import FSButton from '../FSButton';
 
 const linkText = 'Link';
 const linkPath = '/merchant/dashboard';

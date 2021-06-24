@@ -1,8 +1,8 @@
-import React from 'react';
-import MerchantSetupDocuments from '../MerchantSetupDocuments';
 import { cleanup, render, act } from '@testing-library/react';
-import { sampleMerchantData } from '../../../utils/sampleMerchantData';
+import React from 'react';
 import EcommPlatformTypes from '../../../enums/ecommPlatforms.enum';
+import { sampleMerchantData } from '../../../utils/sampleMerchantData';
+import MerchantSetupDocuments from '../MerchantSetupDocuments';
 
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
@@ -57,16 +57,21 @@ describe('Unit Tests', () => {
     const frenchFileName = 'FrenchcobrandedLogo.png';
     sampleMerchantData.englishCobrandLogoLink = englishFileName;
     sampleMerchantData.frenchCobrandLogoLink = frenchFileName;
-    const { queryByText , queryAllByText } = render(<MerchantSetupDocuments merchantData={sampleMerchantData} />);
+    const { queryByText, queryAllByText } = render(
+      <MerchantSetupDocuments merchantData={sampleMerchantData} />
+    );
 
     const englishCobrandLogoLinkTexts = queryAllByText(englishFileName);
     const frenchCobrandLogoLinkTexts = queryAllByText(frenchFileName);
 
-    expect(queryByText('Fairstone e-commerce team will provide you with the cobranded logo for your setup.')).not.toBeInTheDocument();
+    expect(
+      queryByText(
+        'Fairstone e-commerce team will provide you with the cobranded logo for your setup.'
+      )
+    ).not.toBeInTheDocument();
     expect(queryByText('Please use the cobranded logo for your setup.')).toBeInTheDocument();
     expect(englishCobrandLogoLinkTexts.length === 1).toBe(true);
     expect(frenchCobrandLogoLinkTexts.length === 1).toBe(true);
-
   });
 
   test('render_MerchantSetupDocuments_DisplaySetupPromptIfNoCobrandLogo', () => {
@@ -74,13 +79,18 @@ describe('Unit Tests', () => {
     const frenchFileName = '';
     sampleMerchantData.englishCobrandLogoLink = englishFileName;
     sampleMerchantData.frenchCobrandLogoLink = frenchFileName;
-    const { queryByText, queryAllByText } = render(<MerchantSetupDocuments merchantData={sampleMerchantData} />);
+    const { queryByText, queryAllByText } = render(
+      <MerchantSetupDocuments merchantData={sampleMerchantData} />
+    );
 
     const englishCobrandLogoLinkTexts = queryAllByText(englishFileName);
     const frenchCobrandLogoLinkTexts = queryAllByText(frenchFileName);
 
-    expect(queryByText('Fairstone e-commerce team will provide you with the cobranded logo for your setup.')).toBeInTheDocument();
+    expect(
+      queryByText(
+        'Fairstone e-commerce team will provide you with the cobranded logo for your setup.'
+      )
+    ).toBeInTheDocument();
     expect(queryByText('Please use the cobranded logo for your setup.')).not.toBeInTheDocument();
-
   });
 });

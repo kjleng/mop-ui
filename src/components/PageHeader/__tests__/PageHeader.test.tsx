@@ -1,10 +1,10 @@
 // check that header text and body text is rendered as expected
 
-import React from 'react';
-import PageHeader from '../PageHeader';
 import { cleanup, render, fireEvent } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
+import React from 'react';
 import { Router } from 'react-router-dom';
+import PageHeader from '../PageHeader';
 
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown

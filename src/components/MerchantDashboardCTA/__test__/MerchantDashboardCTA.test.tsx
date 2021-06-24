@@ -1,8 +1,8 @@
 // check that header text and body text is rendered as expected
 
+import { cleanup, render, act } from '@testing-library/react';
 import React from 'react';
 import MerchantDashboardCTA from '../MerchantDashboardCTA';
-import { cleanup, render, act } from '@testing-library/react';
 
 afterEach(cleanup);
 
