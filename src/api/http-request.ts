@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { STORAGE_KEYS } from 'constants/auth';
 import merge from 'lodash/merge';
 
 const getApiUrl = () => {
@@ -8,10 +9,22 @@ const getApiUrl = () => {
   else return process.env.REACT_APP_QA_API_HOST;
 };
 
+const getAuthorizationHeader = () => {
+  const val = sessionStorage.getItem(STORAGE_KEYS.USER_SESSION);
+  const session = val && JSON.parse(val);
+
+  if (session) {
+    return session.idToken.jwtToken;
+  }
+
+  return null;
+};
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: getApiUrl(),
   responseType: 'json',
   headers: {
+    Authorization: getAuthorizationHeader(),
     'content-type': 'application/json',
   },
 });

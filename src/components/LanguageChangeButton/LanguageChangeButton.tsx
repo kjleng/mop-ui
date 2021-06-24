@@ -4,15 +4,11 @@ import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuButton: {
-    color: '#3f2a56',
-    fontFamily: 'Source Sans Pro, sans-serif',
+    color: theme.palette.primary.main,
     fontWeight: 600,
     fontSize: '2rem',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 'normal',
-    letterSpacing: 'normal',
     textAlign: 'center',
+    minWidth: 'auto',
   },
 }));
 
