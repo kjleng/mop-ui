@@ -6,7 +6,14 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import MaterialUiTheme from './components/MaterialUiTheme/MaterialUiTheme';
 import { ROUTES } from './constants/routes';
-import { AnotherPage, Dashboard, Login, MerchantDetailsPage, PageNotFound } from './pages';
+import {
+  AnotherPage,
+  Dashboard,
+  Login,
+  MerchantDetailsPage,
+  PageNotFound,
+  FormTest,
+} from './pages';
 
 function App() {
   return (
@@ -17,6 +24,7 @@ function App() {
             <Switch>
               <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
               <PublicRoute exact path={ROUTES.login} component={Login} />
+              <PublicRoute exact path={ROUTES.formTest} component={FormTest} />
               <ProtectedRoute exact path={ROUTES.dashboard} component={Dashboard} />
               <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
               <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
