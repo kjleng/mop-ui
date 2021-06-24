@@ -1,12 +1,12 @@
 import React from 'react';
 import FSButton from '../FSButton';
-import { cleanup, render, act, fireEvent } from '@testing-library/react';
+import { cleanup, render, fireEvent } from '@testing-library/react';
 import { FSButtonTypes } from '../../../enums/fsbutton.enum';
+import { createMemoryHistory, History } from 'history';
+import { Router } from 'react-router-dom';
 
 const linkText = 'Link';
-const linkPath = 'http://www.google.ca';
-
-afterEach(cleanup);
+const linkPath = '/merchant/dashboard';
 
 function renderFSButton(buttonType: FSButtonTypes) {
   return render(<FSButton linkText={linkText} linkPath={linkPath} type={buttonType} />);
@@ -28,6 +28,14 @@ jest.mock('react-i18next', () => ({
 }));
 
 describe('Unit Tests', () => {
+  let history: History<unknown>;
+
+  afterEach(cleanup);
+
+  beforeEach(() => {
+    history = createMemoryHistory();
+  });
+
   test('render_FSButton_DisplaysDesiredText', () => {
     const { queryByText } = renderFSButton(FSButtonTypes.Blue);
 
@@ -44,11 +52,7 @@ describe('Unit Tests', () => {
   });
 
   test('render_FSButton_WhiteTypeRenderedWithWhiteStyle', () => {
-    const { container } = render(
-      <FSButton linkText={linkText} linkPath={linkPath} type={FSButtonTypes.White} />
-    );
-
-    console.log(Object.values((container.firstChild! as HTMLElement).classList));
+    const { container } = renderFSButton(FSButtonTypes.White);
 
     expect(Object.values((container.firstChild! as HTMLElement).classList)).toMatchObject(
       expect.arrayContaining([expect.stringContaining('ctaWhite')])
@@ -56,15 +60,18 @@ describe('Unit Tests', () => {
   });
 
   test('render_FSButton_LinkPointsToExpectedLocation', () => {
-    global.window = { location: { pathname: "/" } };
     const { container, queryByTestId } = render(
-      <FSButton linkText={linkText} linkPath={linkPath} type={FSButtonTypes.Blue} />
+      <Router history={history}>
+        <FSButton linkText={linkText} linkPath={linkPath} type={FSButtonTypes.Blue} />
+      </Router>
     );
 
-    const button = queryByTestId('fsbutton');
+    const button = queryByTestId('fsbutton') as HTMLElement;
 
-    fireEvent.click(button as HTMLElement);
+    fireEvent.click(button);
 
-    expect(global.window.location.pathname).toEqual(linkPath);
+    expect(history.location.pathname.toString() + history.location.search.toString()).toEqual(
+      linkPath
+    );
   });
 });

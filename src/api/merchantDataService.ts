@@ -7,8 +7,8 @@ class MerchantDataService {
       merchantHash: `aaa-${merchantHash}`,
       englishLogoLink: '',
       frenchLogoLink: '',
-      englishCobrandLogoLink: 'test-en.png',
-      frenchCobrandLogoLink: 'test.png',
+      englishCobrandLogoLink: '',
+      frenchCobrandLogoLink: '',
       ecommPlatform: EcommPlatformTypes.Shopify,
     };
 

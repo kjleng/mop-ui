@@ -33,7 +33,7 @@ const PageHeader: React.FC<IPageHeader> = (props: IPageHeader) => {
         <Grid container direction="row">
           {LinkPath.length > 0 && (
             <Grid item>
-              <Link to={LinkPath}>
+              <Link to={LinkPath} data-testid="page-header-back-link">
                 <ArrowBackIos className={classes.backIcon} />
               </Link>
             </Grid>

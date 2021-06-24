@@ -6,7 +6,7 @@ import MerchantDashboardCTA from '../../components/MerchantDashboardCTA/Merchant
 import MerchantSetupDocuments from '../../components/MerchantSetupDocuments/MerchantSetupDocuments';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import EcommPlatformTypes from '../../enums/ecommPlatforms.enum';
-import MerchantData from '../../interfaces/MerchantData.interface';
+//import MerchantData from '../../interfaces/MerchantData.interface';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
