@@ -1,9 +1,9 @@
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
+import FSButton from 'components/FSButton/FSButton';
+import FSButtonTypes from 'enums/fsbutton.enum';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import FSButtonTypes from '../../enums/fsbutton.enum';
-import FSButton from '../FSButton/FSButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {

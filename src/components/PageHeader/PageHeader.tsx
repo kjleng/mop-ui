@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
-    backgroundColor: '#52356E',
+    backgroundColor: theme.palette.primary.light,
     paddingTop: 40,
     paddingBottom: 40,
     color: '#FFFFFF',

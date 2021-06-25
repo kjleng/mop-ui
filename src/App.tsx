@@ -30,7 +30,11 @@ function App() {
               <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
               <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />
               <ProtectedRoute exact path={ROUTES.merchantDashboard} component={MerchantDashboard} />
-              <ProtectedRoute exact path={ROUTES.questionnaire} component={QuestionnairePage} />
+              <ProtectedRoute
+                exact
+                path={ROUTES.merchantQuestionnaire}
+                component={QuestionnairePage}
+              />
               <ProtectedRoute exact path={ROUTES.uploadLogo} component={UploadLogoPage} />
               <Route component={PageNotFound} />
             </Switch>

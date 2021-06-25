@@ -1,13 +1,14 @@
 import { Container, makeStyles, Theme, Typography } from '@material-ui/core';
+import merchantDataService from 'api/merchantDataService';
+import MerchantDashboardCTA from 'components/MerchantDashboardCTA/MerchantDashboardCTA';
+import MerchantSetupDocuments from 'components/MerchantSetupDocuments/MerchantSetupDocuments';
+import PageHeader from 'components/PageHeader/PageHeader';
+import { ROUTES } from 'constants/routes';
+import EcommPlatformTypes from 'enums/ecommPlatforms.enum';
+import FSButtonTypes from 'enums/fsbutton.enum';
+import StorefrontPresentations from 'enums/storefrontPresentations.enum';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import merchantDataService from '../../api/merchantDataService';
-import MerchantDashboardCTA from '../../components/MerchantDashboardCTA/MerchantDashboardCTA';
-import MerchantSetupDocuments from '../../components/MerchantSetupDocuments/MerchantSetupDocuments';
-import PageHeader from '../../components/PageHeader/PageHeader';
-import EcommPlatformTypes from '../../enums/ecommPlatforms.enum';
-import FSButtonTypes from '../../enums/fsbutton.enum';
-import StorefrontPresentations from '../../enums/storefrontPresentations.enum';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -73,7 +74,7 @@ const MerchantDashboard: React.FC = () => {
           LinkText={
             merchantData.states.platformDetailsState === 'Not Started' ? t(`Start`) : t(`Edit`)
           }
-          LinkPath="/merchant/questionnaire"
+          LinkPath={ROUTES.merchantQuestionnaire}
           ButtonType={
             merchantData.states.platformDetailsState === 'Not Started'
               ? FSButtonTypes.Blue

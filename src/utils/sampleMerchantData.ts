@@ -1,8 +1,8 @@
+import EcommPlatformTypes from 'enums/ecommPlatforms.enum';
+import StorefrontPresentations from 'enums/storefrontPresentations.enum';
+import MerchantData from 'interfaces/MerchantData.interface';
 import PlatformDetailsData from 'interfaces/PlatformDetailsData.interface';
 import WorkflowStateData from 'interfaces/WorkflowStatesData.interface';
-import EcommPlatformTypes from '../enums/ecommPlatforms.enum';
-import StorefrontPresentations from '../enums/storefrontPresentations.enum';
-import MerchantData from '../interfaces/MerchantData.interface';
 
 export const samplePlatformDetailsData: PlatformDetailsData = {
   platformType: EcommPlatformTypes.Magento,

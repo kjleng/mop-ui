@@ -1,8 +1,8 @@
 import { Button, makeStyles, Theme } from '@material-ui/core';
 import clsx from 'clsx';
+import { FSButtonTypes } from 'enums/fsbutton.enum';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { FSButtonTypes } from '../../enums/fsbutton.enum';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ctaButton: {

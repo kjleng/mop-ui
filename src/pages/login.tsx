@@ -129,7 +129,7 @@ const Login = () => {
           history.push(ROUTES.dashboard);
         } else if (session && IsMerchantUser(session)) {
           console.debug('[login.tsx] logged in as MERCHANT user');
-          history.push(ROUTES.dashboard); // update once merchant dashboard exists
+          history.push(ROUTES.merchantDashboard); // update once merchant dashboard exists
         }
 
         setLoading(false);

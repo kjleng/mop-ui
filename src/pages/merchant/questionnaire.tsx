@@ -1,7 +1,7 @@
 import { Container, makeStyles, Theme, Typography } from '@material-ui/core';
+import PageHeader from 'components/PageHeader/PageHeader';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import PageHeader from '../../components/PageHeader/PageHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

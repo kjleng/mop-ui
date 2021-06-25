@@ -1,5 +1,5 @@
-import EcommPlatformTypes from '../enums/ecommPlatforms.enum';
-import StorefrontPresentations from '../enums/storefrontPresentations.enum';
+import EcommPlatformTypes from 'enums/ecommPlatforms.enum';
+import StorefrontPresentations from 'enums/storefrontPresentations.enum';
 
 export default interface PlatformDetailsData {
   platformType: EcommPlatformTypes;
@@ -8,7 +8,7 @@ export default interface PlatformDetailsData {
   shopifyVariantId: string;
   thirdParyPlugin: boolean;
   thirdPartyPluginDetails: string;
-  supportTeamType: string
+  supportTeamType: string;
   thirdPartyPluginName: string;
   englishLogoLink: string;
   frenchLogoLink: string;
