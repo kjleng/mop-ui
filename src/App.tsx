@@ -15,6 +15,7 @@ import {
   QuestionnairePage,
   UploadLogoPage,
   PageNotFound,
+  FormTest,
 } from './pages';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Switch>
               <Route path="/" exact render={() => <Redirect to={ROUTES.dashboard} />} />
               <PublicRoute exact path={ROUTES.login} component={Login} />
+              <ProtectedRoute exact path={ROUTES.formTest} component={FormTest} />
               <ProtectedRoute exact path={ROUTES.dashboard} component={Dashboard} />
               <ProtectedRoute exact path={ROUTES.another} component={AnotherPage} />
               <ProtectedRoute exact path={ROUTES.merchantDetails} component={MerchantDetailsPage} />

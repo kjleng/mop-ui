@@ -6,4 +6,5 @@ export const ROUTES = {
   merchantQuestionnaire: '/merchant/questionnaire',
   uploadLogo: '/merchant/uploadlogo',
   merchantDetails: '/admin/merchant-details/:merchantName',
+  formTest: '/form-test',
 };
