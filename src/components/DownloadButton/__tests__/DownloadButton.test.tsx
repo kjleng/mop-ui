@@ -22,7 +22,7 @@ jest.mock('react-i18next', () => ({
 describe('Unit Tests', () => {
   test('render_DownloadButton_DisplaysDesiredText', () => {
     const displayText = 'Download Display Text';
-    const { queryByText } = render(<DownloadButton DisplayText={displayText} />);
+    const { queryByText } = render(<DownloadButton DisplayText={displayText} LinkPath="" />);
 
     const renderedText = queryByText(displayText);
     expect(renderedText).toBeInTheDocument();
