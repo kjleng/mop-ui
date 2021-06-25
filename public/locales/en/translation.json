@@ -73,6 +73,10 @@
     "Search": "Search",
     "Edit": "Edit",
     "Magento LUMA Guide": "Magento LUMA Guide",
-    "Magento Install Guide": "Magento Install Guide"
+    "Magento Install Guide": "Magento Install Guide",
+    "Magento PWA Guide": "Magento PWA Guide",
+    "Payment Extension REST API Documentation": "Payment Extension REST API Documentation",
+    "Shopify Install Guide": "Shopify Install Guide",
+    "Shopify Checklist": "Shopify Checklist"
 }
 

@@ -73,5 +73,9 @@
     "Username":"Nom d'utilisateur",
     "Edit": "Modifier",
     "Magento LUMA Guide": "Magento LUMA Guide",
-    "Magento Install Guide": "Magento Install Guide"
+    "Magento Install Guide": "Magento  Guide d’installation",
+    "Magento PWA Guide": "Guide Magento PWA",
+    "Payment Extension REST API Documentation": "Documentation sur l'API REST de l'extension de paiement",
+    "Shopify Install Guide": "Guide d'installation de Shopify",
+    "Shopify Checklist": "Liste de contrôle Shopify"
 }
