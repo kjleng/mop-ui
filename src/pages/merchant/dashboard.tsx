@@ -6,7 +6,8 @@ import MerchantDashboardCTA from '../../components/MerchantDashboardCTA/Merchant
 import MerchantSetupDocuments from '../../components/MerchantSetupDocuments/MerchantSetupDocuments';
 import PageHeader from '../../components/PageHeader/PageHeader';
 import EcommPlatformTypes from '../../enums/ecommPlatforms.enum';
-//import MerchantData from '../../interfaces/MerchantData.interface';
+import FSButtonTypes from '../../enums/fsbutton.enum';
+import StorefrontPresentations from '../../enums/storefrontPresentations.enum';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -23,11 +24,25 @@ const MerchantDashboard: React.FC = () => {
   const merchantHash = '5d1dc85a-cf5b-4dbc-b078-4b5a77cd9ff0';
   const [merchantData, setMerchantData] = useState({
     merchantHash: '',
-    englishLogoLink: '',
-    frenchLogoLink: '',
-    englishCobrandLogoLink: '',
-    frenchCobrandLogoLink: '',
-    ecommPlatform: EcommPlatformTypes.Other,
+    answers: {
+      platformType: EcommPlatformTypes.Other,
+      storefrontPresentation: StorefrontPresentations.Other,
+      shopifyVersion: '',
+      shopifyVariantId: '',
+      thirdParyPlugin: false,
+      thirdPartyPluginDetails: '',
+      supportTeamType: '',
+      thirdPartyPluginName: '',
+      englishLogoLink: '',
+      frenchLogoLink: '',
+      englishCobrandedLogoLink: '',
+      frenchCobrandedLogoLink: '',
+    },
+    states: {
+      logoState: 'Not Started',
+      platformDetailsState: 'Not Started',
+      planSelectionState: 'Not Started',
+    },
   });
 
   useEffect(() => {
@@ -44,21 +59,43 @@ const MerchantDashboard: React.FC = () => {
         {displaySetupDocuments && <MerchantSetupDocuments merchantData={merchantData} />}
         <Typography variant="h1">{t(`Application`)}</Typography>
         <Typography variant="subtitle1">
-          {t(`Please finish the platform details first before you start choosing your plans.`)}
+          {merchantData.states.platformDetailsState === 'Not Started'
+            ? t(`Please finish the platform details first before you start choosing your plans.`)
+            : ''}
         </Typography>
         <MerchantDashboardCTA
           HeaderText={t(`Platform Details`)}
-          BodyText={t(`We will be asking 4 simple questions about your current platform.`)}
-          LinkText={t(`Start`)}
+          BodyText={
+            merchantData.states.platformDetailsState === 'Not Started'
+              ? t(`We will be asking 4 simple questions about your current platform.`)
+              : ''
+          }
+          LinkText={
+            merchantData.states.platformDetailsState === 'Not Started' ? t(`Start`) : t(`Edit`)
+          }
           LinkPath="/merchant/questionnaire"
+          ButtonType={
+            merchantData.states.platformDetailsState === 'Not Started'
+              ? FSButtonTypes.Blue
+              : FSButtonTypes.White
+          }
+          ShowCheck={merchantData.states.platformDetailsState === 'Complete'}
         />
         <MerchantDashboardCTA
           HeaderText={t(`Upload Logo`)}
-          BodyText={t(
-            `We will need a copy of your company's logo to brand the testing environment.`
-          )}
-          LinkText={t(`Start`)}
+          BodyText={
+            merchantData.states.logoState === 'Not Started'
+              ? t(`We will need a copy of your company's logo to brand the testing environment.`)
+              : ''
+          }
+          LinkText={merchantData.states.logoState === 'Not Started' ? t(`Start`) : t(`Edit`)}
           LinkPath="/merchant/uploadlogo"
+          ButtonType={
+            merchantData.states.logoState === 'Not Started'
+              ? FSButtonTypes.Blue
+              : FSButtonTypes.White
+          }
+          ShowCheck={merchantData.states.logoState === 'Complete'}
         />
       </Container>
     </>

@@ -3,6 +3,7 @@
 import { cleanup, render, act } from '@testing-library/react';
 import React from 'react';
 import MerchantDashboardCTA from '../MerchantDashboardCTA';
+import FSButtonTypes from '../../../enums/fsbutton.enum';
 
 afterEach(cleanup);
 
@@ -26,7 +27,14 @@ describe('Unit Tests', () => {
     const headerText = 'header text';
     const bodyText = 'body text';
     const { queryByText } = render(
-      <MerchantDashboardCTA HeaderText={headerText} BodyText={bodyText} LinkText="" LinkPath="" />
+      <MerchantDashboardCTA
+        HeaderText={headerText}
+        BodyText={bodyText}
+        LinkText=""
+        LinkPath=""
+        ButtonType={FSButtonTypes.Blue}
+        ShowCheck={true}
+      />
     );
 
     const renderedHeaderText = queryByText(headerText);
@@ -34,6 +42,6 @@ describe('Unit Tests', () => {
     expect(renderedHeaderText).toBeInTheDocument();
     expect(renderedBodyText).toBeInTheDocument();
 
-    // the tests or the button in this component is covered by FSButton.test.tsx
+    // the tests for the button in this component is covered by FSButton.test.tsx
   });
 });

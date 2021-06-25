@@ -26,15 +26,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IDownloadButton {
   DisplayText: string;
+  LinkPath: string;
 }
 
 const DownloadButton: React.FC<IDownloadButton> = (props: IDownloadButton) => {
-  const { DisplayText } = props;
+  const { DisplayText, LinkPath } = props;
   const classes = useStyles();
   const { t } = useTranslation();
 
+  const performDowndload = () => {
+    window.open(LinkPath);
+  };
+
   return (
-    <button type="button" className={classes.button}>
+    <button type="button" className={classes.button} onClick={performDowndload}>
       <Grid container direction="row">
         <Grid item xs>
           {DisplayText}

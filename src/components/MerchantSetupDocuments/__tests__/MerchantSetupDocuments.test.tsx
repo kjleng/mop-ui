@@ -1,4 +1,5 @@
 import { cleanup, render, act } from '@testing-library/react';
+import StorefrontPresentations from 'enums/storefrontPresentations.enum';
 import React from 'react';
 import EcommPlatformTypes from '../../../enums/ecommPlatforms.enum';
 import { sampleMerchantData } from '../../../utils/sampleMerchantData';
@@ -23,40 +24,72 @@ describe('Unit Tests', () => {
   afterEach(cleanup);
 
   test('render_MerchantSetupDocuments_DisplayShopifyLinksIfShopifyProviderSelected', () => {
-    sampleMerchantData.ecommPlatform = EcommPlatformTypes.Shopify;
+    sampleMerchantData.answers.platformType = EcommPlatformTypes.Shopify;
+    sampleMerchantData.states.platformDetailsState = 'Complete';
     const { queryAllByText } = render(<MerchantSetupDocuments merchantData={sampleMerchantData} />);
 
-    const ShopifySetupGuideTexts = queryAllByText('ShopifySetupGuide.pdf');
-    const ShopifyHandbookTexts = queryAllByText('ShopifyHandbook.pdf');
-    const MagentoSetupGuideTexts = queryAllByText('MagentoSetupGuide.pdf');
-    const MagentoHandbookTexts = queryAllByText('MagentoHandbook.pdf');
+    const ShopifySetupGuideTexts = queryAllByText('Shopify Install Guide');
+    const ShopifyChecklistTexts = queryAllByText('Shopify Checklist');
+    const MagentoSetupGuideTexts = queryAllByText('Magento Install Guide');
+    const MagentoLumaGuideTexts = queryAllByText('Magento LUMA Guide');
+    const MagentoPWAGuideTexts = queryAllByText('Magento PWA Guide');
+    const MagentoRESTTexts = queryAllByText('Payment Extension REST API Documentation');
 
     expect(ShopifySetupGuideTexts.length === 2).toBe(true);
-    expect(ShopifyHandbookTexts.length === 2).toBe(true);
+    expect(ShopifyChecklistTexts.length === 2).toBe(true);
     expect(MagentoSetupGuideTexts.length === 0).toBe(true);
-    expect(MagentoHandbookTexts.length === 0).toBe(true);
+    expect(MagentoLumaGuideTexts.length === 0).toBe(true);
+    expect(MagentoPWAGuideTexts.length === 0).toBe(true);
+    expect(MagentoRESTTexts.length === 0).toBe(true);
   });
 
-  test('render_MerchantSetupDocuments_DisplayMagentoLinksIfMagentoProviderSelected', () => {
-    sampleMerchantData.ecommPlatform = EcommPlatformTypes.Magento;
+  test('render_MerchantSetupDocuments_DisplayMagentoLinksIfMagentoProviderSelectedWithLUMA', () => {
+    sampleMerchantData.answers.platformType = EcommPlatformTypes.Magento;
+    sampleMerchantData.answers.storefrontPresentation = StorefrontPresentations.LUMA;
+    sampleMerchantData.states.platformDetailsState = 'Complete';
     const { queryAllByText } = render(<MerchantSetupDocuments merchantData={sampleMerchantData} />);
 
-    const ShopifySetupGuideTexts = queryAllByText('ShopifySetupGuide.pdf');
-    const ShopifyHandbookTexts = queryAllByText('ShopifyHandbook.pdf');
-    const MagentoSetupGuideTexts = queryAllByText('MagentoSetupGuide.pdf');
-    const MagentoHandbookTexts = queryAllByText('MagentoHandbook.pdf');
+    const ShopifySetupGuideTexts = queryAllByText('Shopify Install Guide');
+    const ShopifyChecklistTexts = queryAllByText('Shopify Checklist');
+    const MagentoSetupGuideTexts = queryAllByText('Magento Install Guide');
+    const MagentoLumaGuideTexts = queryAllByText('Magento LUMA Guide');
+    const MagentoPWAGuideTexts = queryAllByText('Magento PWA Guide');
+    const MagentoRESTTexts = queryAllByText('Payment Extension REST API Documentation');
 
     expect(ShopifySetupGuideTexts.length === 0).toBe(true);
-    expect(ShopifyHandbookTexts.length === 0).toBe(true);
+    expect(ShopifyChecklistTexts.length === 0).toBe(true);
     expect(MagentoSetupGuideTexts.length === 2).toBe(true);
-    expect(MagentoHandbookTexts.length === 2).toBe(true);
+    expect(MagentoLumaGuideTexts.length === 2).toBe(true);
+    expect(MagentoPWAGuideTexts.length === 0).toBe(true);
+    expect(MagentoRESTTexts.length === 0).toBe(true);
+  });
+
+  test('render_MerchantSetupDocuments_DisplayMagentoLinksIfMagentoProviderSelectedWithPWA', () => {
+    sampleMerchantData.answers.platformType = EcommPlatformTypes.Magento;
+    sampleMerchantData.answers.storefrontPresentation = StorefrontPresentations.PWA;
+    sampleMerchantData.states.platformDetailsState = 'Complete';
+    const { queryAllByText } = render(<MerchantSetupDocuments merchantData={sampleMerchantData} />);
+
+    const ShopifySetupGuideTexts = queryAllByText('Shopify Install Guide');
+    const ShopifyChecklistTexts = queryAllByText('Shopify Checklist');
+    const MagentoSetupGuideTexts = queryAllByText('Magento Install Guide');
+    const MagentoLumaGuideTexts = queryAllByText('Magento LUMA Guide');
+    const MagentoPWAGuideTexts = queryAllByText('Magento PWA Guide');
+    const MagentoRESTTexts = queryAllByText('Payment Extension REST API Documentation');
+
+    expect(ShopifySetupGuideTexts.length === 0).toBe(true);
+    expect(ShopifyChecklistTexts.length === 0).toBe(true);
+    expect(MagentoSetupGuideTexts.length === 2).toBe(true);
+    expect(MagentoLumaGuideTexts.length === 0).toBe(true);
+    expect(MagentoPWAGuideTexts.length === 2).toBe(true);
+    expect(MagentoRESTTexts.length === 2).toBe(true);
   });
 
   test('render_MerchantSetupDocuments_DisplayCobrandLogoDownload', () => {
     const englishFileName = 'EnglishcobrandedLogo.png';
     const frenchFileName = 'FrenchcobrandedLogo.png';
-    sampleMerchantData.englishCobrandLogoLink = englishFileName;
-    sampleMerchantData.frenchCobrandLogoLink = frenchFileName;
+    sampleMerchantData.answers.englishCobrandedLogoLink = englishFileName;
+    sampleMerchantData.answers.frenchCobrandedLogoLink = frenchFileName;
     const { queryByText, queryAllByText } = render(
       <MerchantSetupDocuments merchantData={sampleMerchantData} />
     );
@@ -77,8 +110,9 @@ describe('Unit Tests', () => {
   test('render_MerchantSetupDocuments_DisplaySetupPromptIfNoCobrandLogo', () => {
     const englishFileName = '';
     const frenchFileName = '';
-    sampleMerchantData.englishCobrandLogoLink = englishFileName;
-    sampleMerchantData.frenchCobrandLogoLink = frenchFileName;
+    sampleMerchantData.answers.englishCobrandedLogoLink = englishFileName;
+    sampleMerchantData.answers.frenchCobrandedLogoLink = frenchFileName;
+    sampleMerchantData.states.logoState = 'In Progress';
     const { queryByText, queryAllByText } = render(
       <MerchantSetupDocuments merchantData={sampleMerchantData} />
     );

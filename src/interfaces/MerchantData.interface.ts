@@ -1,10 +1,9 @@
-import EcommPlatformTypes from '../enums/ecommPlatforms.enum';
+import PlatformDetailsData from './PlatformDetailsData.interface';
+import WorkflowStateData from './WorkflowStatesData.interface';
+
 
 export default interface MerchantData {
   merchantHash: string;
-  englishLogoLink: string;
-  frenchLogoLink: string;
-  englishCobrandLogoLink: string;
-  frenchCobrandLogoLink: string;
-  ecommPlatform: EcommPlatformTypes;
+  answers: PlatformDetailsData;
+  states: WorkflowStateData;
 }

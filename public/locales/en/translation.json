@@ -47,6 +47,8 @@
     "Welcome to Fairstone":"Welcome to Fairstone",
     "Application":"Application",
     "Please finish the platform details first before you start choosing your plans.":"Please finish the platform details first before you start choosing your plans.",
+    "Platform Details": "Platform Details",
+    "Upload Logo": "Upload Logo",
     "Start": "Start",
     "Setup Documents": "Setup Documents",
     "Review these documents for the setup.": "Review these documents for the setup.",
@@ -66,6 +68,7 @@
     "Unable to register merchant": "Unable to register merchant",
     "Username":"Username",
     "Perform Payment Authorization": "Perform Payment Authorization",
-    "Search": "Search"
+    "Search": "Search",
+    "Edit": "Edit"
 }
 

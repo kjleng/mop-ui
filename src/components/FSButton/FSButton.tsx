@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   ctaWhite: {
     backgroundColor: 'transparent',
     color: theme.palette.secondary.dark,
+    boxShadow: 'none',
     '&:hover': {
       backgroundColor: 'transparent',
     },
