@@ -1,5 +1,6 @@
 import { Container, makeStyles, Theme, Typography } from '@material-ui/core';
 import PageHeader from 'components/PageHeader/PageHeader';
+import { ROUTES } from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +18,7 @@ const QuestionnairePage: React.FC = () => {
 
   return (
     <>
-      <PageHeader DisplayText={t(`Platform Details`)} LinkPath="/merchant/dashboard" />
+      <PageHeader DisplayText={t(`Platform Details`)} LinkPath={ROUTES.merchantDashboard} />
       <Container maxWidth="md" className={classes.container}>
         <Typography variant="h1">{t(`Questionnaire Page`)}</Typography>
       </Container>
