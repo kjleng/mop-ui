@@ -20,6 +20,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ToggleButton, ToggleButtonGroup, Alert, Color as AlertColor } from '@material-ui/lab';
 import { searchMerchant, addMerchant } from 'api/merchant';
 import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Redirect } from 'react-router-dom';
 
@@ -265,10 +266,6 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: `nowrap`, // French translation is very long
   },
   labelAsterisk: {
-    // color: '#db3131',
-    // '&$error': {
-    //     color: '#db3131'
-    // },
     display: 'none',
   },
   input: {
@@ -329,58 +326,25 @@ const useStyles = makeStyles((theme) => ({
 export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, closeCallback }) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const searchMerchantForm = useForm<SearchMerchantForm>();
+  const merchantFoundForm = useForm<MerchantFoundForm>();
 
   const [merchantFound, setMerchantFound] = React.useState(false); //whether merchant search is successful
   const [merchantedAdded, setMerchantedAdded] = React.useState(false); //whether to redirect to details page
-
+  const [merchantFoundAccordionExpanded, setMerchantFoundAccordionExpanded] = React.useState(false);
   const [toasterOpen, setToasterOpen] = React.useState(false); //whether toaster messgage is open
   const [toasterMessage, setToasterMessage] = React.useState('');
   const [toasterColor, setToasterColor] = React.useState<AlertColor>('success'); // green or red toaster
-
-  const [merchantNameForm, setMerchantNameForm] = React.useState<SearchMerchantForm>({
-    name: ``,
-  });
-
-  const [merchantFoundForm, setMerchantFoundForm] = React.useState<MerchantFoundForm>({
-    displayName: ``,
-    merchantId: ``,
-    ecomId: ``,
-    additionalDetailsExpanded: false,
-    orderManagement: true,
-    paymentGateway: true,
-    showPlan: true,
-    performPayment: true,
-    authorizationFormat: 'Short',
-    merchantName: ``,
-  });
-
-  const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({
-    merchantName: false,
-    displayName: false,
-    merchantId: false,
-    ecomId: false,
-  });
 
   const resetState = () => {
     setMerchantFound(false);
     setToasterOpen(false);
     setToasterMessage('');
     setToasterColor('success');
-    setMerchantNameForm({
-      name: ``,
-    });
-    setMerchantFoundForm({
-      displayName: ``,
-      merchantId: ``,
-      ecomId: ``,
-      additionalDetailsExpanded: false,
-      orderManagement: true,
-      paymentGateway: true,
-      showPlan: true,
-      performPayment: true,
-      authorizationFormat: 'Short',
-      merchantName: ``,
-    });
+    searchMerchantForm.clearErrors;
+    searchMerchantForm.reset();
+    merchantFoundForm.clearErrors();
+    return merchantFoundForm.reset();
   };
 
   const handleClose = () => {
@@ -388,76 +352,62 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
     closeCallback();
   };
 
-  const submitSearchMerchant = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const hasMerchantNameError = !merchantNameForm.name.length;
-    const hasDisplayNameError = merchantFound && !merchantFoundForm.displayName.length;
-    const hasMerchantIdError = merchantFound && !merchantFoundForm.merchantId.length;
-    const hasEcomIdError = merchantFound && !merchantFoundForm.ecomId.length;
-    setFieldErrors((prevErrors) => ({
-      ...prevErrors,
-      merchantName: hasMerchantNameError,
-      displayName: hasDisplayNameError,
-      merchantId: hasMerchantIdError,
-      ecomId: hasEcomIdError,
-    }));
+  const searchMerchantSubmit = async (merchantNameValues: SearchMerchantForm) => {
+    try {
+      const merchantResponse = await searchMerchant(merchantNameValues.name);
 
-    if (hasMerchantNameError || hasDisplayNameError || hasMerchantIdError || hasEcomIdError) return;
-
-    if (!merchantFound) {
-      // searching for merchant
-      try {
-        const merchantResponse = await searchMerchant(merchantNameForm.name);
-
-        if (merchantResponse.success) {
-          setToasterMessage(t('Merchant successfully found'));
-          setToasterOpen(true);
-          setMerchantFound(true);
-          setToasterColor('success');
-          setMerchantFoundForm({ ...merchantFoundForm, merchantName: merchantNameForm.name });
-        }
-      } catch (error) {
-        const msg = error?.data?.message === 'Not found' ? t('Merchant not found') : t('Error');
-        setToasterMessage(msg);
+      if (merchantResponse.success) {
+        setToasterMessage(t('Merchant successfully found'));
         setToasterOpen(true);
-        setMerchantFound(false);
-        setToasterColor('error');
+        setMerchantFound(true);
+        setToasterColor('success');
+        merchantFoundForm.setValue(`merchantName`, merchantNameValues.name);
       }
-    } else {
-      try {
-        const merchantResponse = await addMerchant(merchantFoundForm);
+    } catch (error) {
+      const msg = error?.data?.message === 'Not found' ? t('Merchant not found') : t('Error');
+      setToasterMessage(msg);
+      setToasterOpen(true);
+      setMerchantFound(false);
+      setToasterColor('error');
+    }
+  };
 
-        if (merchantResponse.success) {
-          setToasterMessage(t('Merchant successfully added'));
-          setToasterOpen(true);
-          setMerchantFound(true);
-          setToasterColor('success');
-          setMerchantedAdded(true);
-        }
-      } catch (error) {
-        setToasterMessage(t('Unable to register merchant'));
+  const merchantFoundSubmit = async (merchantFoundValues: MerchantFoundForm) => {
+    console.log(merchantFoundValues);
+    try {
+      const merchantResponse = await addMerchant(merchantFoundValues);
+
+      if (merchantResponse.success) {
+        setToasterMessage(t('Merchant successfully added'));
         setToasterOpen(true);
-        setMerchantFound(false);
-        setToasterColor('error');
+        setMerchantFound(true);
+        setToasterColor('success');
+        setMerchantedAdded(true);
       }
+    } catch (error) {
+      setToasterMessage(t('Unable to register merchant'));
+      setToasterOpen(true);
+      setMerchantFound(false);
+      setToasterColor('error');
     }
   };
 
   const toggleButtonReducer = (newSelection: boolean, stateKey: keyof MerchantFoundForm) => {
-    const currentState = merchantFoundForm[stateKey];
+    console.log(newSelection, stateKey);
+    const currentState = merchantFoundForm.getValues(stateKey);
     if (currentState === newSelection || newSelection === null) return;
     // True or False must be selected, don't let them deselect one and have neither
-    else
-      return setMerchantFoundForm((prevForm) => ({
-        ...prevForm,
-        [stateKey]: newSelection,
-      }));
+    else return merchantFoundForm.setValue(stateKey, newSelection);
   };
 
   if (merchantedAdded) {
     //redirect to details onces merchant is added
-    return <Redirect to={`/admin/merchant-details/${merchantFoundForm.merchantName}`} />;
+    return (
+      <Redirect to={`/admin/merchant-details/${merchantFoundForm.getValues(`merchantName`)}`} />
+    );
   }
+
+  console.log(merchantFoundForm.getValues());
 
   return (
     <div>
@@ -496,28 +446,30 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
             </Alert>
           )}
           {!merchantFound && (
-            <form onSubmit={submitSearchMerchant}>
-              <TextField
-                error={fieldErrors.merchantName}
-                name="search-merchant-name"
-                label={t(`Search Merchant Name`)}
-                value={merchantNameForm.name}
-                InputLabelProps={{
-                  classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
-                  shrink: true,
-                }}
-                InputProps={{
-                  'aria-invalid': !merchantNameForm.name.length,
-                  'aria-required': true,
-                  classes: { root: classes.input },
-                  onChange: ({ target: { value } }) =>
-                    setMerchantNameForm((prevForm) => ({
-                      ...prevForm,
-                      name: value,
-                    })),
-                }}
+            <form onSubmit={searchMerchantForm.handleSubmit(searchMerchantSubmit)}>
+              <Controller
+                name="name"
+                control={searchMerchantForm.control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    error={!!searchMerchantForm.formState.errors.name}
+                    label={t(`Search Merchant Name`)}
+                    value={value}
+                    onChange={onChange}
+                    InputLabelProps={{
+                      classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      'aria-invalid': !!searchMerchantForm.formState.errors.name,
+                      'aria-required': true,
+                      classes: { root: classes.input },
+                    }}
+                  />
+                )}
               />
-
               <DialogActions>
                 <Button onClick={handleClose} className={classes.dialogActionButton}>
                   {t('Cancel')}
@@ -532,100 +484,115 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
           {
             // Search merchant form
             merchantFound && (
-              <form className={classes.merchantFoundForm} onSubmit={submitSearchMerchant}>
-                <TextField
-                  className="merchantName"
-                  id="merchantName"
-                  InputProps={{
-                    classes: { root: classes.input },
-                    disableUnderline: true,
-                    readOnly: true,
-                    onChange: ({ target: { value } }) =>
-                      setMerchantFoundForm((prevForm) => ({
-                        ...prevForm,
-                        merchantName: value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
-                    shrink: true,
-                  }}
-                  label={t('Merchant')}
-                  defaultValue={merchantNameForm.name}
+              <form
+                className={classes.merchantFoundForm}
+                onSubmit={merchantFoundForm.handleSubmit(merchantFoundSubmit)}>
+                <Controller
+                  name="merchantName"
+                  control={merchantFoundForm.control}
+                  defaultValue={merchantFoundForm.getValues(`merchantName`)}
+                  rules={{ required: true }}
+                  render={() => (
+                    <TextField
+                      className="merchantName"
+                      id="merchantName"
+                      InputProps={{
+                        classes: { root: classes.input },
+                        disableUnderline: true,
+                        readOnly: true,
+                        value: merchantFoundForm.getValues(`merchantName`),
+                      }}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                        shrink: true,
+                      }}
+                      label={t('Merchant')}
+                      defaultValue={merchantFoundForm.getValues(`merchantName`)}
+                    />
+                  )}
                 />
-                <TextField
-                  className="displayName"
-                  error={fieldErrors.displayName}
-                  id="displayName"
-                  InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !merchantFoundForm.displayName.length,
-                    classes: { root: classes.input },
-                    value: merchantFoundForm.displayName,
-                    onChange: ({ target: { value } }) =>
-                      setMerchantFoundForm((prevForm) => ({
-                        ...prevForm,
-                        displayName: value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
-                    shrink: true,
-                  }}
-                  label={t('Display Name')}
+                <Controller
+                  name="displayName"
+                  control={merchantFoundForm.control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      className="displayName"
+                      error={!!merchantFoundForm.formState.errors.displayName}
+                      id="displayName"
+                      InputProps={{
+                        'aria-required': true,
+                        'aria-invalid': !!merchantFoundForm.formState.errors.displayName,
+                        classes: { root: classes.input },
+                      }}
+                      onChange={onChange}
+                      value={value}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                        shrink: true,
+                      }}
+                      label={t('Display Name')}
+                    />
+                  )}
                 />
-                <TextField
-                  className="merchantId"
-                  error={fieldErrors.merchantId}
-                  id="merchantId"
-                  InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !merchantFoundForm.merchantId.length,
-                    classes: { root: classes.input },
-                    value: merchantFoundForm.merchantId,
-                    onChange: ({ target: { value } }) =>
-                      setMerchantFoundForm((prevForm) => ({
-                        ...prevForm,
-                        merchantId: value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
-                    shrink: true,
-                  }}
-                  label={t('Merchant Id')}
+                <Controller
+                  name="merchantId"
+                  control={merchantFoundForm.control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      className="merchantId"
+                      error={!!merchantFoundForm.formState.errors.merchantId}
+                      id="merchantId"
+                      InputProps={{
+                        'aria-required': true,
+                        'aria-invalid': !!merchantFoundForm.formState.errors.merchantId,
+                        classes: { root: classes.input },
+                      }}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                        shrink: true,
+                      }}
+                      label={t('Merchant Id')}
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
                 />
-                <TextField
-                  className="ecomId"
-                  error={fieldErrors.ecomId}
-                  id="ecomId"
-                  InputProps={{
-                    'aria-invalid': !merchantFoundForm.ecomId.length,
-                    'aria-required': true,
-                    classes: { root: classes.input },
-                    value: merchantFoundForm.ecomId,
-                    onChange: ({ target: { value } }) =>
-                      setMerchantFoundForm((prevForm) => ({
-                        ...prevForm,
-                        ecomId: value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
-                    shrink: true,
-                  }}
-                  label={t('EComm Store ID')}
+                <Controller
+                  name="ecomId"
+                  control={merchantFoundForm.control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      className="ecomId"
+                      error={!!merchantFoundForm.formState.errors.ecomId}
+                      id="ecomId"
+                      InputProps={{
+                        'aria-invalid': !!merchantFoundForm.formState.errors.ecomId,
+                        'aria-required': true,
+                        classes: { root: classes.input },
+                      }}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.labelAsterisk },
+                        shrink: true,
+                      }}
+                      onChange={onChange}
+                      value={value}
+                      label={t('EComm Store ID')}
+                    />
+                  )}
                 />
 
                 <Accordion
                   className={classes.merchantFoundDrawer}
                   elevation={0}
-                  expanded={merchantFoundForm.additionalDetailsExpanded}
+                  expanded={merchantFoundAccordionExpanded}
                   onChange={() =>
-                    setMerchantFoundForm((prevForm) => ({
-                      ...prevForm,
-                      additionalDetailsExpanded: !prevForm.additionalDetailsExpanded,
-                    }))
+                    setMerchantFoundAccordionExpanded((prevExpanded) => !prevExpanded)
                   }>
                   <AccordionSummary
                     className={classes.merchantFoundDrawerSummary}
@@ -638,7 +605,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         <Typography className="toggle-label">{t('Order Management')}</Typography>
                         <ToggleButtonGroup
                           exclusive
-                          value={merchantFoundForm.orderManagement}
+                          value={merchantFoundForm.getValues(`orderManagement`)}
                           onChange={(_, newManagement) =>
                             toggleButtonReducer(newManagement, `orderManagement`)
                           }>
@@ -656,7 +623,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </Typography>
                         <ToggleButtonGroup
                           exclusive
-                          value={merchantFoundForm.paymentGateway}
+                          value={merchantFoundForm.getValues(`paymentGateway`)}
                           onChange={(_, newPayment) =>
                             toggleButtonReducer(newPayment, `paymentGateway`)
                           }>
@@ -669,7 +636,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </ToggleButtonGroup>
                       </div>
                     </div>
-                    {merchantFoundForm.paymentGateway && (
+                    {!!merchantFoundForm.getValues(`paymentGateway`) && (
                       <div className="bottom-toggles">
                         <div className="toggle">
                           <Typography className="toggle-label">
@@ -677,7 +644,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                           </Typography>
                           <ToggleButtonGroup
                             exclusive
-                            value={merchantFoundForm.showPlan}
+                            value={merchantFoundForm.getValues(`showPlan`)}
                             onChange={(_, newManagement) =>
                               toggleButtonReducer(newManagement, `showPlan`)
                             }>
@@ -695,7 +662,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                           </Typography>
                           <ToggleButtonGroup
                             exclusive
-                            value={merchantFoundForm.performPayment}
+                            value={merchantFoundForm.getValues(`performPayment`)}
                             onChange={(_, newPayment) =>
                               toggleButtonReducer(newPayment, `performPayment`)
                             }>
@@ -709,24 +676,25 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
                         </div>
                         <FormControl className={classes.authorizationSelect}>
                           <Typography className="label">{t('Authorization Format')}</Typography>
-                          <Select
-                            className="select"
-                            // IconComponent={() => <ChevronRight className="chevron" fontSize="large" />}
-                            id="authorizationFormat"
-                            onChange={({ target: { value } }) =>
-                              setMerchantFoundForm((prevForm) => ({
-                                ...prevForm,
-                                authorizationFormat: value as 'Short' | 'Extended',
-                              }))
-                            }
-                            value={merchantFoundForm.authorizationFormat}>
-                            <MenuItem className={classes.MuiMenuItem} value="Short">
-                              {t('Short')}
-                            </MenuItem>
-                            <MenuItem className={classes.MuiMenuItem} value="Extended">
-                              {t('Extended')}
-                            </MenuItem>
-                          </Select>
+                          <Controller
+                            name="authorizationFormat"
+                            control={merchantFoundForm.control}
+                            defaultValue="Short"
+                            render={({ field: { onChange, value } }) => (
+                              <Select
+                                className="select"
+                                id="authorizationFormat"
+                                onChange={onChange}
+                                value={value}>
+                                <MenuItem className={classes.MuiMenuItem} value="Short">
+                                  {t('Short')}
+                                </MenuItem>
+                                <MenuItem className={classes.MuiMenuItem} value="Extended">
+                                  {t('Extended')}
+                                </MenuItem>
+                              </Select>
+                            )}
+                          />
                         </FormControl>
                       </div>
                     )}
