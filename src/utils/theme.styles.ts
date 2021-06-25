@@ -102,7 +102,7 @@ export const muiTheme = {
   palette: {
     // https://app.zeplin.io/project/6064fef491501d0814269e88/screen/609b2081cc5485bd0f4fbff5
     primary: {
-      main: `#32F2A56`,
+      main: `#3F2A56`,
       light: `#52356E`,
     },
     secondary: {

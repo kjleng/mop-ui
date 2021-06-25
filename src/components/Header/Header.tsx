@@ -1,8 +1,9 @@
-import { AppBar, Toolbar, Button, makeStyles, Theme } from '@material-ui/core';
+import { AppBar, makeStyles, Theme, Toolbar } from '@material-ui/core';
 import LanguageChangeButton from 'components/LanguageChangeButton/LanguageChangeButton';
+import LogoutButton from 'components/LogoutButton/LogoutButton';
+import { ROUTES } from 'constants/routes';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from './fairstone_header_logo.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -19,65 +20,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridColumnStart: 3,
     justifySelf: 'right',
     alignSelf: 'center',
+    minHeight: '4.8rem',
   },
-  logo: {
+  logoContainer: {
     gridColumnStart: 1,
-    color: '#3f2a56',
     justifySelf: 'left',
     alignSelf: 'center',
   },
+  logo: {
+    color: theme.palette.primary.main,
+  },
   menuButton: {
-    color: '#3f2a56',
-    fontFamily: 'Source Sans Pro, sans-serif',
+    color: theme.palette.primary.main,
     fontWeight: 600,
     fontSize: '2rem',
-    fontStretch: 'normal',
-    fontStyle: 'normal',
-    lineHeight: 'normal',
-    letterSpacing: 'normal',
     textAlign: 'center',
   },
 }));
 
 const Header = () => {
   const classes = useStyles();
-  const { t } = useTranslation();
-  const navItems = [
-    {
-      label: t('Login'),
-      href: '/login',
-    },
-  ];
-
-  const getNavButtons = () => {
-    return navItems.map(({ label, href }) => {
-      return (
-        <Button
-          key={label}
-          {...{
-            color: 'inherit',
-            to: href,
-            component: RouterLink,
-            className: classes.menuButton,
-          }}>
-          {label}
-        </Button>
-      );
-    });
-  };
 
   return (
-    <>
-      <AppBar position="sticky" className={classes.appBar}>
-        <div className={classes.container}>
+    <AppBar position="sticky" className={classes.appBar}>
+      <div className={classes.container}>
+        <Link to={ROUTES.dashboard} className={classes.logoContainer}>
           <img src={logo} className={classes.logo} alt="Fairstone logo" />
-          <Toolbar className={classes.toolbar}>
-            <LanguageChangeButton />
-            {getNavButtons()}
-          </Toolbar>
-        </div>
-      </AppBar>
-    </>
+        </Link>
+        <Toolbar className={classes.toolbar}>
+          <LanguageChangeButton />
+          <LogoutButton />
+        </Toolbar>
+      </div>
+    </AppBar>
   );
 };
 

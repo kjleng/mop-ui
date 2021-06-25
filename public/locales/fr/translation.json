@@ -16,6 +16,7 @@
     "In Progress": "En cours",
     "Live": "En direct",
     "Login": "Connexion",
+    "Logout": "Déconnexion",
     "Merchant": "Marchand",
     "Merchant Details page": "Page de détails du marchand",
     "Merchant not found": "Marchand introuvable",
@@ -28,6 +29,7 @@
     "Payment Gateway Enabled": "Passerelle de paiement activée",
     "Perform Payment Authorization": "Effectuer l'autorisation de paiement",
     "Search": "Rechercher",
+    "Search Merchant Name": "Rechercher le nom du commerçant",
     "Short": "Court",
     "Extended": "Élargi",
     "Add Merchant": "Ajouter un marchand",
@@ -70,4 +72,4 @@
     "Unable to register merchant": "Impossible d'enregistrer le marchand",
     "Username":"Nom d'utilisateur",
     "Edit": "Modifier"
-}    
+}

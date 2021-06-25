@@ -33,11 +33,6 @@ const asyncAuthenticateUser = (
     });
   });
 
-const asyncSignOut = (cognitoUser: CognitoUser) =>
-  new Promise<void>(() => {
-    cognitoUser.signOut();
-  });
-
 export const useAuth = () => useContext(AuthContext);
 
 // Provider hook that creates auth object and handles state
@@ -73,15 +68,10 @@ export const useProvideAuth = () => {
     return false;
   };
 
-  const signOut = async () => {
-    if (user) {
-      await asyncSignOut(user);
-    }
-
-    if (sessionStorage) {
-      sessionStorage.removeItem(STORAGE_KEYS.USER_SESSION);
-      sessionStorage.removeItem(STORAGE_KEYS.EXPIRES_ON);
-    }
+  const signOut = () => {
+    user?.signOut();
+    sessionStorage?.removeItem(STORAGE_KEYS.USER_SESSION);
+    sessionStorage?.removeItem(STORAGE_KEYS.EXPIRES_ON);
   };
 
   const isAuthenticated = () => {

@@ -6,7 +6,7 @@ export interface AuthContext {
   user?: CognitoUser;
   userSession?: CognitoUserSession;
   signIn: (credentials: LoginCredentials) => Promise<boolean>;
-  signOut: () => Promise<void>;
+  signOut: () => void;
   isAuthenticated: () => boolean;
   getUserSession: () => CognitoUserSession | null;
 }
