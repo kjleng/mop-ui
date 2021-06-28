@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '25% auto 25%',
-    // padding: '1.4rem 2.4rem', this is causing the height of the container to be taller than the gutter used for page position which results in having the page content appear underneath the header bar
+    padding: '1.4rem 2.4rem',
   },
   toolbar: {
     gridColumnStart: 3,
@@ -44,7 +44,7 @@ const Header = () => {
   return (
     <AppBar position="sticky" className={classes.appBar}>
       <div className={classes.container}>
-        <Link to={ROUTES.dashboard} className={classes.logoContainer}>
+        <Link to="/" className={classes.logoContainer}>
           <img src={logo} className={classes.logo} alt="Fairstone logo" />
         </Link>
         <Toolbar className={classes.toolbar}>

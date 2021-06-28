@@ -124,12 +124,10 @@ const Login = () => {
       if (e.currentTarget.checkValidity() && (await signIn(loginForm))) {
         const session = getUserSession();
 
-        if (session && IsAdminUser(session)) {
-          console.debug('[login.tsx] logged in as ADMIN user');
+        if (IsAdminUser(session)) {
           history.push(ROUTES.dashboard);
-        } else if (session && IsMerchantUser(session)) {
-          console.debug('[login.tsx] logged in as MERCHANT user');
-          history.push(ROUTES.merchantDashboard); // update once merchant dashboard exists
+        } else if (IsMerchantUser(session)) {
+          history.push(ROUTES.merchantDashboard);
         }
 
         setLoading(false);

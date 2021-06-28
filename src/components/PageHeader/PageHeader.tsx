@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IPageHeader {
   DisplayText: string;
-  LinkPath: string;
+  LinkPath?: string;
 }
 
 const PageHeader: React.FC<IPageHeader> = (props: IPageHeader) => {
@@ -31,7 +31,7 @@ const PageHeader: React.FC<IPageHeader> = (props: IPageHeader) => {
     <header className={classes.wrapper}>
       <Container maxWidth="md">
         <Grid container direction="row">
-          {LinkPath.length > 0 && (
+          {LinkPath && LinkPath.length > 0 && (
             <Grid item>
               <Link to={LinkPath} data-testid="page-header-back-link">
                 <ArrowBackIos className={classes.backIcon} />
