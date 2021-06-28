@@ -438,6 +438,8 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
     );
   }
 
+  console.log(merchantFoundForm.getValues());
+
   return (
     <div>
       <Dialog open={isOpen} onClose={handleClose} aria-labelledby="add-merchant-modal-title">
