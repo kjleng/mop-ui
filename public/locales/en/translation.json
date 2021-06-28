@@ -78,6 +78,8 @@
     "Username":"Username",
     "We will be asking 4 simple questions about your current platform.": "We will be asking 4 simple questions about your current platform.",
     "We will need a copy of your company's logo to brand the testing environment.":"We will need a copy of your company's logo to brand the testing environment.",
-    "Welcome to Fairstone":"Welcome to Fairstone"
+    "Welcome to Fairstone":"Welcome to Fairstone",
+    "Field is required": "Field is required",
+    "Please provide valid email": "Please provide valid email"
 }
 

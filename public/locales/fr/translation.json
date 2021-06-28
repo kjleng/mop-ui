@@ -78,5 +78,7 @@
     "Username":"Nom d'utilisateur",
     "We will be asking 4 simple questions about your current platform.": "Nous vous poserons 4 questions simples sur votre plateforme actuelle.",
     "We will need a copy of your company's logo to brand the testing environment.":"Nous aurons besoin d'une copie du logo de votre entreprise pour marquer l'environnement d'essai.",
-    "Welcome to Fairstone":"Bienvenue à Fairstone"
+    "Welcome to Fairstone":"Bienvenue à Fairstone",
+    "Field is required": "Le champ est requis",
+    "Please provide valid email": "Veuillez fournir une adresse e-mail valide"
 }

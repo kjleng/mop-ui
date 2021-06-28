@@ -1,5 +1,5 @@
-import MerchantDetailsPage from 'pages/admin';
 import Dashboard from 'pages/admin/dashboard';
+import MerchantDetailsPage from 'pages/admin/merchant-details/merchant-details';
 import AnotherPage from 'pages/another';
 import Forbidden from 'pages/forbidden';
 import FormTest from 'pages/form-test';

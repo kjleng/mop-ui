@@ -20,6 +20,7 @@ type State = {
   users: Array<MerchantUser>;
   error: string;
   modalOpen: boolean;
+  merchantHash: string;
 };
 
 // Styles
@@ -112,11 +113,12 @@ const MerchantDetailPage = () => {
   const classes = useStyles();
   const params: Params = useParams();
 
-  const [{ error, loading, users, modalOpen }, setState] = useState<State>({
+  const [{ error, loading, users, modalOpen, merchantHash }, setState] = useState<State>({
     loading: true,
     users: [],
     error: ``,
     modalOpen: false,
+    merchantHash: '',
   });
 
   const closeModal = () =>
@@ -136,6 +138,10 @@ const MerchantDetailPage = () => {
           res: AxiosResponse<{ merchantHash: string }>
         ): PromiseLike<AxiosResponse<{ users: Array<MerchantUser> }>> => {
           const merchantHash = res?.data?.merchantHash ?? ``;
+          setState((prevState) => ({
+            ...prevState,
+            merchantHash,
+          }));
 
           return httpRequest({
             // Get Merchant User
@@ -170,7 +176,7 @@ const MerchantDetailPage = () => {
 
   return (
     <>
-      <AddUserModal isOpen={modalOpen} closeCallback={closeModal} />
+      <AddUserModal isOpen={modalOpen} closeCallback={closeModal} merchantHash={merchantHash} />
       <Container maxWidth="md" className={classes.container}>
         <Typography data-testid="h1" className={classes.h1} variant="h1">
           {params.merchantName}

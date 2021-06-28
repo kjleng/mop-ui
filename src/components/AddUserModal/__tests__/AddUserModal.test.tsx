@@ -27,6 +27,7 @@ test('Has tile with correct font', () => {
   const { queryByText, getByLabelText } = render(
     <MaterialUiTheme>
       <AddUserModal
+        merchantHash="testhash"
         isOpen={true}
         closeCallback={() => {
           return undefined;
@@ -42,7 +43,7 @@ test('Has tile with correct font', () => {
 test('close function fired value when close button clicked', () => {
   const onClose = jest.fn();
   const { queryByText, getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose}></AddUserModal>
+    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
   );
 
   const closeIcon = getByLabelText('Close Button');
@@ -58,7 +59,7 @@ test('close function fired value when close button clicked', () => {
 test('add user button', () => {
   const onClose = jest.fn();
   const { getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose}></AddUserModal>
+    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
   );
 
   const addButton = getByLabelText(/Add User/i);
@@ -75,7 +76,7 @@ test('add user button', () => {
 test('bad form inputs dont allow submit', () => {
   const onClose = jest.fn();
   const { queryByText, getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose}></AddUserModal>
+    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
   );
 
   const doneButton = getByLabelText(/Done/i);

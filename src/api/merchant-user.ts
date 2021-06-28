@@ -3,30 +3,21 @@ import { httpRequest } from './http-request';
 export interface MerchantUserDTO {
   fullName: string;
   emailAddress: string;
-  language: 'en' | 'fr';
-}
-
-export interface CreateMerchantUserError {
-  fullName: string;
-  emailAddress: string;
   language: string;
 }
 
 export interface AddMerchantUserResponse {
   success: boolean;
   message?: string;
-  error?: CreateMerchantUserError;
+  error?: any;
 }
 
-const add = async (user: MerchantUserDTO) => {
-  const body = {
-    fullName: user.fullName,
-    emailAddress: user.emailAddress,
-    language: user.language,
-  };
-
+const add = async (users: Array<MerchantUserDTO>, merchantHash: string) => {
   try {
-    const { data } = await httpRequest.post<AddMerchantUserResponse>('/merchant/user', body);
+    const { data } = await httpRequest.post<AddMerchantUserResponse>(
+      `/merchants/${merchantHash}/users`,
+      { users }
+    );
 
     return data;
   } catch (error) {
@@ -34,9 +25,7 @@ const add = async (user: MerchantUserDTO) => {
       success: false,
       message: error?.data?.message ? error?.data.message : 'Error',
       error: {
-        fullName: error?.data?.error?.fullName || '',
-        emailAddress: error?.data?.error?.emailAddress || '',
-        language: error?.data?.error?.language || '',
+        error,
       },
     };
 
