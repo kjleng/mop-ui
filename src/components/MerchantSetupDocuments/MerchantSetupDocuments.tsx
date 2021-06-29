@@ -181,7 +181,9 @@ const MerchantSetupDocuments: React.FC<IMerchantSetupDocuments> = (
     return (
       <>
         <Typography variant="h1">{t(`Setup Documents`)}</Typography>
-        {merchantData.states.platformDetailsState === 'Complete' && renderSetupDocuments}
+        {merchantData.states.platformDetailsState === 'Complete' &&
+          merchantData.answers.platformType !== EcommPlatformTypes.Other &&
+          renderSetupDocuments}
         {renderCobrandDownloadButtons}
       </>
     );

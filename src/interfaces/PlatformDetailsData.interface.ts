@@ -6,7 +6,7 @@ export default interface PlatformDetailsData {
   storefrontPresentation: StorefrontPresentations;
   shopifyVersion: string;
   shopifyVariantId: string;
-  thirdParyPlugin: boolean;
+  thirdPartyPlugin: boolean;
   thirdPartyPluginDetails: string;
   supportTeamType: string;
   thirdPartyPluginName: string;

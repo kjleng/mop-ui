@@ -1,4 +1,5 @@
 import { Container, makeStyles, Theme, Typography } from '@material-ui/core';
+import { httpRequest } from 'api/http-request';
 import merchantDataService from 'api/merchantDataService';
 import MerchantDashboardCTA from 'components/MerchantDashboardCTA/MerchantDashboardCTA';
 import MerchantSetupDocuments from 'components/MerchantSetupDocuments/MerchantSetupDocuments';
@@ -7,6 +8,7 @@ import { ROUTES } from 'constants/routes';
 import EcommPlatformTypes from 'enums/ecommPlatforms.enum';
 import FSButtonTypes from 'enums/fsbutton.enum';
 import StorefrontPresentations from 'enums/storefrontPresentations.enum';
+import { useAuth } from 'hooks/useAuth';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,16 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 const MerchantDashboard: React.FC = () => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { isAuthenticated, getUserSession } = useAuth();
+  const session: any = getUserSession();
   const displaySetupDocuments = true;
-  const merchantHash = '5d1dc85a-cf5b-4dbc-b078-4b5a77cd9ff0';
+  const merchantHash = session?.idToken.payload['custom:MerchantHash']; // '5d1dc85a-cf5b-4dbc-b078-4b5a77cd9ff0';
   const [merchantData, setMerchantData] = useState({
-    merchantHash: '',
+    merchantHash: merchantHash,
     answers: {
       platformType: EcommPlatformTypes.Other,
       storefrontPresentation: StorefrontPresentations.Other,
       shopifyVersion: '',
       shopifyVariantId: '',
-      thirdParyPlugin: false,
+      thirdPartyPlugin: false,
       thirdPartyPluginDetails: '',
       supportTeamType: '',
       thirdPartyPluginName: '',
