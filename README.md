@@ -47,5 +47,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## cloudfront domain
 
-dev: http://djkzjxyznzy5n.cloudfront.net
-qa: http://dwvyyfl2ump0o.cloudfront.net
+dev: https://djkzjxyznzy5n.cloudfront.net
+qa: https://dwvyyfl2ump0o.cloudfront.net

@@ -175,13 +175,13 @@ const MerchantSetupDocuments: React.FC<IMerchantSetupDocuments> = (
   );
 
   if (
-    merchantData.states.platformDetailsState !== 'Not Started' ||
+    merchantData.states.platformDetailsState === 'Complete' ||
     merchantData.states.logoState !== 'Not Started'
   ) {
     return (
       <>
         <Typography variant="h1">{t(`Setup Documents`)}</Typography>
-        {merchantData.states.platformDetailsState !== 'Not Started' && renderSetupDocuments}
+        {merchantData.states.platformDetailsState === 'Complete' && renderSetupDocuments}
         {renderCobrandDownloadButtons}
       </>
     );

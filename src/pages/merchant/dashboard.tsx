@@ -96,7 +96,10 @@ const MerchantDashboard: React.FC = () => {
               ? FSButtonTypes.Blue
               : FSButtonTypes.White
           }
-          ShowCheck={merchantData.states.logoState === 'Complete'}
+          ShowCheck={
+            merchantData.states.logoState === 'In Progress' ||
+            merchantData.states.logoState === 'Complete'
+          }
         />
       </Container>
     </>
