@@ -11,7 +11,7 @@ import { validEmail } from 'utils/validators.utils';
 
 interface AddUserModalProps {
   isOpen: boolean;
-  closeCallback: () => void;
+  closeCallback: (callNewUsers?: boolean) => void | Promise<void>;
   merchantHash: string;
 }
 
@@ -250,14 +250,14 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
   const [isToasterOpen, setIsToasterOpen] = React.useState<boolean>(false);
   const [toasterMsg, setToasterMsg] = React.useState<string>('');
 
-  const handleClose = () => {
+  const handleClose = (success?: boolean) => {
     setIsToasterOpen(false);
     setToasterMsg('');
     setNewUsersLangs(['en']);
     reset({
       users: [{ fullName: '', emailAddress: '', language: 'en' }],
     });
-    closeCallback();
+    return success ? closeCallback(true) : closeCallback();
   };
 
   const onSubmit = async (validatedInputs: FormValues) => {
@@ -276,7 +276,7 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
       setIsToasterOpen(true);
       setToasterMsg(t('Error'));
     } else {
-      handleClose();
+      handleClose(true);
     }
   };
 
@@ -387,7 +387,7 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
         <div className={classes.actionBar}>
           <Button
             aria-label="Close Button"
-            onClick={handleClose}
+            onClick={() => handleClose()}
             className={classes.dialogActionButton}>
             {t('Cancel')}
           </Button>

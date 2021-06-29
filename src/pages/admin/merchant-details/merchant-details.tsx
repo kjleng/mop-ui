@@ -121,14 +121,21 @@ const MerchantDetailPage = () => {
     merchantHash: '',
   });
 
-  const closeModal = () =>
+  const closeModal = (callNewUsers?: boolean) => {
     setState((prevState) => ({
       ...prevState,
       modalOpen: false,
     }));
 
-  React.useEffect(() => {
-    httpRequest({
+    if (callNewUsers) return getUsers();
+  };
+
+  const getUsers = () => {
+    setState((prevState) => ({
+      ...prevState,
+      loading: true,
+    }));
+    return httpRequest({
       // Get Merchant Hash
       url: `merchants/?name=${params.merchantName}`,
       method: `GET`,
@@ -172,6 +179,10 @@ const MerchantDetailPage = () => {
             `There was an issue getting the information for ${params.merchantName}, please try again later`,
         }));
       });
+  };
+
+  React.useEffect(() => {
+    getUsers();
   }, [params.merchantName]);
 
   return (
