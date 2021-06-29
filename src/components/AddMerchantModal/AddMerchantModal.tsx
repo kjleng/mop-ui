@@ -335,7 +335,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
       ecomId: ``,
       additionalDetailsExpanded: false,
       orderManagement: true,
-      paymentGateway: false,
+      paymentGateway: true,
       showPlan: true,
       performPayment: true,
       authorizationFormat: `Short`,
@@ -349,7 +349,7 @@ export const AddMerchantModal: React.FC<AddMerchantModalProps> = ({ isOpen, clos
   const paymentGateway = useWatch({
     control: merchantFoundForm.control,
     name: `paymentGateway`,
-    defaultValue: false,
+    defaultValue: true,
   });
   const showPlan = useWatch({
     control: merchantFoundForm.control,
