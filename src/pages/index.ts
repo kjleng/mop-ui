@@ -1,18 +1,19 @@
-import { MerchantDetailsPage } from 'pages/admin';
+import Dashboard from 'pages/admin/dashboard';
+import MerchantDetailsPage from 'pages/admin/merchant-details/merchant-details';
+import AnotherPage from 'pages/another';
+import Forbidden from 'pages/forbidden';
+import FormTest from 'pages/form-test';
+import Login from 'pages/login';
+import MerchantDashboard from 'pages/merchant/dashboard';
+import QuestionnairePage from 'pages/merchant/questionnaire';
+import UploadLogoPage from 'pages/merchant/uploadlogo';
 import PageNotFound from 'pages/page-not-found';
-import React from 'react';
-import Dashboard from './admin/dashboard';
-import AnotherPage from './another';
-import FormTest from './form-test';
-import Login from './login';
-import MerchantDashboard from './merchant/dashboard';
-import QuestionnairePage from './merchant/questionnaire';
-import UploadLogoPage from './merchant/uploadlogo';
 
 export {
   Login,
   Dashboard,
   AnotherPage,
+  Forbidden,
   MerchantDetailsPage,
   MerchantDashboard,
   QuestionnairePage,

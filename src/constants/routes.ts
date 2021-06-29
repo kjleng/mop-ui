@@ -2,6 +2,7 @@ export const ROUTES = {
   dashboard: '/admin/dashboard',
   another: '/anotherpage',
   login: '/login',
+  forbidden: '/forbidden',
   merchantDashboard: '/merchant/dashboard',
   merchantQuestionnaire: '/merchant/questionnaire',
   uploadLogo: '/merchant/uploadlogo',

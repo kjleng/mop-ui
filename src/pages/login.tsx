@@ -10,14 +10,18 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { CognitoUserSession } from 'amazon-cognito-identity-js';
-import { STORAGE_KEYS } from 'constants/auth';
 import { ROUTES } from 'constants/routes';
-import { LoginCredentials, useAuth } from 'hooks/useAuth';
-import React, { FormEvent, useState } from 'react';
+import { useAuth } from 'hooks/useAuth';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { IsAdminUser, IsMerchantUser } from 'utils/token.utils';
+
+type FormFields = {
+  Username: string;
+  Password: string;
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -81,55 +85,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type LoginErrors = {
-  username: boolean;
-  password: boolean;
-};
-
 const Login = () => {
   const history = useHistory();
   const classes = useStyles();
+  const { control, handleSubmit, formState } = useForm<FormFields>();
   const { t } = useTranslation();
   const { signIn, getUserSession } = useAuth();
 
-  const [loginForm, setLoginForm] = useState<LoginCredentials>({
-    Username: '',
-    Password: '',
-  });
-
-  const [loginErrors, setLoginErrors] = useState<LoginErrors>({
-    username: false,
-    password: false,
-  });
+  const { errors } = formState;
 
   const [loading, setLoading] = useState(false);
   const [openErrorAlert, setOpenErrorAlert] = useState(false);
 
-  const submitLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const hasUserNameError = !loginForm.Username.length;
-    const hasPasswordError = !loginForm.Password.length;
-
-    setLoginErrors((prevErrors) => ({
-      ...prevErrors,
-      username: hasUserNameError,
-      password: hasPasswordError,
-    }));
-
-    if (hasUserNameError || hasPasswordError) return;
-    setLoading(!hasUserNameError && !hasPasswordError);
+  const onSubmit = async (cleanValues: FormFields) => {
+    setLoading(true);
 
     try {
-      if (e.currentTarget.checkValidity() && (await signIn(loginForm))) {
+      if (await signIn(cleanValues)) {
         const session = getUserSession();
 
-        if (session && IsAdminUser(session)) {
-          console.debug('[login.tsx] logged in as ADMIN user');
+        if (IsAdminUser(session)) {
           history.push(ROUTES.dashboard);
-        } else if (session && IsMerchantUser(session)) {
-          console.debug('[login.tsx] logged in as MERCHANT user');
-          history.push(ROUTES.merchantDashboard); // update once merchant dashboard exists
+        } else if (IsMerchantUser(session)) {
+          history.push(ROUTES.merchantDashboard);
         }
 
         setLoading(false);
@@ -169,57 +147,67 @@ const Login = () => {
           </Alert>
         </Snackbar>
         <div className={classes.form}>
-          <form onSubmit={submitLogin}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container direction="column" justify="center" alignItems="center" spacing={5}>
               <Grid item xs={12} sm={8} md={6} lg={4} className={classes.gridItem}>
-                <TextField
-                  id="username"
-                  error={loginErrors.username}
-                  className="username"
-                  label={t('Username')}
-                  autoComplete="username"
-                  fullWidth
-                  defaultValue={loginForm.Username}
-                  InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !loginForm.Username.length,
-                    classes: { input: classes.inputText },
-                    onChange: (e) =>
-                      setLoginForm((prevForm) => ({
-                        ...prevForm,
-                        Username: e.target.value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.inputLabelAsterisk },
-                    shrink: true,
-                  }}
+                <Controller
+                  name="Username"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      id="username"
+                      error={!!errors.Username}
+                      className="username"
+                      label={t('Username')}
+                      autoComplete="username"
+                      fullWidth
+                      defaultValue=""
+                      InputProps={{
+                        'aria-required': true,
+                        'aria-invalid': !!errors.Username,
+                        classes: { input: classes.inputText },
+                      }}
+                      onChange={onChange}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.inputLabelAsterisk },
+                        shrink: true,
+                      }}
+                      value={value}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={8} md={6} lg={4} className={classes.gridItem}>
-                <TextField
-                  error={loginErrors.password}
-                  id="password"
-                  className="password"
-                  type="password"
-                  label={t('Password')}
-                  autoComplete="current-password"
-                  defaultValue={loginForm.Password}
-                  fullWidth
-                  InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !loginForm.Password.length,
-                    classes: { input: classes.inputText },
-                    onChange: (e) =>
-                      setLoginForm((prevForm) => ({
-                        ...prevForm,
-                        Password: e.target.value,
-                      })),
-                  }}
-                  InputLabelProps={{
-                    classes: { root: classes.inputLabel, asterisk: classes.inputLabelAsterisk },
-                    shrink: true,
-                  }}
+                <Controller
+                  name="Password"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      error={!!errors.Password}
+                      id="password"
+                      className="password"
+                      type="password"
+                      label={t('Password')}
+                      autoComplete="current-password"
+                      defaultValue=""
+                      fullWidth
+                      InputProps={{
+                        'aria-required': true,
+                        'aria-invalid': !!errors.Password,
+                        classes: { input: classes.inputText },
+                      }}
+                      onChange={onChange}
+                      value={value}
+                      InputLabelProps={{
+                        classes: { root: classes.inputLabel, asterisk: classes.inputLabelAsterisk },
+                        shrink: true,
+                      }}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={11} sm={6} md={4} lg={3} className={classes.gridItem}>

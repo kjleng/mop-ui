@@ -2,15 +2,17 @@ import { makeStyles, Typography, Button, TextField, Container } from '@material-
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { ToggleButton, ToggleButtonGroup, Color as AlertColor } from '@material-ui/lab';
-
 import { MerchantUserDTO, addUserMerchant } from 'api/merchant-user';
 import { Modal } from 'components/Modal/Modal';
 import React, { FC } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { validEmail } from 'utils/validators.utils';
 
 interface AddUserModalProps {
   isOpen: boolean;
-  closeCallback: () => void;
+  closeCallback: (callNewUsers?: boolean) => void | Promise<void>;
+  merchantHash: string;
 }
 
 type FormError = {
@@ -23,6 +25,14 @@ interface MerchantUserState extends MerchantUserDTO {
   nameError: boolean;
   emailError: boolean;
 }
+
+type FormValues = {
+  users: Array<{
+    fullName: string;
+    emailAddress: string;
+    language: string;
+  }>;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -74,9 +84,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     margin: 'none',
     '& button': {
-      // gridColumnStart: 2,
-      // justifySelf: 'right',
-      // alignSelf: 'center',
       fontFamily: 'Source Sans Pro',
       fontSize: '1.8rem',
       fontWeight: 600,
@@ -213,9 +220,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) => {
-  const { isOpen, closeCallback } = props;
+  const { isOpen, closeCallback, merchantHash } = props;
   const classes = useStyles();
   const { t, i18n } = useTranslation();
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState,
+    register,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      users: [{ fullName: '', emailAddress: '', language: 'en' }],
+    },
+    mode: 'onBlur',
+  });
+  const { fields, append, remove } = useFieldArray({ name: 'users', control });
 
   const currentLang = () => {
     const currentLang = i18n.language;
@@ -224,101 +245,63 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
     return regex.test(currentLang) ? 'en' : 'fr';
   };
 
-  const [newUsers, setNewUsers] = React.useState<Array<MerchantUserState>>([
-    {
-      fullName: '',
-      emailAddress: '',
-      language: currentLang(),
-      nameError: false,
-      emailError: false,
-    },
-  ]);
+  const [newUsersLangs, setNewUsersLangs] = React.useState<Array<string>>([currentLang()]);
 
-  const [errors, setErrors] = React.useState<Array<FormError>>([]);
+  const [isToasterOpen, setIsToasterOpen] = React.useState<boolean>(false);
+  const [toasterMsg, setToasterMsg] = React.useState<string>('');
 
-  const resetState = () => {
-    setNewUsers([
-      {
-        fullName: '',
-        emailAddress: '',
-        language: currentLang(),
-        nameError: false,
-        emailError: false,
-      },
-    ]);
-    setErrors([]);
+  const handleClose = (success?: boolean) => {
+    setIsToasterOpen(false);
+    setToasterMsg('');
+    setNewUsersLangs(['en']);
+    reset({
+      users: [{ fullName: '', emailAddress: '', language: 'en' }],
+    });
+    return success ? closeCallback(true) : closeCallback();
   };
 
-  const handleClose = () => {
-    resetState();
-    closeCallback();
-  };
+  const onSubmit = async (validatedInputs: FormValues) => {
+    console.log(validatedInputs);
 
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    let hasErrors = false;
-
-    const formattedUsers = newUsers.map((user) => {
-      const nameError = !user.fullName.length;
-      const emailError = !user.emailAddress.length;
-      user.nameError = nameError;
-      user.emailError = emailError;
-      if (!hasErrors) hasErrors = nameError || emailError;
-      return user;
+    const users = validatedInputs.users.map((value, index) => {
+      return {
+        ...value,
+        language: newUsersLangs[index] == 'fr' ? 'fr' : 'en',
+      };
     });
 
-    setNewUsers(formattedUsers);
+    const response = await addUserMerchant(users, merchantHash);
 
-    console.log(formattedUsers);
-
-    if (hasErrors) return;
-
-    let isError = false;
-
-    for (let index = 0; index < newUsers.length; index++) {
-      const response = await addUserMerchant(newUsers[index]);
-      isError = !response.success;
-
-      setErrors(() => {
-        const currentError: FormError = {
-          ...errors[index],
-          fullName: response?.error?.fullName,
-          emailAddress: response?.error?.emailAddress,
-          language: response?.error?.language,
-        };
-        return [...errors, currentError];
-      });
+    if (!response.success) {
+      setIsToasterOpen(true);
+      setToasterMsg(t('Error'));
+    } else {
+      handleClose(true);
     }
-
-    !isError && handleClose(); // if no error, close modal
   };
 
   return (
     <Modal
       isOpen={isOpen}
       title={t('Add Merchant User')}
+      toasterMessage={toasterMsg}
+      isToasterOpen={isToasterOpen}
+      toasterColor="error"
       closeCallback={() => {
         if (typeof closeCallback === 'function') closeCallback();
       }}>
-      <form onSubmit={submit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className={classes.formHeaderContainer}>
           <Typography className="formHeaderText">{t('Merchant Users')}</Typography>
           <Button
             className="addUserButton"
             aria-label="Add User"
             onClick={() => {
-              setNewUsers((prevValue) => {
-                return [
-                  ...prevValue,
-                  {
-                    fullName: '',
-                    emailAddress: '',
-                    language: 'fr',
-                    nameError: false,
-                    emailError: false,
-                  },
-                ];
+              setNewUsersLangs([...newUsersLangs, currentLang()]);
+              append({
+                fullName: '',
+                emailAddress: '',
+                language: 'fr',
               });
             }}>
             <AddIcon></AddIcon>
@@ -326,79 +309,61 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
           </Button>
         </div>
 
-        {newUsers.map((user, reactIndex) => {
+        {fields.map((user, reactIndex) => {
           return (
-            <Container className={classes.newUserContainer} key={reactIndex}>
+            <Container className={classes.newUserContainer} key={user.id}>
               <CloseIcon
                 className="removeUserIcon"
                 onClick={() => {
-                  setNewUsers((prevValue) =>
-                    prevValue.filter((user, arrindex) => arrindex != reactIndex)
-                  );
+                  remove(reactIndex);
                 }}></CloseIcon>
               <div className={classes.newUserInputs}>
                 <TextField
                   className="fullName"
                   aria-label="Full Name"
+                  aria-required="true"
                   InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !!errors[reactIndex]?.fullName || user.nameError,
-                    onChange: ({ target: { value } }) =>
-                      setNewUsers((prevValue) =>
-                        prevValue.map((user, userIndex) => {
-                          if (userIndex == reactIndex) {
-                            user.fullName = value;
-
-                            return user;
-                          } else {
-                            return user;
-                          }
-                        })
-                      ),
+                    ...register(`users.${reactIndex}.fullName` as const, {
+                      required: true,
+                    }),
                   }}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   label={t('Full name')}
-                  helperText={errors[reactIndex]?.fullName}
-                  error={!!errors[reactIndex]?.fullName || user.nameError}
+                  helperText={errors?.users?.[reactIndex]?.fullName && t('Field is required')}
+                  error={!!errors?.users?.[reactIndex]?.fullName}
                 />
                 <TextField
                   className="emailAddress"
                   aria-label="Email Address"
+                  aria-required="true"
                   InputProps={{
-                    'aria-required': true,
-                    'aria-invalid': !!errors[reactIndex]?.emailAddress || user.emailError,
-                    onChange: ({ target: { value } }) =>
-                      setNewUsers((prevValue) =>
-                        prevValue.map((user, userIndex) => {
-                          if (userIndex == reactIndex) {
-                            user.emailAddress = value;
-
-                            return user;
-                          } else {
-                            return user;
-                          }
-                        })
-                      ),
+                    ...register(`users.${reactIndex}.emailAddress` as const, {
+                      required: true,
+                      pattern: validEmail,
+                    }),
                   }}
                   InputLabelProps={{
                     shrink: true,
                   }}
                   label={t('Email address')}
-                  helperText={errors[reactIndex]?.emailAddress}
-                  error={!!errors[reactIndex]?.emailAddress || user.emailError}
+                  helperText={
+                    errors?.users?.[reactIndex]?.emailAddress && t('Please provide valid email')
+                  }
+                  error={!!errors?.users?.[reactIndex]?.emailAddress}
                 />
+
                 <div className="language">
                   <Typography className="toggle-label">{t('Language')}</Typography>
                   <ToggleButtonGroup
                     exclusive
-                    value={newUsers[reactIndex].language}
+                    value={newUsersLangs[reactIndex]}
                     onChange={(event, value) => {
-                      setNewUsers((prevState) => {
-                        return newUsers.map((user, userIndex) => {
+                      setNewUsersLangs((prevState) => {
+                        return newUsersLangs.map((user, userIndex) => {
                           if (userIndex == reactIndex) {
-                            user.language = value == 'fr' ? 'fr' : 'en';
+                            user = value == 'fr' ? 'fr' : 'en';
                             return user;
                           } else {
                             return user;
@@ -422,7 +387,7 @@ export const AddUserModal: FC<AddUserModalProps> = (props: AddUserModalProps) =>
         <div className={classes.actionBar}>
           <Button
             aria-label="Close Button"
-            onClick={handleClose}
+            onClick={() => handleClose()}
             className={classes.dialogActionButton}>
             {t('Cancel')}
           </Button>

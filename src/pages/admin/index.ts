@@ -1,3 +1,3 @@
-import MerchantDetailsPage from './merchant-details';
+import MerchantDetailsPage from './merchant-details/merchant-details';
 
-export { MerchantDetailsPage };
+export default MerchantDetailsPage;
