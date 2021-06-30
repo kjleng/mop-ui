@@ -5,6 +5,8 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -13,6 +15,11 @@ import { Alert, Color as AlertColor } from '@material-ui/lab';
 import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
+  action: {
+    fontSize: '1.8rem',
+    fontWeight: 600,
+    color: theme.palette.secondary.main,
+  },
   paper: {
     position: 'absolute',
     width: '60rem',
@@ -22,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   diaglogTitle: {
-    // width: '60rem',
-    // height: '58rem',
     padding: '1.6rem 2.4rem 1.5rem',
   },
   diaglogTitleContainer: {
@@ -71,21 +76,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface ModalProps {
-  isOpen: boolean;
   closeCallback?: () => void;
-  title?: string;
+  disableClickaway?: boolean;
+  isOpen: boolean;
   isToasterOpen?: boolean;
-  toasterMessage?: string;
+  showPrimaryAction?: boolean;
+  showCancel?: boolean;
+  title?: string;
   toasterColor?: AlertColor;
+  toasterMessage?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
-  isOpen,
   closeCallback,
-  title = '',
+  disableClickaway = false,
+  isOpen,
   isToasterOpen = false,
-  toasterMessage,
+  showPrimaryAction = false,
+  showCancel = false,
+  title = '',
   toasterColor = 'success',
+  toasterMessage,
   children,
 }) => {
   const classes = useStyles();
@@ -94,7 +105,8 @@ export const Modal: React.FC<ModalProps> = ({
   const [toastMessage, setToastMessage] = React.useState(toasterMessage);
   const [toastColor, setToastColor] = React.useState(toasterColor);
 
-  const handleClose = () => {
+  const handleClose = (event: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
+    if (disableClickaway && reason === 'backdropClick') return;
     isOpen = false;
     if (typeof closeCallback === 'function') closeCallback();
   };
@@ -151,6 +163,18 @@ export const Modal: React.FC<ModalProps> = ({
           )}
           {children}
         </DialogContent>
+        <DialogActions>
+          {showCancel && (
+            <Button onClick={handleClose} color="primary" className={classes.action}>
+              Cancel
+            </Button>
+          )}
+          {showPrimaryAction && (
+            <Button onClick={handleClose} color="primary" className={classes.action}>
+              Done
+            </Button>
+          )}
+        </DialogActions>
       </Dialog>
     </div>
   );

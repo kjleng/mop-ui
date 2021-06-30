@@ -6,21 +6,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
-afterEach(cleanup);
-
-jest.mock('react-i18next', () => ({
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () =>
-          new Promise(() => {
-            return undefined;
-          }),
-      },
-    };
-  },
-}));
+jest.mock('react-i18next');
 
 const mockSignOut = jest.fn();
 const mockIsAuthenticated = jest.fn();
@@ -32,6 +18,8 @@ jest.mock('hooks/useAuth', () => ({
 }));
 
 describe('<LogoutButton />', () => {
+  afterEach(cleanup);
+
   it('should return Logout button if user is authenticated', async () => {
     mockIsAuthenticated.mockReturnValue(true);
     render(<LogoutButton />);

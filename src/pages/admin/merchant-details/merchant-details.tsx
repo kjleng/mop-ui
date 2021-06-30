@@ -1,14 +1,14 @@
-import { Container, Card, List, ListItem, Button } from '@material-ui/core';
+import { Button, Card, Container, List, ListItem } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Skeleton } from '@material-ui/lab';
+import { httpRequest } from 'api/http-request';
 import { AxiosResponse } from 'axios';
+import { AddUserModal } from 'components/AddUserModal/AddUserModal';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { httpRequest } from '../../../api/http-request';
-import { AddUserModal } from '../../../components/AddUserModal/AddUserModal';
-import type { MerchantUser } from '../../../types/merchants.types';
+import type { MerchantUser } from 'types/merchants.types';
 
 // Types
 type Params = {

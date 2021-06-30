@@ -1,93 +1,72 @@
-import { createMuiTheme, useTheme } from '@material-ui/core/styles';
-import { cleanup, render, act } from '@testing-library/react';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { AddUserModal } from 'components/AddUserModal/AddUserModal';
 import MaterialUiTheme from 'components/MaterialUiTheme/MaterialUiTheme';
 import React from 'react';
 import { muiTheme } from 'utils/theme.styles';
 
-afterEach(cleanup);
+jest.mock('react-i18next');
 
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate hook can use it without a warning being shown
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () =>
-          new Promise(() => {
+describe('<AddUserModal />', () => {
+  afterEach(cleanup);
+
+  it('should render modal with correct title and styling', () => {
+    createMuiTheme(muiTheme);
+
+    render(
+      <MaterialUiTheme>
+        <AddUserModal
+          merchantHash="testhash"
+          isOpen={true}
+          closeCallback={() => {
             return undefined;
-          }),
-      },
-    };
-  },
-}));
+          }}></AddUserModal>
+      </MaterialUiTheme>
+    );
 
-test('Has tile with correct font', () => {
-  const renderedTheme = createMuiTheme(muiTheme);
-  const { queryByText, getByLabelText } = render(
-    <MaterialUiTheme>
-      <AddUserModal
-        merchantHash="testhash"
-        isOpen={true}
-        closeCallback={() => {
-          return undefined;
-        }}></AddUserModal>
-    </MaterialUiTheme>
-  );
-  const { typography, palette } = renderedTheme;
-  const titleNode = queryByText(/Merchant Users/i);
-  expect(titleNode).toBeInTheDocument();
-  expect(titleNode).toHaveStyle(`font-family: Source Sans Pro,sans-serif;`);
-});
-
-test('close function fired value when close button clicked', () => {
-  const onClose = jest.fn();
-  const { queryByText, getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
-  );
-
-  const closeIcon = getByLabelText('Close Button');
-  expect(closeIcon).toBeInTheDocument();
-
-  act(() => {
-    closeIcon.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    const titleNode = screen.queryByText(/Merchant Users/i);
+    expect(titleNode).toBeInTheDocument();
+    expect(titleNode).toHaveStyle(`font-family: Source Sans Pro,sans-serif;`);
   });
 
-  expect(onClose).toHaveBeenCalledTimes(1);
-});
+  it('should call onClose function when close button is clicked', () => {
+    const onClose = jest.fn();
+    render(<AddUserModal isOpen closeCallback={onClose} merchantHash="testhash"></AddUserModal>);
 
-test('add user button', () => {
-  const onClose = jest.fn();
-  const { getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
-  );
+    const closeIcon = screen.getByLabelText('Close Button');
+    expect(closeIcon).toBeInTheDocument();
 
-  const addButton = getByLabelText(/Add User/i);
-  expect(addButton).toBeInTheDocument();
+    userEvent.click(closeIcon);
 
-  act(() => {
-    addButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  const fullNameInputs = getAllByLabelText(/Full Name/i);
-  expect(fullNameInputs.length == 2);
-});
+  it('should add fields for new user when add user button is clicked', async () => {
+    const onClose = jest.fn();
+    render(<AddUserModal isOpen closeCallback={onClose} merchantHash="testhash"></AddUserModal>);
 
-test('bad form inputs dont allow submit', () => {
-  const onClose = jest.fn();
-  const { queryByText, getByLabelText, getAllByLabelText } = render(
-    <AddUserModal isOpen={true} closeCallback={onClose} merchantHash="testhash"></AddUserModal>
-  );
+    const addButton = screen.getByLabelText(/Add User/i);
+    expect(addButton).toBeInTheDocument();
 
-  const doneButton = getByLabelText(/Done/i);
-  expect(doneButton).toBeInTheDocument();
+    userEvent.click(addButton);
 
-  act(() => {
-    doneButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    const fullNameInputs = await screen.findAllByLabelText(/Full Name/i);
+    expect(fullNameInputs.length == 2);
   });
 
-  const fullNameInputs = getAllByLabelText(/Full Name/i);
-  expect(fullNameInputs.length == 2);
+  it('should not allow submit when given bad form inputs', async () => {
+    const onClose = jest.fn();
+    render(<AddUserModal isOpen closeCallback={onClose} merchantHash="testhash"></AddUserModal>);
 
-  expect(onClose).toHaveBeenCalledTimes(0);
+    const doneButton = screen.getByLabelText(/Done/i);
+    expect(doneButton).toBeInTheDocument();
+
+    userEvent.click(doneButton);
+
+    const fullNameInputs = await screen.findAllByLabelText(/Full Name/i);
+
+    expect(fullNameInputs.length == 2);
+    expect(onClose).toHaveBeenCalledTimes(0);
+  });
 });

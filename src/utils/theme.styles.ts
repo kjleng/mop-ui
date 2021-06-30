@@ -95,7 +95,6 @@ export const muiTheme = {
     },
     body2: {
       fontSize: `1.6rem`,
-      fontWeight: 600,
       lineHeight: 1.25,
     },
   },

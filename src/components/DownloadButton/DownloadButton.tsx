@@ -1,7 +1,6 @@
 import { Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -32,14 +31,13 @@ interface IDownloadButton {
 const DownloadButton: React.FC<IDownloadButton> = (props: IDownloadButton) => {
   const { DisplayText, LinkPath } = props;
   const classes = useStyles();
-  const { t } = useTranslation();
 
-  const performDowndload = () => {
+  const performDownload = () => {
     window.open(LinkPath);
   };
 
   return (
-    <button type="button" className={classes.button} onClick={performDowndload}>
+    <button type="button" className={classes.button} onClick={performDownload}>
       <Grid container direction="row">
         <Grid item xs>
           {DisplayText}

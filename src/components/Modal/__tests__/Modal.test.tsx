@@ -1,52 +1,47 @@
 import { createMuiTheme, useTheme } from '@material-ui/core/styles';
-import { cleanup, render, act } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MaterialUiTheme from 'components/MaterialUiTheme/MaterialUiTheme';
 import { Modal } from 'components/Modal/Modal';
 import React from 'react';
 import { muiTheme } from 'utils/theme.styles';
 
-afterEach(cleanup);
+describe('<Modal />', () => {
+  afterEach(cleanup);
 
-test('Has tile with correct font', () => {
-  const renderedTheme = createMuiTheme(muiTheme);
-  const { queryByText, getByLabelText } = render(
-    <MaterialUiTheme>
-      <Modal isOpen={true} title={'OurTitle'}></Modal>
-    </MaterialUiTheme>
-  );
-  const { typography, palette } = renderedTheme;
-  const titleNode = queryByText(/OurTitle/i);
-  expect(titleNode).toBeInTheDocument();
-  expect(titleNode).toHaveStyle(`font-family: Source Sans Pro,sans-serif;`);
-});
+  it('should render modal with correct title and styling', () => {
+    createMuiTheme(muiTheme);
 
-test('close function fired value when x clicked', () => {
-  const onClose = jest.fn();
-  const { queryByText, getByLabelText } = render(
-    <Modal isOpen={true} title={'OurTitle'} closeCallback={onClose}></Modal>
-  );
+    render(
+      <MaterialUiTheme>
+        <Modal isOpen title="OurTitle" />
+      </MaterialUiTheme>
+    );
 
-  const closeIcon = getByLabelText('Close');
-  expect(closeIcon).toBeInTheDocument();
-
-  act(() => {
-    closeIcon.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    const titleNode = screen.queryByText(/OurTitle/i);
+    expect(titleNode).toBeInTheDocument();
+    expect(titleNode).toHaveStyle(`font-family: Source Sans Pro,sans-serif;`);
   });
 
-  expect(onClose).toHaveBeenCalledTimes(1);
-});
+  it('should call onClose function when close icon is clicked', () => {
+    const onClose = jest.fn();
+    render(<Modal isOpen title="OurTitle" closeCallback={onClose} />);
 
-test('toaster works', () => {
-  const onClose = jest.fn();
-  const { queryByText, getByLabelText } = render(
-    <Modal
-      isOpen={true}
-      isToasterOpen={true}
-      toasterMessage={'toaster_message'}
-      toasterColor={'error'}></Modal>
-  );
+    const closeIcon = screen.getByLabelText('Close');
+    expect(closeIcon).toBeInTheDocument();
 
-  const toaster = queryByText('toaster_message');
-  expect(toaster).toBeInTheDocument();
-  expect(toaster).toHaveStyle(`backgroundColor: '#00a857'`);
+    userEvent.click(closeIcon);
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('should display toaster with correct text and colour', () => {
+    render(
+      <Modal isOpen isToasterOpen toasterMessage={'toaster_message'} toasterColor={'error'} />
+    );
+
+    const toaster = screen.queryByText('toaster_message');
+    expect(toaster).toBeInTheDocument();
+    expect(toaster).toHaveStyle(`backgroundColor: '#00a857'`);
+  });
 });

@@ -1,9 +1,12 @@
-import { cleanup, render, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import FSButton from 'components/FSButton/FSButton';
+import { FSButtonTypes } from 'enums/fsbutton.enum';
 import { createMemoryHistory, History } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { FSButtonTypes } from '../../../enums/fsbutton.enum';
-import FSButton from '../FSButton';
+
+jest.mock('react-i18next');
 
 const linkText = 'Link';
 const linkPath = '/merchant/dashboard';
@@ -12,22 +15,7 @@ function renderFSButton(buttonType: FSButtonTypes) {
   return render(<FSButton linkText={linkText} linkPath={linkPath} type={buttonType} />);
 }
 
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate hook can use it without a warning being shown
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () =>
-          new Promise(() => {
-            return undefined;
-          }),
-      },
-    };
-  },
-}));
-
-describe('Unit Tests', () => {
+describe('<FSButton />', () => {
   let history: History<unknown>;
 
   afterEach(cleanup);
@@ -36,14 +24,14 @@ describe('Unit Tests', () => {
     history = createMemoryHistory();
   });
 
-  test('render_FSButton_DisplaysDesiredText', () => {
-    const { queryByText } = renderFSButton(FSButtonTypes.Blue);
+  test('should display correct text', () => {
+    renderFSButton(FSButtonTypes.Blue);
 
-    const renderedText = queryByText(linkText);
+    const renderedText = screen.queryByText(linkText);
     expect(renderedText).toBeInTheDocument();
   });
 
-  test('render_FSButton_BlueTypeRenderedWithBlueStyle', () => {
+  test('should render blue type with blue style', () => {
     const { container } = renderFSButton(FSButtonTypes.Blue);
 
     expect(Object.values((container.firstChild! as HTMLElement).classList)).toMatchObject(
@@ -51,7 +39,7 @@ describe('Unit Tests', () => {
     );
   });
 
-  test('render_FSButton_WhiteTypeRenderedWithWhiteStyle', () => {
+  test('should render white type with white style', () => {
     const { container } = renderFSButton(FSButtonTypes.White);
 
     expect(Object.values((container.firstChild! as HTMLElement).classList)).toMatchObject(
@@ -59,16 +47,16 @@ describe('Unit Tests', () => {
     );
   });
 
-  test('render_FSButton_LinkPointsToExpectedLocation', () => {
-    const { container, queryByTestId } = render(
+  test('should link to expected target location', () => {
+    render(
       <Router history={history}>
         <FSButton linkText={linkText} linkPath={linkPath} type={FSButtonTypes.Blue} />
       </Router>
     );
 
-    const button = queryByTestId('fsbutton') as HTMLElement;
+    const button = screen.queryByTestId('fsbutton') as HTMLElement;
 
-    fireEvent.click(button);
+    userEvent.click(button);
 
     expect(history.location.pathname.toString() + history.location.search.toString()).toEqual(
       linkPath

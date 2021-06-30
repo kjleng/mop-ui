@@ -18,12 +18,17 @@ jest.mock('hooks/useAuth', () => ({
   }),
 }));
 
-afterEach(cleanup);
+describe('<ProtectedRoute />', () => {
+  let history: MemoryHistory;
 
-describe('<ProtectedRoute/>', () => {
+  afterEach(cleanup);
+
+  beforeEach(() => {
+    history = createMemoryHistory({ initialEntries: ['/protected'] });
+  });
+
   it('redirects unauthenticated users to login route', async () => {
     mockIsAuthenticated.mockReturnValue(false);
-    const history = createMemoryHistory({ initialEntries: ['/protected'] });
 
     setup(history);
 
@@ -34,7 +39,6 @@ describe('<ProtectedRoute/>', () => {
 
   it('allows authenticated users to access the private route', async () => {
     mockIsAuthenticated.mockReturnValue(true);
-    const history = createMemoryHistory({ initialEntries: ['/protected'] });
 
     setup(history);
 
@@ -46,7 +50,6 @@ describe('<ProtectedRoute/>', () => {
   it('allows authenticated users with allowed roles access to the private route', async () => {
     mockIsAuthenticated.mockReturnValue(true);
     mockGetUserRole.mockReturnValue(Roles.Admin);
-    const history = createMemoryHistory({ initialEntries: ['/protected'] });
 
     setup(history, [Roles.Admin]);
 
@@ -57,7 +60,6 @@ describe('<ProtectedRoute/>', () => {
   it('forbids authenticated users without allowed roles access to the private route', async () => {
     mockIsAuthenticated.mockReturnValue(true);
     mockGetUserRole.mockReturnValue(Roles.Merchant);
-    const history = createMemoryHistory({ initialEntries: ['/protected'] });
 
     setup(history, [Roles.Admin]);
 

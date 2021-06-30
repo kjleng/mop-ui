@@ -24,6 +24,7 @@
     "Extended": "Extended",
     "Fairstone e-commerce team will provide you with the cobranded logo for your setup.": "Fairstone e-commerce team will provide you with the cobranded logo for your setup.",
     "False": "False",
+    "Field is required": "Field is required",
     "Financing provided by Fairstone": "Financing provided by Fairstone",
     "French Version": "French Version",
     "French":"French",
@@ -57,7 +58,10 @@
     "Payment Gateway Enabled": "Payment Gateway Enabled",
     "Perform Payment Authorization": "Perform Payment Authorization",
     "Platform Details": "Platform Details",
+    "Platform Details Completed": "Platform Details Completed",
     "Please finish the platform details first before you start choosing your plans.":"Please finish the platform details first before you start choosing your plans.",
+    "Please provide valid email": "Please provide valid email",
+    "Please review the following PDFs to continue the setup process. You can also find these documents in your dashboard.":"Please review the following PDFs to continue the setup process. You can also find these documents in your dashboard.",
     "Please use the cobranded logo for your setup.": "Please use the cobranded logo for your setup.",
     "Review these documents for the setup.": "Review these documents for the setup.",
     "Search Merchant Name": "Search Merchant Name",
@@ -72,14 +76,13 @@
     "Sign into your account":"Sign into your account",
     "Sorry - you do not have access to this page or resource.":"Sorry - you do not have access to this page or resource.",
     "Start": "Start",
+    "Thank you. Our e-comm team will follow up with you in the next couple days.":"Thank you. Our e-comm team will follow up with you in the next couple days.",
     "True": "True",
     "Unable to register merchant": "Unable to register merchant",
     "Upload Logo": "Upload Logo",
     "Username":"Username",
     "We will be asking 4 simple questions about your current platform.": "We will be asking 4 simple questions about your current platform.",
     "We will need a copy of your company's logo to brand the testing environment.":"We will need a copy of your company's logo to brand the testing environment.",
-    "Welcome to Fairstone":"Welcome to Fairstone",
-    "Field is required": "Field is required",
-    "Please provide valid email": "Please provide valid email"
+    "Welcome to Fairstone":"Welcome to Fairstone"
 }
 

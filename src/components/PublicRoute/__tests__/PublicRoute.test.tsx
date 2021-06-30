@@ -17,13 +17,18 @@ jest.mock('hooks/useAuth', () => ({
   }),
 }));
 
-afterEach(cleanup);
+describe('<PublicRoute />', () => {
+  let history: MemoryHistory;
 
-describe('<PublicRoute/>', () => {
+  afterEach(cleanup);
+
+  beforeEach(() => {
+    history = createMemoryHistory({ initialEntries: ['/public'] });
+  });
+
   it('redirects authenticated admin users to admin dashboard route', () => {
     mockIsAuthenticated.mockReturnValue(true);
     mockIsAdminUser.mockReturnValue(true);
-    const history = createMemoryHistory({ initialEntries: ['/public'] });
 
     setup(history);
 
@@ -35,7 +40,6 @@ describe('<PublicRoute/>', () => {
   it('redirects authenticated merchant users to merchant dashboard route', () => {
     mockIsAuthenticated.mockReturnValue(true);
     mockIsAdminUser.mockReturnValue(false);
-    const history = createMemoryHistory({ initialEntries: ['/public'] });
 
     setup(history);
 
@@ -46,7 +50,6 @@ describe('<PublicRoute/>', () => {
 
   it('allows unauthenticated users to access the public route', () => {
     mockIsAuthenticated.mockReturnValue(false);
-    const history = createMemoryHistory({ initialEntries: ['/public'] });
 
     setup(history);
 

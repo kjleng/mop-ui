@@ -1,27 +1,15 @@
 // check that header text and body text is rendered as expected
 
-import { cleanup, render, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import PageHeader from 'components/PageHeader/PageHeader';
 import { createMemoryHistory, History } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import PageHeader from '../PageHeader';
 
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate hook can use it without a warning being shown
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () =>
-          new Promise(() => {
-            return undefined;
-          }),
-      },
-    };
-  },
-}));
+jest.mock('react-i18next');
 
-describe('Unit Tests', () => {
+describe('<PageHeader />', () => {
   let history: History<unknown>;
 
   afterEach(cleanup);
@@ -30,37 +18,37 @@ describe('Unit Tests', () => {
     history = createMemoryHistory();
   });
 
-  test('render_PageHeader_DisplaysDesiredText', () => {
+  it('should display correct text', () => {
     const DisplayText = 'header text';
     const LinkPath = '';
-    const { container, queryByText, queryByTestId } = render(
+
+    render(
       <Router history={history}>
         <PageHeader DisplayText={DisplayText} LinkPath={LinkPath} />
       </Router>
     );
 
-    const renderedHeaderText = queryByText(DisplayText);
+    const renderedHeaderText = screen.queryByText(DisplayText);
     expect(renderedHeaderText).toBeInTheDocument();
 
-    const button = queryByTestId('page-header-back-link') as HTMLElement;
-    expect(container.contains(button)).toBe(false);
+    const button = screen.queryByTestId('page-header-back-link') as HTMLElement;
+    expect(button).not.toBeInTheDocument();
   });
 
-  test('render_PageHeader_BackArrowNavigatesToAppriateLocation', () => {
+  it('should navigate to expected location when back arrow is clicked', () => {
     const DisplayText = 'header text';
     const LinkPath = '/merchant/dashboard';
-    const { queryByTestId } = render(
+
+    render(
       <Router history={history}>
         <PageHeader DisplayText={DisplayText} LinkPath={LinkPath} />
       </Router>
     );
 
-    const button = queryByTestId('page-header-back-link') as HTMLElement;
+    const button = screen.queryByTestId('page-header-back-link') as HTMLElement;
 
-    fireEvent.click(button);
+    userEvent.click(button);
 
-    expect(history.location.pathname.toString() + history.location.search.toString()).toEqual(
-      LinkPath
-    );
+    expect(history.location.pathname).toEqual(LinkPath);
   });
 });

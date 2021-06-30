@@ -1,31 +1,17 @@
-// check that header text and body text is rendered as expected
-
-import { cleanup, render, act } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
+import MerchantDashboardCTA from 'components/MerchantDashboardCTA/MerchantDashboardCTA';
+import FSButtonTypes from 'enums/fsbutton.enum';
 import React from 'react';
-import FSButtonTypes from '../../../enums/fsbutton.enum';
-import MerchantDashboardCTA from '../MerchantDashboardCTA';
 
-afterEach(cleanup);
+jest.mock('react-i18next');
 
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate hook can use it without a warning being shown
-  useTranslation: () => {
-    return {
-      t: (str: string) => str,
-      i18n: {
-        changeLanguage: () =>
-          new Promise(() => {
-            return undefined;
-          }),
-      },
-    };
-  },
-}));
+describe('<MerchantDashboardCTA />', () => {
+  afterEach(cleanup);
 
-describe('Unit Tests', () => {
-  test('render_MerchantDashboardCTA_DisplaysDesiredText', () => {
+  it('should display correct text', () => {
     const headerText = 'header text';
     const bodyText = 'body text';
+
     const { queryByText } = render(
       <MerchantDashboardCTA
         HeaderText={headerText}
@@ -41,7 +27,5 @@ describe('Unit Tests', () => {
     const renderedBodyText = queryByText(bodyText);
     expect(renderedHeaderText).toBeInTheDocument();
     expect(renderedBodyText).toBeInTheDocument();
-
-    // the tests for the button in this component is covered by FSButton.test.tsx
   });
 });
